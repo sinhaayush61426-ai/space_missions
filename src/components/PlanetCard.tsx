@@ -1,4 +1,5 @@
-import { Rocket } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Rocket, ArrowRight } from "lucide-react";
 
 interface Mission {
   name: string;
@@ -8,6 +9,7 @@ interface Mission {
 }
 
 interface PlanetCardProps {
+  id: string;
   name: string;
   description: string;
   color: string;
@@ -16,7 +18,7 @@ interface PlanetCardProps {
   delay: number;
 }
 
-const PlanetCard = ({ name, description, color, missions, distance, delay }: PlanetCardProps) => {
+const PlanetCard = ({ id, name, description, color, missions, distance, delay }: PlanetCardProps) => {
   const statusColors = {
     completed: "bg-planet-earth",
     active: "bg-primary",
@@ -24,8 +26,9 @@ const PlanetCard = ({ name, description, color, missions, distance, delay }: Pla
   };
 
   return (
-    <article 
-      className="planet-card group opacity-0 animate-fade-in"
+    <Link 
+      to={`/planet/${id}`}
+      className="planet-card group opacity-0 animate-fade-in block"
       style={{ animationDelay: `${delay}s` }}
     >
       {/* Planet glow effect */}
@@ -44,7 +47,7 @@ const PlanetCard = ({ name, description, color, missions, distance, delay }: Pla
         }}
       />
 
-      <h3 className="font-display text-2xl font-bold text-foreground mb-2">
+      <h3 className="font-display text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
         {name}
       </h3>
       
@@ -80,7 +83,17 @@ const PlanetCard = ({ name, description, color, missions, distance, delay }: Pla
           ))}
         </ul>
       </div>
-    </article>
+
+      {/* View More indicator */}
+      <div className="mt-4 pt-4 border-t border-border/50 flex items-center justify-between">
+        <span className="text-sm text-muted-foreground">
+          {missions.length} total missions
+        </span>
+        <span className="flex items-center gap-1 text-sm text-primary group-hover:gap-2 transition-all">
+          Explore <ArrowRight className="w-4 h-4" />
+        </span>
+      </div>
+    </Link>
   );
 };
 

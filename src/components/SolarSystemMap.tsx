@@ -440,6 +440,78 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       ctx.stroke();
     });
 
+    // Draw Oort Cloud (outermost region - very distant)
+    const oortCloudInnerRadius = 700;
+    const oortCloudOuterRadius = 900;
+    const oortObjectCount = 500;
+    
+    // Oort Cloud subtle outer glow
+    const oortGlow = ctx.createRadialGradient(
+      centerX, centerY, oortCloudInnerRadius * zoom,
+      centerX, centerY, oortCloudOuterRadius * zoom
+    );
+    oortGlow.addColorStop(0, "rgba(80, 100, 140, 0)");
+    oortGlow.addColorStop(0.2, "rgba(80, 100, 140, 0.015)");
+    oortGlow.addColorStop(0.5, "rgba(60, 80, 120, 0.02)");
+    oortGlow.addColorStop(0.8, "rgba(60, 80, 120, 0.015)");
+    oortGlow.addColorStop(1, "rgba(40, 60, 100, 0)");
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, oortCloudOuterRadius * zoom, 0, Math.PI * 2);
+    ctx.fillStyle = oortGlow;
+    ctx.fill();
+    
+    // Oort Cloud boundary hints
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, oortCloudInnerRadius * zoom, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(100, 130, 180, 0.06)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 10]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Draw Oort Cloud objects (very distant, faint icy bodies)
+    for (let i = 0; i < oortObjectCount; i++) {
+      const seed = i * 7654.32109;
+      const randomAngle = (Math.sin(seed) * 0.5 + 0.5) * Math.PI * 2;
+      // More objects toward edges (shell-like distribution)
+      const shellFactor = Math.pow(Math.cos(seed * 2) * 0.5 + 0.5, 0.3);
+      const randomRadius = oortCloudInnerRadius + shellFactor * (oortCloudOuterRadius - oortCloudInnerRadius);
+      const randomSize = 0.2 + (Math.sin(seed * 3) * 0.5 + 0.5) * 0.8;
+      const randomBrightness = 0.1 + (Math.cos(seed * 4) * 0.5 + 0.5) * 0.25;
+      
+      // Very slow drift animation
+      const oortAngle = randomAngle + (planetAngles["neptune"] || 0) * 0.02;
+      const oortX = centerX + Math.cos(oortAngle) * randomRadius * zoom;
+      const oortY = centerY + Math.sin(oortAngle) * randomRadius * zoom;
+      
+      // Very pale icy blue-white colors
+      const iceColors = ["rgba(160, 180, 220,", "rgba(140, 160, 200,", "rgba(180, 190, 210,", "rgba(120, 140, 180,"];
+      const colorChoice = iceColors[i % 4];
+      
+      ctx.beginPath();
+      ctx.arc(oortX, oortY, randomSize * zoom, 0, Math.PI * 2);
+      ctx.fillStyle = `${colorChoice} ${randomBrightness})`;
+      ctx.fill();
+      
+      // Occasional larger, brighter objects (potential long-period comets)
+      if (i % 50 === 0) {
+        const cometSize = randomSize * 2;
+        const cometGlow = ctx.createRadialGradient(oortX, oortY, 0, oortX, oortY, cometSize * 3 * zoom);
+        cometGlow.addColorStop(0, "rgba(200, 220, 255, 0.3)");
+        cometGlow.addColorStop(1, "transparent");
+        ctx.beginPath();
+        ctx.arc(oortX, oortY, cometSize * 3 * zoom, 0, Math.PI * 2);
+        ctx.fillStyle = cometGlow;
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(oortX, oortY, cometSize * zoom, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220, 235, 255, 0.5)";
+        ctx.fill();
+      }
+    }
+
     // Draw Kuiper Belt (beyond Neptune)
     const kuiperBeltInnerRadius = 450;
     const kuiperBeltOuterRadius = 600;
@@ -984,6 +1056,14 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
               <div className="w-1 h-1 rounded-full bg-[#DCE6FF]/50" />
             </div>
             <span className="text-muted-foreground">Kuiper Belt</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-0.5">
+              <div className="w-0.5 h-0.5 rounded-full bg-[#A0B4DC]/40" />
+              <div className="w-1 h-1 rounded-full bg-[#8CA0C8]/30" />
+              <div className="w-0.5 h-0.5 rounded-full bg-[#B4BED2]/20" />
+            </div>
+            <span className="text-muted-foreground">Oort Cloud</span>
           </div>
         </div>
 

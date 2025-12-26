@@ -231,6 +231,48 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       ctx.stroke();
     });
 
+    // Draw asteroid belt between Mars and Jupiter
+    const asteroidBeltInnerRadius = 175;
+    const asteroidBeltOuterRadius = 205;
+    const asteroidCount = 300;
+    
+    for (let i = 0; i < asteroidCount; i++) {
+      // Use seeded random for consistent asteroid positions
+      const seed = i * 9876.54321;
+      const randomAngle = (Math.sin(seed) * 0.5 + 0.5) * Math.PI * 2;
+      const randomRadius = asteroidBeltInnerRadius + (Math.cos(seed * 2) * 0.5 + 0.5) * (asteroidBeltOuterRadius - asteroidBeltInnerRadius);
+      const randomSize = 0.5 + (Math.sin(seed * 3) * 0.5 + 0.5) * 1.5;
+      const randomBrightness = 0.3 + (Math.cos(seed * 4) * 0.5 + 0.5) * 0.5;
+      
+      // Slow orbit animation for asteroids
+      const asteroidAngle = randomAngle + (planetAngles["mars"] || 0) * 0.3;
+      
+      const asteroidX = centerX + Math.cos(asteroidAngle) * randomRadius * zoom;
+      const asteroidY = centerY + Math.sin(asteroidAngle) * randomRadius * zoom;
+      
+      ctx.beginPath();
+      ctx.arc(asteroidX, asteroidY, randomSize * zoom, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180, 160, 140, ${randomBrightness})`;
+      ctx.fill();
+    }
+    
+    // Draw asteroid belt boundary hints (subtle rings)
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, asteroidBeltInnerRadius * zoom, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(180, 160, 140, 0.1)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, asteroidBeltOuterRadius * zoom, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(180, 160, 140, 0.1)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
     // Draw spacecraft trajectories
     if (showTrajectories) {
       initialSpacecraft.forEach((spacecraft) => {
@@ -485,6 +527,14 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
           <div className="flex items-center gap-2">
             <div className="w-6 border-t-2 border-dashed border-muted-foreground" />
             <span className="text-muted-foreground">Trajectories</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-0.5">
+              <div className="w-1 h-1 rounded-full bg-[#B4A08C]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#B4A08C]/70" />
+              <div className="w-1 h-1 rounded-full bg-[#B4A08C]/50" />
+            </div>
+            <span className="text-muted-foreground">Asteroid Belt</span>
           </div>
         </div>
 

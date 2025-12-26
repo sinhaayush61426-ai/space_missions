@@ -10,6 +10,34 @@ interface Planet {
   color: string;
   orbitSpeed: number;
   angle: number;
+  gradientColors?: string[];
+  hasRings?: boolean;
+  ringColor?: string;
+}
+
+interface DwarfPlanet {
+  id: string;
+  name: string;
+  orbitRadius: number;
+  size: number;
+  color: string;
+  orbitSpeed: number;
+  angle: number;
+  region: "asteroid-belt" | "kuiper-belt";
+  description: string;
+  discoveredYear: number;
+}
+
+interface MajorAsteroid {
+  id: string;
+  name: string;
+  size: number;
+  color: string;
+  angleOffset: number;
+  radiusOffset: number;
+  description: string;
+  diameter: string;
+  discoveredYear: number;
 }
 
 interface Spacecraft {
@@ -25,14 +53,141 @@ interface Spacecraft {
 }
 
 const planets: Planet[] = [
-  { id: "mercury", name: "Mercury", orbitRadius: 60, size: 6, color: "#B5B5B5", orbitSpeed: 0.004, angle: 0 },
-  { id: "venus", name: "Venus", orbitRadius: 90, size: 10, color: "#E6C77A", orbitSpeed: 0.003, angle: 45 },
-  { id: "earth", name: "Earth", orbitRadius: 120, size: 12, color: "#6B93D6", orbitSpeed: 0.002, angle: 90 },
-  { id: "mars", name: "Mars", orbitRadius: 160, size: 8, color: "#C1440E", orbitSpeed: 0.0015, angle: 135 },
-  { id: "jupiter", name: "Jupiter", orbitRadius: 220, size: 28, color: "#D4A574", orbitSpeed: 0.0008, angle: 180 },
-  { id: "saturn", name: "Saturn", orbitRadius: 290, size: 24, color: "#F4D59E", orbitSpeed: 0.0006, angle: 225 },
-  { id: "uranus", name: "Uranus", orbitRadius: 360, size: 16, color: "#93CCEA", orbitSpeed: 0.0004, angle: 270 },
-  { id: "neptune", name: "Neptune", orbitRadius: 420, size: 14, color: "#5B7FDE", orbitSpeed: 0.0003, angle: 315 },
+  { 
+    id: "mercury", name: "Mercury", orbitRadius: 60, size: 6, color: "#B5B5B5", orbitSpeed: 0.004, angle: 0,
+    gradientColors: ["#D4D4D4", "#B5B5B5", "#8A8A8A", "#5C5C5C"]
+  },
+  { 
+    id: "venus", name: "Venus", orbitRadius: 90, size: 10, color: "#E6C77A", orbitSpeed: 0.003, angle: 45,
+    gradientColors: ["#F5E6B8", "#E6C77A", "#D4A84B", "#C49332"]
+  },
+  { 
+    id: "earth", name: "Earth", orbitRadius: 120, size: 12, color: "#6B93D6", orbitSpeed: 0.002, angle: 90,
+    gradientColors: ["#8FB5E6", "#6B93D6", "#4A7AC7", "#3D6BA8"]
+  },
+  { 
+    id: "mars", name: "Mars", orbitRadius: 160, size: 8, color: "#C1440E", orbitSpeed: 0.0015, angle: 135,
+    gradientColors: ["#E85D3A", "#C1440E", "#A83708", "#8B2D06"]
+  },
+  { 
+    id: "jupiter", name: "Jupiter", orbitRadius: 220, size: 28, color: "#D4A574", orbitSpeed: 0.0008, angle: 180,
+    gradientColors: ["#E8C9A0", "#D4A574", "#C9945E", "#B87D4A", "#A86B3D"]
+  },
+  { 
+    id: "saturn", name: "Saturn", orbitRadius: 290, size: 24, color: "#F4D59E", orbitSpeed: 0.0006, angle: 225,
+    gradientColors: ["#FAEAC9", "#F4D59E", "#E8C47D", "#D4A85C"],
+    hasRings: true,
+    ringColor: "#C9B896"
+  },
+  { 
+    id: "uranus", name: "Uranus", orbitRadius: 360, size: 16, color: "#93CCEA", orbitSpeed: 0.0004, angle: 270,
+    gradientColors: ["#B8E4F5", "#93CCEA", "#6BB8D9", "#4AA8C9"],
+    hasRings: true,
+    ringColor: "#7AC4DE"
+  },
+  { 
+    id: "neptune", name: "Neptune", orbitRadius: 420, size: 14, color: "#5B7FDE", orbitSpeed: 0.0003, angle: 315,
+    gradientColors: ["#8BA5EE", "#5B7FDE", "#4A6BC9", "#3A58B4"]
+  },
+];
+
+const dwarfPlanets: DwarfPlanet[] = [
+  {
+    id: "ceres",
+    name: "Ceres",
+    orbitRadius: 190,
+    size: 4,
+    color: "#A8A8A8",
+    orbitSpeed: 0.0012,
+    angle: 60,
+    region: "asteroid-belt",
+    description: "Largest object in the asteroid belt",
+    discoveredYear: 1801
+  },
+  {
+    id: "pluto",
+    name: "Pluto",
+    orbitRadius: 480,
+    size: 5,
+    color: "#E8D4B8",
+    orbitSpeed: 0.00015,
+    angle: 200,
+    region: "kuiper-belt",
+    description: "Largest known dwarf planet in the Kuiper Belt",
+    discoveredYear: 1930
+  },
+  {
+    id: "eris",
+    name: "Eris",
+    orbitRadius: 560,
+    size: 4.5,
+    color: "#F0E6D6",
+    orbitSpeed: 0.0001,
+    angle: 320,
+    region: "kuiper-belt",
+    description: "Most massive known dwarf planet",
+    discoveredYear: 2005
+  },
+  {
+    id: "makemake",
+    name: "Makemake",
+    orbitRadius: 520,
+    size: 4,
+    color: "#E8C9A8",
+    orbitSpeed: 0.00012,
+    angle: 80,
+    region: "kuiper-belt",
+    description: "Third-largest dwarf planet in the Kuiper Belt",
+    discoveredYear: 2005
+  },
+  {
+    id: "haumea",
+    name: "Haumea",
+    orbitRadius: 500,
+    size: 3.5,
+    color: "#FFFFFF",
+    orbitSpeed: 0.00013,
+    angle: 150,
+    region: "kuiper-belt",
+    description: "Elongated dwarf planet with two moons",
+    discoveredYear: 2004
+  }
+];
+
+const majorAsteroids: MajorAsteroid[] = [
+  {
+    id: "vesta",
+    name: "Vesta",
+    size: 3,
+    color: "#C4B8A8",
+    angleOffset: 0.5,
+    radiusOffset: 0.3,
+    description: "Second-largest asteroid, visited by Dawn spacecraft",
+    diameter: "525 km",
+    discoveredYear: 1807
+  },
+  {
+    id: "pallas",
+    name: "Pallas",
+    size: 2.8,
+    color: "#B8B0A0",
+    angleOffset: 2.1,
+    radiusOffset: 0.7,
+    description: "Third-largest asteroid with highly inclined orbit",
+    diameter: "512 km",
+    discoveredYear: 1802
+  },
+  {
+    id: "hygiea",
+    name: "Hygiea",
+    size: 2.5,
+    color: "#A09890",
+    angleOffset: 3.8,
+    radiusOffset: 0.5,
+    description: "Fourth-largest asteroid, nearly spherical",
+    diameter: "434 km",
+    discoveredYear: 1849
+  }
 ];
 
 const generateTrajectory = (
@@ -134,13 +289,18 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number>();
   
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(0.8);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [hoveredItem, setHoveredItem] = useState<{ type: "planet" | "spacecraft"; data: Planet | Spacecraft } | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<{ 
+    type: "planet" | "spacecraft" | "dwarf" | "asteroid-belt"; 
+    data: Planet | Spacecraft | DwarfPlanet | null;
+  } | null>(null);
   const [planetAngles, setPlanetAngles] = useState<Record<string, number>>({});
+  const [dwarfAngles, setDwarfAngles] = useState<Record<string, number>>({});
   const [showTrajectories, setShowTrajectories] = useState(true);
+  const [showAsteroidInfo, setShowAsteroidInfo] = useState(false);
 
   // Initialize planet angles
   useEffect(() => {
@@ -149,6 +309,12 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       angles[p.id] = (p.angle * Math.PI) / 180;
     });
     setPlanetAngles(angles);
+    
+    const dAngles: Record<string, number> = {};
+    dwarfPlanets.forEach((d) => {
+      dAngles[d.id] = (d.angle * Math.PI) / 180;
+    });
+    setDwarfAngles(dAngles);
   }, []);
 
   const getPlanetPosition = useCallback((planet: Planet) => {
@@ -158,6 +324,14 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       y: Math.sin(angle) * planet.orbitRadius,
     };
   }, [planetAngles]);
+
+  const getDwarfPosition = useCallback((dwarf: DwarfPlanet) => {
+    const angle = dwarfAngles[dwarf.id] || 0;
+    return {
+      x: Math.cos(angle) * dwarf.orbitRadius,
+      y: Math.sin(angle) * dwarf.orbitRadius,
+    };
+  }, [dwarfAngles]);
 
   const getSpacecraftPosition = useCallback((spacecraft: Spacecraft) => {
     if (spacecraft.targetPlanet) {
@@ -177,6 +351,13 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
         const newAngles = { ...prev };
         planets.forEach((planet) => {
           newAngles[planet.id] = (prev[planet.id] || 0) + planet.orbitSpeed;
+        });
+        return newAngles;
+      });
+      setDwarfAngles((prev) => {
+        const newAngles = { ...prev };
+        dwarfPlanets.forEach((dwarf) => {
+          newAngles[dwarf.id] = (prev[dwarf.id] || 0) + dwarf.orbitSpeed;
         });
         return newAngles;
       });
@@ -207,23 +388,51 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
     const centerX = rect.width / 2 + offset.x;
     const centerY = rect.height / 2 + offset.y;
 
-    // Clear canvas
-    ctx.fillStyle = "#030712";
+    // Clear canvas with deep space gradient
+    const spaceGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.max(rect.width, rect.height));
+    spaceGradient.addColorStop(0, "#0a0a15");
+    spaceGradient.addColorStop(0.3, "#050510");
+    spaceGradient.addColorStop(1, "#020208");
+    ctx.fillStyle = spaceGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw stars
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-    for (let i = 0; i < 200; i++) {
+    // Draw distant stars with varying brightness
+    for (let i = 0; i < 300; i++) {
       const x = (Math.sin(i * 12345.6789) * 0.5 + 0.5) * canvas.width;
       const y = (Math.cos(i * 98765.4321) * 0.5 + 0.5) * canvas.height;
-      const size = Math.random() * 1.5;
+      const size = (Math.sin(i * 1234) * 0.5 + 0.5) * 1.5 + 0.3;
+      const brightness = 0.3 + (Math.cos(i * 5678) * 0.5 + 0.5) * 0.7;
+      
+      // Star color variation
+      const colorIndex = i % 5;
+      let starColor = `rgba(255, 255, 255, ${brightness})`;
+      if (colorIndex === 0) starColor = `rgba(255, 240, 220, ${brightness})`; // warm
+      if (colorIndex === 1) starColor = `rgba(220, 240, 255, ${brightness})`; // cool
+      if (colorIndex === 2) starColor = `rgba(255, 255, 220, ${brightness})`; // yellow
+      
       ctx.beginPath();
       ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fillStyle = starColor;
       ctx.fill();
+      
+      // Add twinkle effect to some stars
+      if (i % 7 === 0) {
+        const time = Date.now() * 0.001;
+        const twinkle = 0.5 + Math.sin(time + i) * 0.5;
+        ctx.beginPath();
+        ctx.arc(x, y, size * 1.5 * twinkle, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${brightness * 0.3 * twinkle})`;
+        ctx.fill();
+      }
     }
 
-    // Draw orbits
+    // Draw orbits with gradient effect
     planets.forEach((planet) => {
+      const gradient = ctx.createRadialGradient(centerX, centerY, (planet.orbitRadius - 2) * zoom, centerX, centerY, (planet.orbitRadius + 2) * zoom);
+      gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+      gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.08)");
+      gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+      
       ctx.beginPath();
       ctx.arc(centerX, centerY, planet.orbitRadius * zoom, 0, Math.PI * 2);
       ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
@@ -231,47 +440,117 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       ctx.stroke();
     });
 
+    // Draw Kuiper Belt (beyond Neptune)
+    const kuiperBeltInnerRadius = 450;
+    const kuiperBeltOuterRadius = 600;
+    const kuiperObjectCount = 400;
+    
+    // Kuiper Belt glow
+    const kuiperGlow = ctx.createRadialGradient(
+      centerX, centerY, kuiperBeltInnerRadius * zoom,
+      centerX, centerY, kuiperBeltOuterRadius * zoom
+    );
+    kuiperGlow.addColorStop(0, "rgba(100, 150, 200, 0)");
+    kuiperGlow.addColorStop(0.3, "rgba(100, 150, 200, 0.03)");
+    kuiperGlow.addColorStop(0.7, "rgba(100, 150, 200, 0.02)");
+    kuiperGlow.addColorStop(1, "rgba(100, 150, 200, 0)");
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, kuiperBeltOuterRadius * zoom, 0, Math.PI * 2);
+    ctx.fillStyle = kuiperGlow;
+    ctx.fill();
+    
+    for (let i = 0; i < kuiperObjectCount; i++) {
+      const seed = i * 5432.12345;
+      const randomAngle = (Math.sin(seed) * 0.5 + 0.5) * Math.PI * 2;
+      const randomRadius = kuiperBeltInnerRadius + (Math.cos(seed * 2) * 0.5 + 0.5) * (kuiperBeltOuterRadius - kuiperBeltInnerRadius);
+      const randomSize = 0.3 + (Math.sin(seed * 3) * 0.5 + 0.5) * 1.2;
+      const randomBrightness = 0.2 + (Math.cos(seed * 4) * 0.5 + 0.5) * 0.4;
+      
+      const kuiperAngle = randomAngle + (planetAngles["neptune"] || 0) * 0.1;
+      const kuiperX = centerX + Math.cos(kuiperAngle) * randomRadius * zoom;
+      const kuiperY = centerY + Math.sin(kuiperAngle) * randomRadius * zoom;
+      
+      // Icy blue-white colors for Kuiper Belt objects
+      const iceColors = ["rgba(200, 220, 255,", "rgba(180, 200, 240,", "rgba(220, 230, 255,"];
+      const colorChoice = iceColors[i % 3];
+      
+      ctx.beginPath();
+      ctx.arc(kuiperX, kuiperY, randomSize * zoom, 0, Math.PI * 2);
+      ctx.fillStyle = `${colorChoice} ${randomBrightness})`;
+      ctx.fill();
+    }
+
     // Draw asteroid belt between Mars and Jupiter
     const asteroidBeltInnerRadius = 175;
     const asteroidBeltOuterRadius = 205;
-    const asteroidCount = 300;
+    const asteroidCount = 350;
+    
+    // Asteroid belt glow
+    const beltGlow = ctx.createRadialGradient(
+      centerX, centerY, asteroidBeltInnerRadius * zoom,
+      centerX, centerY, asteroidBeltOuterRadius * zoom
+    );
+    beltGlow.addColorStop(0, "rgba(180, 160, 140, 0)");
+    beltGlow.addColorStop(0.5, "rgba(180, 160, 140, 0.05)");
+    beltGlow.addColorStop(1, "rgba(180, 160, 140, 0)");
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, (asteroidBeltInnerRadius + asteroidBeltOuterRadius) / 2 * zoom, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(180, 160, 140, 0.08)";
+    ctx.lineWidth = (asteroidBeltOuterRadius - asteroidBeltInnerRadius) * zoom;
+    ctx.stroke();
     
     for (let i = 0; i < asteroidCount; i++) {
-      // Use seeded random for consistent asteroid positions
       const seed = i * 9876.54321;
       const randomAngle = (Math.sin(seed) * 0.5 + 0.5) * Math.PI * 2;
       const randomRadius = asteroidBeltInnerRadius + (Math.cos(seed * 2) * 0.5 + 0.5) * (asteroidBeltOuterRadius - asteroidBeltInnerRadius);
-      const randomSize = 0.5 + (Math.sin(seed * 3) * 0.5 + 0.5) * 1.5;
-      const randomBrightness = 0.3 + (Math.cos(seed * 4) * 0.5 + 0.5) * 0.5;
+      const randomSize = 0.4 + (Math.sin(seed * 3) * 0.5 + 0.5) * 1.8;
+      const randomBrightness = 0.25 + (Math.cos(seed * 4) * 0.5 + 0.5) * 0.55;
       
-      // Slow orbit animation for asteroids
       const asteroidAngle = randomAngle + (planetAngles["mars"] || 0) * 0.3;
-      
       const asteroidX = centerX + Math.cos(asteroidAngle) * randomRadius * zoom;
       const asteroidY = centerY + Math.sin(asteroidAngle) * randomRadius * zoom;
       
+      // Rocky brownish colors
+      const rockColors = ["rgba(180, 160, 140,", "rgba(160, 140, 120,", "rgba(200, 180, 160,"];
+      const colorChoice = rockColors[i % 3];
+      
       ctx.beginPath();
       ctx.arc(asteroidX, asteroidY, randomSize * zoom, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(180, 160, 140, ${randomBrightness})`;
+      ctx.fillStyle = `${colorChoice} ${randomBrightness})`;
       ctx.fill();
     }
     
-    // Draw asteroid belt boundary hints (subtle rings)
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, asteroidBeltInnerRadius * zoom, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(180, 160, 140, 0.1)";
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 6]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, asteroidBeltOuterRadius * zoom, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(180, 160, 140, 0.1)";
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 6]);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    // Draw major asteroids
+    majorAsteroids.forEach((asteroid) => {
+      const baseAngle = (planetAngles["mars"] || 0) * 0.3 + asteroid.angleOffset;
+      const radius = asteroidBeltInnerRadius + (asteroidBeltOuterRadius - asteroidBeltInnerRadius) * asteroid.radiusOffset;
+      const x = centerX + Math.cos(baseAngle) * radius * zoom;
+      const y = centerY + Math.sin(baseAngle) * radius * zoom;
+      const size = asteroid.size * zoom;
+      
+      // Glow
+      const glow = ctx.createRadialGradient(x, y, 0, x, y, size * 3);
+      glow.addColorStop(0, asteroid.color + "60");
+      glow.addColorStop(1, "transparent");
+      ctx.beginPath();
+      ctx.arc(x, y, size * 3, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+      
+      // Body
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fillStyle = asteroid.color;
+      ctx.fill();
+      
+      // Label
+      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.font = `${8 * zoom}px 'Space Grotesk', sans-serif`;
+      ctx.textAlign = "center";
+      ctx.fillText(asteroid.name, x, y + size + 10 * zoom);
+    });
 
     // Draw spacecraft trajectories
     if (showTrajectories) {
@@ -298,55 +577,183 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       });
     }
 
-    // Draw Sun
+    // Draw Sun with enhanced visuals
     const sunGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 25 * zoom);
-    sunGradient.addColorStop(0, "#FDB813");
-    sunGradient.addColorStop(0.5, "#F9A602");
-    sunGradient.addColorStop(1, "#F97306");
+    sunGradient.addColorStop(0, "#FFFFFF");
+    sunGradient.addColorStop(0.2, "#FFF5E0");
+    sunGradient.addColorStop(0.5, "#FDB813");
+    sunGradient.addColorStop(0.8, "#F97306");
+    sunGradient.addColorStop(1, "#E85D04");
     ctx.beginPath();
     ctx.arc(centerX, centerY, 20 * zoom, 0, Math.PI * 2);
     ctx.fillStyle = sunGradient;
     ctx.fill();
 
-    // Draw sun glow
-    const glowGradient = ctx.createRadialGradient(centerX, centerY, 15 * zoom, centerX, centerY, 40 * zoom);
-    glowGradient.addColorStop(0, "rgba(249, 166, 2, 0.4)");
-    glowGradient.addColorStop(1, "rgba(249, 166, 2, 0)");
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 40 * zoom, 0, Math.PI * 2);
-    ctx.fillStyle = glowGradient;
-    ctx.fill();
+    // Sun corona layers
+    for (let i = 3; i >= 1; i--) {
+      const coronaGradient = ctx.createRadialGradient(centerX, centerY, 15 * zoom, centerX, centerY, (25 + i * 15) * zoom);
+      coronaGradient.addColorStop(0, `rgba(255, 200, 100, ${0.15 / i})`);
+      coronaGradient.addColorStop(1, "rgba(255, 150, 50, 0)");
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, (25 + i * 15) * zoom, 0, Math.PI * 2);
+      ctx.fillStyle = coronaGradient;
+      ctx.fill();
+    }
 
-    // Draw planets
+    // Draw dwarf planets
+    dwarfPlanets.forEach((dwarf) => {
+      const pos = getDwarfPosition(dwarf);
+      const x = centerX + pos.x * zoom;
+      const y = centerY + pos.y * zoom;
+      const size = dwarf.size * zoom * 0.5;
+      
+      // Dwarf planet orbit (faint)
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, dwarf.orbitRadius * zoom, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 8]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Glow
+      const dwarfGlow = ctx.createRadialGradient(x, y, 0, x, y, size * 2.5);
+      dwarfGlow.addColorStop(0, dwarf.color + "50");
+      dwarfGlow.addColorStop(1, "transparent");
+      ctx.beginPath();
+      ctx.arc(x, y, size * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = dwarfGlow;
+      ctx.fill();
+      
+      // Body with gradient
+      const bodyGradient = ctx.createRadialGradient(x - size * 0.3, y - size * 0.3, 0, x, y, size);
+      bodyGradient.addColorStop(0, "#FFFFFF");
+      bodyGradient.addColorStop(0.3, dwarf.color);
+      bodyGradient.addColorStop(1, dwarf.color.replace(/[^,]+(?=\))/, "0.7"));
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fillStyle = bodyGradient;
+      ctx.fill();
+      
+      // Diamond marker for dwarf planets
+      ctx.beginPath();
+      ctx.moveTo(x, y - size - 6 * zoom);
+      ctx.lineTo(x + 4 * zoom, y - size - 10 * zoom);
+      ctx.lineTo(x, y - size - 14 * zoom);
+      ctx.lineTo(x - 4 * zoom, y - size - 10 * zoom);
+      ctx.closePath();
+      ctx.fillStyle = dwarf.color;
+      ctx.fill();
+      
+      // Label
+      ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+      ctx.font = `${9 * zoom}px 'Space Grotesk', sans-serif`;
+      ctx.textAlign = "center";
+      ctx.fillText(dwarf.name, x, y + size + 12 * zoom);
+    });
+
+    // Draw planets with enhanced visuals
     planets.forEach((planet) => {
       const pos = getPlanetPosition(planet);
       const x = centerX + pos.x * zoom;
       const y = centerY + pos.y * zoom;
       const size = planet.size * zoom * 0.5;
 
-      // Planet glow
-      const planetGlow = ctx.createRadialGradient(x, y, 0, x, y, size * 2);
-      planetGlow.addColorStop(0, planet.color + "40");
-      planetGlow.addColorStop(1, "transparent");
+      // Planet atmosphere glow
+      const atmosphereGlow = ctx.createRadialGradient(x, y, size * 0.8, x, y, size * 2.5);
+      atmosphereGlow.addColorStop(0, planet.color + "30");
+      atmosphereGlow.addColorStop(0.5, planet.color + "15");
+      atmosphereGlow.addColorStop(1, "transparent");
       ctx.beginPath();
-      ctx.arc(x, y, size * 2, 0, Math.PI * 2);
-      ctx.fillStyle = planetGlow;
+      ctx.arc(x, y, size * 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = atmosphereGlow;
       ctx.fill();
 
-      // Planet body
+      // Planet rings (Saturn, Uranus)
+      if (planet.hasRings) {
+        ctx.save();
+        ctx.translate(x, y);
+        if (planet.id === "uranus") {
+          ctx.rotate(Math.PI / 2);
+        }
+        
+        // Multiple ring layers
+        for (let r = 0; r < 3; r++) {
+          const ringGradient = ctx.createLinearGradient(-size * 2, 0, size * 2, 0);
+          ringGradient.addColorStop(0, "transparent");
+          ringGradient.addColorStop(0.2, planet.ringColor + "60");
+          ringGradient.addColorStop(0.5, planet.ringColor + "90");
+          ringGradient.addColorStop(0.8, planet.ringColor + "60");
+          ringGradient.addColorStop(1, "transparent");
+          
+          ctx.beginPath();
+          ctx.ellipse(0, 0, size * (1.6 + r * 0.2), size * (0.3 + r * 0.05), 0, 0, Math.PI * 2);
+          ctx.strokeStyle = ringGradient;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // Planet body with 3D gradient
+      const planetGradient = ctx.createRadialGradient(
+        x - size * 0.3, y - size * 0.3, 0,
+        x, y, size
+      );
+      
+      if (planet.gradientColors) {
+        const colors = planet.gradientColors;
+        colors.forEach((color, i) => {
+          planetGradient.addColorStop(i / (colors.length - 1), color);
+        });
+      } else {
+        planetGradient.addColorStop(0, "#FFFFFF");
+        planetGradient.addColorStop(0.3, planet.color);
+        planetGradient.addColorStop(1, planet.color);
+      }
+      
       ctx.beginPath();
       ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fillStyle = planet.color;
+      ctx.fillStyle = planetGradient;
       ctx.fill();
-
-      // Saturn rings
-      if (planet.id === "saturn") {
+      
+      // Add surface detail for gas giants
+      if (planet.id === "jupiter") {
+        // Jupiter bands
+        ctx.save();
         ctx.beginPath();
-        ctx.ellipse(x, y, size * 1.8, size * 0.4, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = "#D4A574";
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.clip();
+        
+        for (let band = -4; band <= 4; band++) {
+          const bandY = y + band * size * 0.2;
+          ctx.beginPath();
+          ctx.moveTo(x - size, bandY);
+          ctx.lineTo(x + size, bandY);
+          ctx.strokeStyle = band % 2 === 0 ? "rgba(180, 120, 80, 0.3)" : "rgba(220, 180, 140, 0.2)";
+          ctx.lineWidth = size * 0.15;
+          ctx.stroke();
+        }
+        
+        // Great Red Spot
+        ctx.beginPath();
+        ctx.ellipse(x + size * 0.3, y + size * 0.2, size * 0.25, size * 0.15, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(200, 80, 60, 0.5)";
+        ctx.fill();
+        ctx.restore();
       }
+      
+      // Highlight
+      const highlight = ctx.createRadialGradient(
+        x - size * 0.4, y - size * 0.4, 0,
+        x - size * 0.4, y - size * 0.4, size * 0.6
+      );
+      highlight.addColorStop(0, "rgba(255, 255, 255, 0.4)");
+      highlight.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fillStyle = highlight;
+      ctx.fill();
 
       // Planet label
       ctx.fillStyle = "#ffffff";
@@ -377,7 +784,7 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       ctx.fill();
     });
 
-  }, [zoom, offset, planetAngles, showTrajectories, getPlanetPosition, getSpacecraftPosition]);
+  }, [zoom, offset, planetAngles, dwarfAngles, showTrajectories, getPlanetPosition, getDwarfPosition, getSpacecraftPosition]);
 
   // Mouse handlers
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -420,6 +827,34 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       }
     }
 
+    // Check dwarf planets
+    if (!found) {
+      for (const dwarf of dwarfPlanets) {
+        const pos = getDwarfPosition(dwarf);
+        const x = centerX + pos.x * zoom;
+        const y = centerY + pos.y * zoom;
+        const dist = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+        
+        if (dist < dwarf.size * zoom + 10) {
+          setHoveredItem({ type: "dwarf", data: dwarf });
+          found = true;
+          break;
+        }
+      }
+    }
+    
+    // Check asteroid belt region
+    if (!found) {
+      const distFromCenter = Math.sqrt((mouseX - centerX) ** 2 + (mouseY - centerY) ** 2);
+      const asteroidBeltInner = 175 * zoom;
+      const asteroidBeltOuter = 205 * zoom;
+      
+      if (distFromCenter >= asteroidBeltInner && distFromCenter <= asteroidBeltOuter) {
+        setHoveredItem({ type: "asteroid-belt", data: null });
+        found = true;
+      }
+    }
+
     // Check spacecraft
     if (!found) {
       for (const spacecraft of initialSpacecraft) {
@@ -448,6 +883,8 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
   const handleClick = () => {
     if (hoveredItem?.type === "planet") {
       navigate(`/planet/${(hoveredItem.data as Planet).id}`);
+    } else if (hoveredItem?.type === "asteroid-belt") {
+      setShowAsteroidInfo(true);
     }
   };
 
@@ -458,7 +895,7 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
   };
 
   const resetView = () => {
-    setZoom(1);
+    setZoom(0.8);
     setOffset({ x: 0, y: 0 });
   };
 
@@ -521,6 +958,10 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
             <span className="text-muted-foreground">Planets (click to view)</span>
           </div>
           <div className="flex items-center gap-2">
+            <div className="w-2.5 h-2.5 rotate-45 bg-[#E8D4B8]" />
+            <span className="text-muted-foreground">Dwarf Planets</span>
+          </div>
+          <div className="flex items-center gap-2">
             <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-b-[8px] border-l-transparent border-r-transparent border-b-primary" />
             <span className="text-muted-foreground">Spacecraft</span>
           </div>
@@ -534,7 +975,15 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
               <div className="w-1.5 h-1.5 rounded-full bg-[#B4A08C]/70" />
               <div className="w-1 h-1 rounded-full bg-[#B4A08C]/50" />
             </div>
-            <span className="text-muted-foreground">Asteroid Belt</span>
+            <span className="text-muted-foreground">Asteroid Belt (click)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex gap-0.5">
+              <div className="w-1 h-1 rounded-full bg-[#C8DCFF]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#B4C8F0]/70" />
+              <div className="w-1 h-1 rounded-full bg-[#DCE6FF]/50" />
+            </div>
+            <span className="text-muted-foreground">Kuiper Belt</span>
           </div>
         </div>
 
@@ -582,6 +1031,28 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
               </h3>
               <p className="text-sm text-muted-foreground mt-1">Click to view missions</p>
             </>
+          ) : hoveredItem.type === "dwarf" ? (
+            <>
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rotate-45" style={{ backgroundColor: (hoveredItem.data as DwarfPlanet).color }} />
+                <h3 className="font-display font-bold text-lg text-foreground">
+                  {(hoveredItem.data as DwarfPlanet).name}
+                </h3>
+              </div>
+              <p className="text-xs text-primary mt-1">Dwarf Planet</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {(hoveredItem.data as DwarfPlanet).description}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Discovered: {(hoveredItem.data as DwarfPlanet).discoveredYear}
+              </p>
+            </>
+          ) : hoveredItem.type === "asteroid-belt" ? (
+            <>
+              <h3 className="font-display font-bold text-lg text-foreground">Asteroid Belt</h3>
+              <p className="text-sm text-muted-foreground mt-1">Click for detailed info</p>
+              <p className="text-xs text-primary mt-1">Between Mars & Jupiter</p>
+            </>
           ) : (
             <>
               <h3 className="font-display font-bold text-lg text-foreground">
@@ -595,6 +1066,70 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
               </p>
             </>
           )}
+        </div>
+      )}
+
+      {/* Asteroid Belt Info Popup */}
+      {showAsteroidInfo && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
+          <div className="bg-card/95 backdrop-blur-md border border-border rounded-2xl p-6 max-w-md mx-4 animate-scale-in">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-xl font-bold text-foreground">
+                Asteroid Belt
+              </h2>
+              <button
+                onClick={() => setShowAsteroidInfo(false)}
+                className="p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
+              >
+                <X className="w-5 h-5 text-muted-foreground" />
+              </button>
+            </div>
+            
+            <p className="text-muted-foreground text-sm mb-4">
+              The asteroid belt is a torus-shaped region in the Solar System, located roughly between the orbits of Mars and Jupiter. 
+              It contains millions of rocky objects, from small debris to dwarf planet Ceres.
+            </p>
+            
+            <h3 className="font-display font-semibold text-foreground mb-3">Major Asteroids</h3>
+            <div className="space-y-3">
+              {majorAsteroids.map((asteroid) => (
+                <div key={asteroid.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
+                  <div 
+                    className="w-4 h-4 rounded-full mt-0.5 flex-shrink-0"
+                    style={{ backgroundColor: asteroid.color }}
+                  />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium text-foreground">{asteroid.name}</h4>
+                      <span className="text-xs text-primary">{asteroid.diameter}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">{asteroid.description}</p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">Discovered: {asteroid.discoveredYear}</p>
+                  </div>
+                </div>
+              ))}
+              
+              {/* Ceres - special mention as dwarf planet in asteroid belt */}
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <div className="w-4 h-4 rotate-45 bg-[#A8A8A8] mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-medium text-foreground">Ceres</h4>
+                    <span className="text-xs text-primary">939 km (Dwarf Planet)</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">Largest object in the asteroid belt, classified as a dwarf planet</p>
+                  <p className="text-xs text-muted-foreground/70 mt-1">Discovered: 1801</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-4 p-3 rounded-lg bg-muted/20 border border-border/30">
+              <p className="text-xs text-muted-foreground">
+                <span className="text-primary font-medium">Fun Fact:</span> Despite containing millions of objects, 
+                the total mass of the asteroid belt is only about 4% of Earth's Moon.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 

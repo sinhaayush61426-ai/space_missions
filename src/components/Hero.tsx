@@ -17,21 +17,21 @@ const Hero = () => {
       
       {/* Orbital rings decoration */}
       <div className="absolute inset-0 flex items-center justify-center z-0 opacity-20">
-        <div className="w-[600px] h-[600px] border border-primary/30 rounded-full animate-spin-slow" />
-        <div className="absolute w-[400px] h-[400px] border border-accent/30 rounded-full animate-spin-slow" style={{ animationDuration: "15s", animationDirection: "reverse" }} />
-        <div className="absolute w-[200px] h-[200px] border border-cosmic-blue/30 rounded-full animate-spin-slow" style={{ animationDuration: "10s" }} />
+        <div className="w-[300px] sm:w-[450px] md:w-[600px] h-[300px] sm:h-[450px] md:h-[600px] border border-primary/30 rounded-full animate-spin-slow" />
+        <div className="absolute w-[200px] sm:w-[300px] md:w-[400px] h-[200px] sm:h-[300px] md:h-[400px] border border-accent/30 rounded-full animate-spin-slow" style={{ animationDuration: "15s", animationDirection: "reverse" }} />
+        <div className="absolute w-[100px] sm:w-[150px] md:w-[200px] h-[100px] sm:h-[150px] md:h-[200px] border border-cosmic-blue/30 rounded-full animate-spin-slow" style={{ animationDuration: "10s" }} />
       </div>
 
-      <div className="relative z-10 container mx-auto px-6 text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center">
         <p 
-          className="text-primary font-display text-sm md:text-base tracking-[0.3em] uppercase mb-6 opacity-0 animate-fade-in"
+          className="text-primary font-display text-xs sm:text-sm md:text-base tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-4 sm:mb-6 opacity-0 animate-fade-in"
           style={{ animationDelay: "0.2s" }}
         >
           Explore the Cosmos
         </p>
         
         <h1 
-          className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 glow-text opacity-0 animate-fade-in"
+          className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-4 sm:mb-6 glow-text opacity-0 animate-fade-in"
           style={{ animationDelay: "0.4s" }}
         >
           <span className="text-foreground">Space</span>{" "}
@@ -39,7 +39,7 @@ const Hero = () => {
         </h1>
         
         <p 
-          className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-12 opacity-0 animate-fade-in"
+          className="text-muted-foreground text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 sm:mb-12 px-2 opacity-0 animate-fade-in"
           style={{ animationDelay: "0.6s" }}
         >
           Journey through humanity's greatest expeditions across our solar system. 

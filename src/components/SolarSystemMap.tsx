@@ -971,85 +971,133 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
     setOffset({ x: 0, y: 0 });
   };
 
+  // Touch event handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      setDragStart({
+        x: e.touches[0].clientX - offset.x,
+        y: e.touches[0].clientY - offset.y,
+      });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (isDragging && e.touches.length === 1) {
+      setOffset({
+        x: e.touches[0].clientX - dragStart.x,
+        y: e.touches[0].clientY - dragStart.y,
+      });
+    }
+    
+    // Pinch to zoom
+    if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const dist = Math.sqrt(
+        Math.pow(touch2.clientX - touch1.clientX, 2) +
+        Math.pow(touch2.clientY - touch1.clientY, 2)
+      );
+      
+      if (!pinchStartRef.current) {
+        pinchStartRef.current = { dist, zoom };
+      } else {
+        const scale = dist / pinchStartRef.current.dist;
+        const newZoom = Math.max(0.3, Math.min(3, pinchStartRef.current.zoom * scale));
+        setZoom(newZoom);
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    pinchStartRef.current = null;
+  };
+
+  const pinchStartRef = useRef<{ dist: number; zoom: number } | null>(null);
+
   return (
     <div
       ref={containerRef}
-      className={`${isFullscreen ? "fixed inset-0 z-50" : "relative w-full h-[600px]"} bg-background`}
+      className={`${isFullscreen ? "fixed inset-0 z-50" : "relative w-full h-[400px] sm:h-[500px] md:h-[600px]"} bg-background`}
     >
       <canvas
         ref={canvasRef}
-        className="w-full h-full cursor-grab active:cursor-grabbing"
+        className="w-full h-full cursor-grab active:cursor-grabbing touch-none"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onClick={handleClick}
         onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       />
 
       {/* Controls */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2">
+      <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex flex-col gap-1.5 sm:gap-2">
         {isFullscreen && onClose && (
           <button
             onClick={onClose}
-            className="p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
+            className="p-1.5 sm:p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         )}
         <button
           onClick={() => setZoom((z) => Math.min(3, z + 0.2))}
-          className="p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
+          className="p-1.5 sm:p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
         >
-          <ZoomIn className="w-5 h-5" />
+          <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           onClick={() => setZoom((z) => Math.max(0.3, z - 0.2))}
-          className="p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
+          className="p-1.5 sm:p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
         >
-          <ZoomOut className="w-5 h-5" />
+          <ZoomOut className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           onClick={resetView}
-          className="p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
+          className="p-1.5 sm:p-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border/50 text-foreground hover:bg-primary/20 hover:border-primary/50 transition-all"
         >
-          <RotateCcw className="w-5 h-5" />
+          <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
 
-      {/* Legend */}
-      <div className="absolute bottom-4 left-4 p-4 rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 max-w-xs">
-        <div className="flex items-center gap-2 mb-3">
-          <Info className="w-4 h-4 text-primary" />
-          <span className="font-display font-semibold text-foreground">Map Legend</span>
+      {/* Legend - hidden on small mobile, collapsible on tablet */}
+      <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 p-2 sm:p-4 rounded-lg sm:rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 max-w-[180px] sm:max-w-xs hidden sm:block">
+        <div className="flex items-center gap-2 mb-2 sm:mb-3">
+          <Info className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
+          <span className="font-display font-semibold text-foreground text-xs sm:text-sm">Map Legend</span>
         </div>
         
-        <div className="space-y-2 text-sm">
+        <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-primary" />
-            <span className="text-muted-foreground">Planets (click to view)</span>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-primary" />
+            <span className="text-muted-foreground">Planets (tap to view)</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rotate-45 bg-[#E8D4B8]" />
+            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rotate-45 bg-[#E8D4B8]" />
             <span className="text-muted-foreground">Dwarf Planets</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-b-[8px] border-l-transparent border-r-transparent border-b-primary" />
+            <div className="w-0 h-0 border-l-[4px] sm:border-l-[5px] border-r-[4px] sm:border-r-[5px] border-b-[6px] sm:border-b-[8px] border-l-transparent border-r-transparent border-b-primary" />
             <span className="text-muted-foreground">Spacecraft</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2">
             <div className="w-6 border-t-2 border-dashed border-muted-foreground" />
             <span className="text-muted-foreground">Trajectories</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2">
             <div className="flex gap-0.5">
               <div className="w-1 h-1 rounded-full bg-[#B4A08C]" />
               <div className="w-1.5 h-1.5 rounded-full bg-[#B4A08C]/70" />
               <div className="w-1 h-1 rounded-full bg-[#B4A08C]/50" />
             </div>
-            <span className="text-muted-foreground">Asteroid Belt (click)</span>
+            <span className="text-muted-foreground">Asteroid Belt (tap)</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <div className="flex gap-0.5">
               <div className="w-1 h-1 rounded-full bg-[#C8DCFF]" />
               <div className="w-1.5 h-1.5 rounded-full bg-[#B4C8F0]/70" />
@@ -1057,7 +1105,7 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
             </div>
             <span className="text-muted-foreground">Kuiper Belt</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             <div className="flex gap-0.5">
               <div className="w-0.5 h-0.5 rounded-full bg-[#A0B4DC]/40" />
               <div className="w-1 h-1 rounded-full bg-[#8CA0C8]/30" />
@@ -1069,7 +1117,7 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
 
         <button
           onClick={() => setShowTrajectories(!showTrajectories)}
-          className={`mt-3 w-full py-1.5 px-3 rounded-lg text-xs font-medium transition-all ${
+          className={`mt-2 sm:mt-3 w-full py-1 sm:py-1.5 px-2 sm:px-3 rounded-lg text-xs font-medium transition-all ${
             showTrajectories
               ? "bg-primary/20 text-primary border border-primary/50"
               : "bg-muted/50 text-muted-foreground border border-border/50"
@@ -1079,48 +1127,48 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
         </button>
       </div>
 
-      {/* Spacecraft List */}
-      <div className="absolute top-4 left-4 p-4 rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 max-w-xs max-h-[300px] overflow-y-auto">
-        <h3 className="font-display font-semibold text-foreground mb-3">Active Missions</h3>
-        <div className="space-y-2">
+      {/* Spacecraft List - hide on mobile */}
+      <div className="absolute top-12 sm:top-4 left-2 sm:left-4 p-2 sm:p-4 rounded-lg sm:rounded-xl bg-card/80 backdrop-blur-sm border border-border/50 max-w-[160px] sm:max-w-xs max-h-[200px] sm:max-h-[300px] overflow-y-auto hidden md:block">
+        <h3 className="font-display font-semibold text-foreground text-xs sm:text-base mb-2 sm:mb-3">Active Missions</h3>
+        <div className="space-y-1.5 sm:space-y-2">
           {initialSpacecraft.map((s) => (
             <div
               key={s.id}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/30 transition-colors"
+              className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg hover:bg-muted/30 transition-colors"
             >
               <div
-                className="w-2 h-2 rounded-full"
+                className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full flex-shrink-0"
                 style={{ backgroundColor: s.color }}
               />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">{s.name}</p>
-                <p className="text-xs text-muted-foreground">{s.status}</p>
+                <p className="text-xs sm:text-sm font-medium text-foreground truncate">{s.name}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block">{s.status}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Hover tooltip */}
+      {/* Hover tooltip - positioned for mobile */}
       {hoveredItem && (
-        <div className="absolute bottom-4 right-4 p-4 rounded-xl bg-card/90 backdrop-blur-sm border border-primary/30 min-w-[200px]">
+        <div className="absolute bottom-14 sm:bottom-4 right-2 sm:right-4 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-card/90 backdrop-blur-sm border border-primary/30 min-w-[150px] sm:min-w-[200px]">
           {hoveredItem.type === "planet" ? (
             <>
-              <h3 className="font-display font-bold text-lg text-foreground">
+              <h3 className="font-display font-bold text-base sm:text-lg text-foreground">
                 {(hoveredItem.data as Planet).name}
               </h3>
-              <p className="text-sm text-muted-foreground mt-1">Click to view missions</p>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">Tap to view missions</p>
             </>
           ) : hoveredItem.type === "dwarf" ? (
             <>
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rotate-45" style={{ backgroundColor: (hoveredItem.data as DwarfPlanet).color }} />
-                <h3 className="font-display font-bold text-lg text-foreground">
+                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rotate-45" style={{ backgroundColor: (hoveredItem.data as DwarfPlanet).color }} />
+                <h3 className="font-display font-bold text-base sm:text-lg text-foreground">
                   {(hoveredItem.data as DwarfPlanet).name}
                 </h3>
               </div>
               <p className="text-xs text-primary mt-1">Dwarf Planet</p>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
                 {(hoveredItem.data as DwarfPlanet).description}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
@@ -1129,19 +1177,19 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
             </>
           ) : hoveredItem.type === "asteroid-belt" ? (
             <>
-              <h3 className="font-display font-bold text-lg text-foreground">Asteroid Belt</h3>
-              <p className="text-sm text-muted-foreground mt-1">Click for detailed info</p>
+              <h3 className="font-display font-bold text-base sm:text-lg text-foreground">Asteroid Belt</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">Tap for detailed info</p>
               <p className="text-xs text-primary mt-1">Between Mars & Jupiter</p>
             </>
           ) : (
             <>
-              <h3 className="font-display font-bold text-lg text-foreground">
+              <h3 className="font-display font-bold text-base sm:text-lg text-foreground">
                 {(hoveredItem.data as Spacecraft).name}
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 Launched: {(hoveredItem.data as Spacecraft).launchYear}
               </p>
-              <p className="text-sm text-primary">
+              <p className="text-xs sm:text-sm text-primary">
                 {(hoveredItem.data as Spacecraft).status}
               </p>
             </>
@@ -1151,60 +1199,60 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
 
       {/* Asteroid Belt Info Popup */}
       {showAsteroidInfo && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
-          <div className="bg-card/95 backdrop-blur-md border border-border rounded-2xl p-6 max-w-md mx-4 animate-scale-in">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl font-bold text-foreground">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10 p-4">
+          <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl sm:rounded-2xl p-4 sm:p-6 max-w-md w-full max-h-[80vh] overflow-y-auto animate-scale-in">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h2 className="font-display text-lg sm:text-xl font-bold text-foreground">
                 Asteroid Belt
               </h2>
               <button
                 onClick={() => setShowAsteroidInfo(false)}
-                className="p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
+                className="p-1 sm:p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
               >
-                <X className="w-5 h-5 text-muted-foreground" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
               </button>
             </div>
             
-            <p className="text-muted-foreground text-sm mb-4">
+            <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4">
               The asteroid belt is a torus-shaped region in the Solar System, located roughly between the orbits of Mars and Jupiter. 
               It contains millions of rocky objects, from small debris to dwarf planet Ceres.
             </p>
             
-            <h3 className="font-display font-semibold text-foreground mb-3">Major Asteroids</h3>
-            <div className="space-y-3">
+            <h3 className="font-display font-semibold text-foreground text-sm sm:text-base mb-2 sm:mb-3">Major Asteroids</h3>
+            <div className="space-y-2 sm:space-y-3">
               {majorAsteroids.map((asteroid) => (
-                <div key={asteroid.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
+                <div key={asteroid.id} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-muted/30 border border-border/50">
                   <div 
-                    className="w-4 h-4 rounded-full mt-0.5 flex-shrink-0"
+                    className="w-3 h-3 sm:w-4 sm:h-4 rounded-full mt-0.5 flex-shrink-0"
                     style={{ backgroundColor: asteroid.color }}
                   />
                   <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium text-foreground">{asteroid.name}</h4>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-medium text-foreground text-sm">{asteroid.name}</h4>
                       <span className="text-xs text-primary">{asteroid.diameter}</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">{asteroid.description}</p>
-                    <p className="text-xs text-muted-foreground/70 mt-1">Discovered: {asteroid.discoveredYear}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground/70 mt-1">Discovered: {asteroid.discoveredYear}</p>
                   </div>
                 </div>
               ))}
               
               {/* Ceres - special mention as dwarf planet in asteroid belt */}
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/10 border border-primary/30">
-                <div className="w-4 h-4 rotate-45 bg-[#A8A8A8] mt-0.5 flex-shrink-0" />
+              <div className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <div className="w-3 h-3 sm:w-4 sm:h-4 rotate-45 bg-[#A8A8A8] mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium text-foreground">Ceres</h4>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h4 className="font-medium text-foreground text-sm">Ceres</h4>
                     <span className="text-xs text-primary">939 km (Dwarf Planet)</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">Largest object in the asteroid belt, classified as a dwarf planet</p>
-                  <p className="text-xs text-muted-foreground/70 mt-1">Discovered: 1801</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground/70 mt-1">Discovered: 1801</p>
                 </div>
               </div>
             </div>
             
-            <div className="mt-4 p-3 rounded-lg bg-muted/20 border border-border/30">
-              <p className="text-xs text-muted-foreground">
+            <div className="mt-3 sm:mt-4 p-2 sm:p-3 rounded-lg bg-muted/20 border border-border/30">
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
                 <span className="text-primary font-medium">Fun Fact:</span> Despite containing millions of objects, 
                 the total mass of the asteroid belt is only about 4% of Earth's Moon.
               </p>
@@ -1214,12 +1262,15 @@ const SolarSystemMap = ({ isFullscreen = true, onClose }: SolarSystemMapProps) =
       )}
 
       {/* Title */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 text-center">
-        <h1 className="font-display text-2xl font-bold text-foreground">
+      <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 text-center px-4">
+        <h1 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-foreground">
           Solar System <span className="text-primary">Explorer</span>
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Drag to pan • Scroll to zoom • Click planets for details
+        <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
+          Drag to pan • Scroll to zoom • Tap planets for details
+        </p>
+        <p className="text-xs text-muted-foreground sm:hidden">
+          Drag to pan • Pinch to zoom
         </p>
       </div>
     </div>

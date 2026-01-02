@@ -119,13 +119,13 @@ const PlanetCard = ({ id, name, description, color, missions, distance, delay }:
           {missions.slice(0, 3).map((mission, index) => (
             <li 
               key={index}
-              className="flex items-center justify-between text-sm bg-secondary/50 rounded-lg px-3 py-2"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm bg-secondary/50 rounded-lg px-3 py-2 gap-1 sm:gap-0"
             >
               <div className="flex items-center gap-3">
-                <span className={`w-2 h-2 rounded-full ${statusColors[mission.status]}`} />
-                <span className="text-foreground font-medium">{mission.name}</span>
+                <span className={`w-2 h-2 rounded-full flex-shrink-0 ${statusColors[mission.status]}`} />
+                <span className="text-foreground font-medium text-sm">{mission.name}</span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground text-xs">
+              <div className="flex items-center gap-2 text-muted-foreground text-xs pl-5 sm:pl-0">
                 <span>{mission.agency}</span>
                 <span className="text-primary">{mission.year}</span>
               </div>

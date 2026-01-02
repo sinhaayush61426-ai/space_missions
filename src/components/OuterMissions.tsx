@@ -41,26 +41,26 @@ const outerMissions = [
 
 const OuterMissions = () => {
   return (
-    <section className="relative py-24 px-6 bg-gradient-to-b from-background via-secondary/20 to-background">
+    <section className="relative py-12 sm:py-16 md:py-24 px-4 sm:px-6 bg-gradient-to-b from-background via-secondary/20 to-background">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-primary font-display text-sm tracking-[0.3em] uppercase mb-4">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
+          <p className="text-primary font-display text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-3 sm:mb-4">
             Beyond the Planets
           </p>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-display font-bold text-foreground mb-3 sm:mb-4">
             Outer <span className="cosmic-gradient">Expeditions</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto px-2">
             Humanity's most ambitious spacecraft, journeying beyond the solar system 
             into the vast unknown of interstellar space.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           {outerMissions.map((mission, index) => (
             <article 
               key={mission.name}
-              className="group relative bg-card border border-border/50 rounded-2xl p-8 hover:border-primary/50 transition-all duration-500 opacity-0 animate-fade-in overflow-hidden"
+              className="group relative bg-card border border-border/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 hover:border-primary/50 transition-all duration-500 opacity-0 animate-fade-in overflow-hidden"
               style={{ animationDelay: `${0.2 * index}s` }}
             >
               {/* Glow effect */}
@@ -70,13 +70,13 @@ const OuterMissions = () => {
               />
 
               <div className="relative z-10">
-                <div className="flex items-start justify-between mb-6">
+                <div className="flex items-start justify-between mb-4 sm:mb-6">
                   <div>
-                    <h3 className="font-display text-2xl font-bold text-foreground mb-2">
+                    <h3 className="font-display text-lg sm:text-xl lg:text-2xl font-bold text-foreground mb-2">
                       {mission.name}
                     </h3>
                     <span 
-                      className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1 rounded-full"
+                      className="inline-flex items-center gap-1 text-xs font-medium px-2 sm:px-3 py-1 rounded-full"
                       style={{ 
                         backgroundColor: `${mission.color}20`,
                         color: mission.color
@@ -86,27 +86,27 @@ const OuterMissions = () => {
                       {mission.status}
                     </span>
                   </div>
-                  <Rocket className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <Rocket className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                 </div>
 
-                <p className="text-muted-foreground mb-6 leading-relaxed">
+                <p className="text-muted-foreground text-sm sm:text-base mb-4 sm:mb-6 leading-relaxed">
                   {mission.description}
                 </p>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Calendar className="w-4 h-4 text-primary" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Calendar className="w-4 h-4 text-primary flex-shrink-0" />
                     <span className="text-muted-foreground">Launch:</span>
                     <span className="text-foreground font-medium">{mission.launch}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Navigation className="w-4 h-4 text-accent" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Navigation className="w-4 h-4 text-accent flex-shrink-0" />
                     <span className="text-muted-foreground">Distance:</span>
                     <span className="text-foreground font-medium">{mission.distance}</span>
                   </div>
                 </div>
 
-                <div className="bg-secondary/50 rounded-lg p-4">
+                <div className="bg-secondary/50 rounded-lg p-3 sm:p-4">
                   <p className="text-xs text-primary font-display uppercase tracking-wider mb-1">
                     Key Achievement
                   </p>

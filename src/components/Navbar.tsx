@@ -1,24 +1,32 @@
-import { Rocket, Map } from "lucide-react";
+import { useState } from "react";
+import { Rocket, Map, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setIsOpen(false);
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center animate-pulse-glow">
-              <Rocket className="w-5 h-5 text-primary" />
+          <Link to="/" className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center animate-pulse-glow">
+              <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
             </div>
-            <span className="font-display font-bold text-lg text-foreground">
+            <span className="font-display font-bold text-base sm:text-lg text-foreground">
               Space<span className="text-primary">Missions</span>
             </span>
           </Link>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <Link
               to="/map"
@@ -40,6 +48,40 @@ const Navbar = () => {
               Outer Missions
             </button>
           </div>
+
+          {/* Mobile Navigation */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild className="md:hidden">
+              <button className="p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <Menu className="w-5 h-5 text-foreground" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px] bg-background border-border">
+              <div className="flex flex-col gap-6 mt-8">
+                <SheetClose asChild>
+                  <Link
+                    to="/map"
+                    className="flex items-center gap-3 text-base text-primary hover:text-primary/80 transition-colors font-medium p-3 rounded-lg hover:bg-muted/30"
+                  >
+                    <Map className="w-5 h-5" />
+                    Solar Map
+                  </Link>
+                </SheetClose>
+                <button 
+                  onClick={() => scrollToSection("planets")}
+                  className="flex items-center gap-3 text-base text-muted-foreground hover:text-foreground transition-colors font-medium p-3 rounded-lg hover:bg-muted/30 text-left"
+                >
+                  Planets
+                </button>
+                <button 
+                  onClick={() => scrollToSection("outer")}
+                  className="flex items-center gap-3 text-base text-muted-foreground hover:text-foreground transition-colors font-medium p-3 rounded-lg hover:bg-muted/30 text-left"
+                >
+                  Outer Missions
+                </button>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </nav>

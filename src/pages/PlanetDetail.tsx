@@ -51,19 +51,19 @@ const PlanetDetail = () => {
               <span>Back to Solar System</span>
             </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Planet Info */}
               <div className="opacity-0 animate-fade-in">
                 <p 
-                  className="font-display text-sm tracking-[0.3em] uppercase mb-4"
+                  className="font-display text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-3 sm:mb-4"
                   style={{ color: planet.color }}
                 >
                   {planet.distance}
                 </p>
-                <h1 className="text-5xl md:text-7xl font-display font-bold text-foreground mb-6">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold text-foreground mb-4 sm:mb-6">
                   {planet.name}
                 </h1>
-                <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-8">
                   {planet.longDescription}
                 </p>
 

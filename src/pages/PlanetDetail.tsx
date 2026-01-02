@@ -1,16 +1,20 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Globe, Clock, Calendar, Moon } from "lucide-react";
-import { getPlanetById } from "@/data/planetsData";
+import { ArrowLeft, Globe, Clock, Calendar, Moon, ChevronLeft, ChevronRight } from "lucide-react";
+import { getPlanetById, planetsData } from "@/data/planetsData";
 import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
 import Planet3D from "@/components/Planet3D";
 import MissionTimeline from "@/components/MissionTimeline";
 import SpacecraftGallery from "@/components/SpacecraftGallery";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import { usePlanetSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import marsImage from "@/assets/mars.png";
 
 const planetImages: Record<string, string> = {
   mars: marsImage,
 };
+
+const planetIds = planetsData.map((p) => p.id);
 
 const PlanetDetail = () => {
   const { planetId } = useParams<{ planetId: string }>();
@@ -34,8 +38,20 @@ const PlanetDetail = () => {
     { icon: Moon, label: "Moons", value: planet.moons.toString() },
   ];
 
+  // Swipe navigation for mobile
+  const { handlers, prevPlanet, nextPlanet, currentIndex, totalPlanets } = usePlanetSwipeNavigation(
+    planetId || "",
+    planetIds
+  );
+
+  const prevPlanetData = prevPlanet ? getPlanetById(prevPlanet) : null;
+  const nextPlanetData = nextPlanet ? getPlanetById(nextPlanet) : null;
+
   return (
-    <div className="relative min-h-screen bg-background overflow-x-hidden">
+    <div 
+      className="relative min-h-screen bg-background overflow-x-hidden"
+      {...handlers}
+    >
       <Starfield />
       <Navbar />
 
@@ -177,19 +193,80 @@ const PlanetDetail = () => {
         </section>
 
         {/* Navigation to other planets */}
-        <section className="py-16 px-6 border-t border-border/50">
-          <div className="container mx-auto text-center">
-            <p className="text-muted-foreground mb-4">Continue exploring</p>
-            <Link 
-              to="/#planets"
-              className="inline-flex items-center gap-2 font-display text-primary hover:text-foreground transition-colors"
-            >
-              <span>View All Planets</span>
-              <ArrowLeft className="w-4 h-4 rotate-180" />
-            </Link>
+        <section className="py-16 px-6 border-t border-border/50 pb-24 md:pb-16">
+          <div className="container mx-auto">
+            {/* Planet navigation dots */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              {planetIds.map((id, index) => (
+                <Link
+                  key={id}
+                  to={`/planet/${id}`}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === currentIndex 
+                      ? "bg-primary scale-125" 
+                      : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                  }`}
+                  aria-label={`Go to ${planetsData[index].name}`}
+                />
+              ))}
+            </div>
+            
+            {/* Previous/Next navigation */}
+            <div className="flex items-center justify-between max-w-md mx-auto mb-6">
+              {prevPlanetData ? (
+                <Link
+                  to={`/planet/${prevPlanet}`}
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
+                >
+                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                  <div className="text-left">
+                    <p className="text-xs text-muted-foreground">Previous</p>
+                    <p className="text-sm font-medium" style={{ color: prevPlanetData.color }}>
+                      {prevPlanetData.name}
+                    </p>
+                  </div>
+                </Link>
+              ) : (
+                <div />
+              )}
+              
+              {nextPlanetData ? (
+                <Link
+                  to={`/planet/${nextPlanet}`}
+                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
+                >
+                  <div className="text-right">
+                    <p className="text-xs text-muted-foreground">Next</p>
+                    <p className="text-sm font-medium" style={{ color: nextPlanetData.color }}>
+                      {nextPlanetData.name}
+                    </p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ) : (
+                <div />
+              )}
+            </div>
+
+            {/* Swipe hint for mobile */}
+            <p className="text-xs text-muted-foreground text-center md:hidden mb-4">
+              Swipe left or right to navigate planets
+            </p>
+            
+            <div className="text-center">
+              <Link 
+                to="/#planets"
+                className="inline-flex items-center gap-2 font-display text-primary hover:text-foreground transition-colors"
+              >
+                <span>View All Planets</span>
+                <ArrowLeft className="w-4 h-4 rotate-180" />
+              </Link>
+            </div>
           </div>
         </section>
       </main>
+      
+      <MobileBottomNav />
     </div>
   );
 };

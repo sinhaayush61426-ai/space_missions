@@ -1,24 +1,29 @@
 import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useHapticFeedback } from "./useHapticFeedback";
 
 interface SwipeConfig {
   minSwipeDistance?: number;
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
+  enableHaptics?: boolean;
 }
 
 export const useSwipeNavigation = (config: SwipeConfig = {}) => {
-  const { minSwipeDistance = 50, onSwipeLeft, onSwipeRight } = config;
+  const { minSwipeDistance = 50, onSwipeLeft, onSwipeRight, enableHaptics = true } = config;
   const navigate = useNavigate();
+  const haptics = useHapticFeedback();
   
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   const [isSwiping, setIsSwiping] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(null);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchEndX.current = null;
     touchStartX.current = e.targetTouches[0].clientX;
     setIsSwiping(true);
+    setSwipeDirection(null);
   }, []);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
@@ -35,14 +40,18 @@ export const useSwipeNavigation = (config: SwipeConfig = {}) => {
     const isRightSwipe = distance < -minSwipeDistance;
 
     if (isLeftSwipe && onSwipeLeft) {
+      if (enableHaptics) haptics.medium();
+      setSwipeDirection("left");
       onSwipeLeft();
     } else if (isRightSwipe && onSwipeRight) {
+      if (enableHaptics) haptics.medium();
+      setSwipeDirection("right");
       onSwipeRight();
     }
 
     touchStartX.current = null;
     touchEndX.current = null;
-  }, [minSwipeDistance, onSwipeLeft, onSwipeRight]);
+  }, [minSwipeDistance, onSwipeLeft, onSwipeRight, enableHaptics, haptics]);
 
   return {
     handlers: {
@@ -51,6 +60,7 @@ export const useSwipeNavigation = (config: SwipeConfig = {}) => {
       onTouchEnd: handleTouchEnd,
     },
     isSwiping,
+    swipeDirection,
   };
 };
 
@@ -67,13 +77,13 @@ export const usePlanetSwipeNavigation = (
 
   const goToPrevPlanet = useCallback(() => {
     if (prevPlanet) {
-      navigate(`/planet/${prevPlanet}`);
+      navigate(`/planet/${prevPlanet}`, { state: { direction: "right" } });
     }
   }, [prevPlanet, navigate]);
 
   const goToNextPlanet = useCallback(() => {
     if (nextPlanet) {
-      navigate(`/planet/${nextPlanet}`);
+      navigate(`/planet/${nextPlanet}`, { state: { direction: "left" } });
     }
   }, [nextPlanet, navigate]);
 
@@ -81,6 +91,7 @@ export const usePlanetSwipeNavigation = (
     minSwipeDistance: 80,
     onSwipeLeft: goToNextPlanet,
     onSwipeRight: goToPrevPlanet,
+    enableHaptics: true,
   });
 
   return {

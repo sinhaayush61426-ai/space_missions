@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Rocket, ArrowRight } from "lucide-react";
-
+import FavoriteButton from "@/components/FavoriteButton";
 interface Mission {
   name: string;
   year: string;
@@ -75,6 +75,11 @@ const PlanetCard = ({ id, name, description, color, missions, distance, delay }:
         className="absolute -top-20 -right-20 w-40 h-40 rounded-full blur-3xl opacity-20 transition-opacity duration-500 group-hover:opacity-40"
         style={{ backgroundColor: gradient.shadow }}
       />
+      
+      {/* Favorite button */}
+      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+        <FavoriteButton planetId={id} size="sm" />
+      </div>
       
       {/* Realistic planet sphere */}
       <div 

@@ -1,4 +1,5 @@
 import { useParams, Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Globe, Clock, Calendar, Moon, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { getPlanetById, planetsData } from "@/data/planetsData";
@@ -8,7 +9,10 @@ import Planet3D from "@/components/Planet3D";
 import MissionTimeline from "@/components/MissionTimeline";
 import SpacecraftGallery from "@/components/SpacecraftGallery";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import FavoriteButton from "@/components/FavoriteButton";
+import PlanetDetailSkeleton from "@/components/PlanetDetailSkeleton";
 import { usePlanetSwipeNavigation } from "@/hooks/useSwipeNavigation";
+import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
 import marsImage from "@/assets/mars.png";
 
 const planetImages: Record<string, string> = {
@@ -20,8 +24,16 @@ const planetIds = planetsData.map((p) => p.id);
 const PlanetDetail = () => {
   const { planetId } = useParams<{ planetId: string }>();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
   const planet = getPlanetById(planetId || "");
   
+  // Simulate loading for skeleton demonstration
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, [planetId]);
+
   // Get navigation direction from location state
   const direction = (location.state as { direction?: "left" | "right" })?.direction || "none";
 
@@ -51,6 +63,14 @@ const PlanetDetail = () => {
 
   const prevPlanetData = prevPlanet ? getPlanetById(prevPlanet) : null;
   const nextPlanetData = nextPlanet ? getPlanetById(nextPlanet) : null;
+
+  // Keyboard navigation
+  useKeyboardNavigation(prevPlanet, nextPlanet);
+
+  // Show skeleton while loading
+  if (isLoading) {
+    return <PlanetDetailSkeleton />;
+  }
 
   // Animation variants
   const pageVariants = {
@@ -110,9 +130,12 @@ const PlanetDetail = () => {
                 >
                   {planet.distance}
                 </p>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold text-foreground mb-4 sm:mb-6">
-                  {planet.name}
-                </h1>
+                <div className="flex items-center gap-4 mb-4 sm:mb-6">
+                  <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold text-foreground">
+                    {planet.name}
+                  </h1>
+                  <FavoriteButton planetId={planet.id} size="lg" />
+                </div>
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-8">
                   {planet.longDescription}
                 </p>

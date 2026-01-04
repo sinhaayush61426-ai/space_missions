@@ -1,5 +1,6 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { ArrowLeft, Globe, Clock, Calendar, Moon, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { getPlanetById, planetsData } from "@/data/planetsData";
 import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
@@ -18,7 +19,11 @@ const planetIds = planetsData.map((p) => p.id);
 
 const PlanetDetail = () => {
   const { planetId } = useParams<{ planetId: string }>();
+  const location = useLocation();
   const planet = getPlanetById(planetId || "");
+  
+  // Get navigation direction from location state
+  const direction = (location.state as { direction?: "left" | "right" })?.direction || "none";
 
   if (!planet) {
     return (
@@ -47,9 +52,38 @@ const PlanetDetail = () => {
   const prevPlanetData = prevPlanet ? getPlanetById(prevPlanet) : null;
   const nextPlanetData = nextPlanet ? getPlanetById(nextPlanet) : null;
 
+  // Animation variants
+  const pageVariants = {
+    initial: (dir: string) => ({
+      x: dir === "none" ? 0 : dir === "left" ? "100%" : "-100%",
+      opacity: dir === "none" ? 1 : 0,
+    }),
+    animate: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        x: { type: "spring" as const, stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 },
+      },
+    },
+    exit: (dir: string) => ({
+      x: dir === "none" ? 0 : dir === "left" ? "-100%" : "100%",
+      opacity: dir === "none" ? 1 : 0,
+      transition: {
+        x: { type: "spring" as const, stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 },
+      },
+    }),
+  };
+
   return (
-    <div 
+    <motion.div 
       className="relative min-h-screen bg-background overflow-x-hidden"
+      custom={direction}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageVariants}
       {...handlers}
     >
       <Starfield />
@@ -267,7 +301,7 @@ const PlanetDetail = () => {
       </main>
       
       <MobileBottomNav />
-    </div>
+    </motion.div>
   );
 };
 

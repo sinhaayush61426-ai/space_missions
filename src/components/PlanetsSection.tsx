@@ -2,34 +2,37 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PlanetCard from "./PlanetCard";
 import PlanetSearch from "./PlanetSearch";
+import CompareBar from "./CompareBar";
+import CompareModal from "./CompareModal";
 import { planetsData } from "@/data/planetsData";
+import { useCompare } from "@/hooks/useCompare";
 
 const PlanetsSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const {
+    compareIds,
+    comparePlanets,
+    toggleCompare,
+    removeFromCompare,
+    isInCompare,
+    clearCompare,
+    isCompareOpen,
+    openCompare,
+    closeCompare,
+    canCompare,
+  } = useCompare();
 
   const filteredPlanets = useMemo(() => {
     if (!searchQuery.trim()) return planetsData;
     
     const query = searchQuery.toLowerCase();
     return planetsData.filter((planet) => {
-      // Search by name
       if (planet.name.toLowerCase().includes(query)) return true;
-      
-      // Search by description
       if (planet.description.toLowerCase().includes(query)) return true;
-      
-      // Search by distance (e.g., "57" for Mercury's 57.9M km)
       if (planet.distance.toLowerCase().includes(query)) return true;
-      
-      // Search by facts
       if (planet.facts.some(fact => fact.toLowerCase().includes(query))) return true;
-      
-      // Search by mission names
       if (planet.missions.some(m => m.name.toLowerCase().includes(query))) return true;
-      
-      // Search by characteristics like "rings", "moons", etc.
       if (planet.longDescription?.toLowerCase().includes(query)) return true;
-      
       return false;
     });
   }, [searchQuery]);
@@ -84,6 +87,8 @@ const PlanetsSection = () => {
                     status: m.status,
                   }))}
                   delay={0}
+                  isInCompare={isInCompare(planet.id)}
+                  onToggleCompare={toggleCompare}
                 />
               </motion.div>
             ))}
@@ -103,6 +108,22 @@ const PlanetsSection = () => {
           </motion.div>
         )}
       </div>
+
+      {/* Compare Bar */}
+      <CompareBar
+        compareIds={compareIds}
+        onRemove={removeFromCompare}
+        onCompare={openCompare}
+        canCompare={canCompare}
+      />
+
+      {/* Compare Modal */}
+      <CompareModal
+        isOpen={isCompareOpen}
+        onClose={closeCompare}
+        planets={comparePlanets}
+        onClear={clearCompare}
+      />
     </section>
   );
 };

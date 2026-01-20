@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Rocket, ArrowRight } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
+import CompareButton from "@/components/CompareButton";
+
 interface Mission {
   name: string;
   year: string;
@@ -16,6 +18,8 @@ interface PlanetCardProps {
   missions: Mission[];
   distance: string;
   delay: number;
+  isInCompare?: boolean;
+  onToggleCompare?: (id: string) => void;
 }
 
 // Realistic planet gradient configurations
@@ -54,7 +58,17 @@ const planetGradients: Record<string, { colors: string[]; shadow: string }> = {
   },
 };
 
-const PlanetCard = ({ id, name, description, color, missions, distance, delay }: PlanetCardProps) => {
+const PlanetCard = ({ 
+  id, 
+  name, 
+  description, 
+  color, 
+  missions, 
+  distance, 
+  delay,
+  isInCompare = false,
+  onToggleCompare,
+}: PlanetCardProps) => {
   const statusColors = {
     completed: "bg-planet-earth",
     active: "bg-primary",
@@ -76,8 +90,16 @@ const PlanetCard = ({ id, name, description, color, missions, distance, delay }:
         style={{ backgroundColor: gradient.shadow }}
       />
       
-      {/* Favorite button */}
-      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Action buttons */}
+      <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        {onToggleCompare && (
+          <CompareButton
+            planetId={id}
+            isInCompare={isInCompare}
+            onToggle={onToggleCompare}
+            size="sm"
+          />
+        )}
         <FavoriteButton planetId={id} size="sm" />
       </div>
       

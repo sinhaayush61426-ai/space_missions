@@ -1,7 +1,39 @@
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import PlanetCard from "./PlanetCard";
+import PlanetSearch from "./PlanetSearch";
 import { planetsData } from "@/data/planetsData";
 
 const PlanetsSection = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredPlanets = useMemo(() => {
+    if (!searchQuery.trim()) return planetsData;
+    
+    const query = searchQuery.toLowerCase();
+    return planetsData.filter((planet) => {
+      // Search by name
+      if (planet.name.toLowerCase().includes(query)) return true;
+      
+      // Search by description
+      if (planet.description.toLowerCase().includes(query)) return true;
+      
+      // Search by distance (e.g., "57" for Mercury's 57.9M km)
+      if (planet.distance.toLowerCase().includes(query)) return true;
+      
+      // Search by facts
+      if (planet.facts.some(fact => fact.toLowerCase().includes(query))) return true;
+      
+      // Search by mission names
+      if (planet.missions.some(m => m.name.toLowerCase().includes(query))) return true;
+      
+      // Search by characteristics like "rings", "moons", etc.
+      if (planet.longDescription?.toLowerCase().includes(query)) return true;
+      
+      return false;
+    });
+  }, [searchQuery]);
+
   return (
     <section id="planets" className="relative py-12 sm:py-16 md:py-24 px-4 sm:px-6">
       <div className="container mx-auto">
@@ -18,25 +50,58 @@ const PlanetsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {planetsData.map((planet, index) => (
-            <PlanetCard
-              key={planet.name}
-              id={planet.id}
-              name={planet.name}
-              description={planet.description}
-              color={planet.color}
-              distance={planet.distance}
-              missions={planet.missions.map(m => ({
-                name: m.name,
-                year: m.year,
-                agency: m.agency,
-                status: m.status,
-              }))}
-              delay={0.1 * index}
-            />
-          ))}
-        </div>
+        <PlanetSearch
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          resultCount={filteredPlanets.length}
+          totalCount={planetsData.length}
+        />
+
+        <AnimatePresence mode="popLayout">
+          <motion.div 
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {filteredPlanets.map((planet, index) => (
+              <motion.div
+                key={planet.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <PlanetCard
+                  id={planet.id}
+                  name={planet.name}
+                  description={planet.description}
+                  color={planet.color}
+                  distance={planet.distance}
+                  missions={planet.missions.map(m => ({
+                    name: m.name,
+                    year: m.year,
+                    agency: m.agency,
+                    status: m.status,
+                  }))}
+                  delay={0}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        {filteredPlanets.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12"
+          >
+            <p className="text-muted-foreground text-lg mb-2">No planets found</p>
+            <p className="text-muted-foreground/60 text-sm">
+              Try searching for "rings", "mars", "jupiter", or mission names like "voyager"
+            </p>
+          </motion.div>
+        )}
       </div>
     </section>
   );

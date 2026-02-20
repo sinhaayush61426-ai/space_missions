@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import PlanetDetail from "./pages/PlanetDetail";
 import SolarSystemMapPage from "./pages/SolarSystemMapPage";
+import QuizPage from "./pages/QuizPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<Index />} />
         <Route path="/planet/:planetId" element={<PlanetDetail />} />
         <Route path="/map" element={<SolarSystemMapPage />} />
+        <Route path="/quiz" element={<QuizPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

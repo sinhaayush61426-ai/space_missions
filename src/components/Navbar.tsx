@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Rocket, Map, Menu, Heart } from "lucide-react";
+import { Rocket, Map, Menu, Heart, HelpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import FavoritesPanel from "@/components/FavoritesPanel";
@@ -39,6 +39,13 @@ const Navbar = () => {
               >
                 <Map className="w-4 h-4" />
                 Solar Map
+              </Link>
+              <Link
+                to="/quiz"
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+              >
+                <HelpCircle className="w-4 h-4" />
+                Quiz
               </Link>
               <button 
                 onClick={() => scrollToSection("planets")}
@@ -94,6 +101,15 @@ const Navbar = () => {
                       >
                         <Map className="w-5 h-5" />
                         Solar Map
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link
+                        to="/quiz"
+                        className="flex items-center gap-3 text-base text-muted-foreground hover:text-foreground transition-colors font-medium p-3 rounded-lg hover:bg-muted/30"
+                      >
+                        <HelpCircle className="w-5 h-5" />
+                        Quiz
                       </Link>
                     </SheetClose>
                     <button 

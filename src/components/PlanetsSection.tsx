@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import PlanetCard from "./PlanetCard";
 import PlanetSearch from "./PlanetSearch";
@@ -8,6 +9,7 @@ import { planetsData } from "@/data/planetsData";
 import { useCompare } from "@/hooks/useCompare";
 
 const PlanetsSection = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const {
     compareIds,
@@ -20,7 +22,21 @@ const PlanetsSection = () => {
     openCompare,
     closeCompare,
     canCompare,
+    addToCompare,
   } = useCompare();
+
+  // Auto-open comparison from shared link
+  useEffect(() => {
+    const compareParam = searchParams.get("compare");
+    if (compareParam) {
+      const ids = compareParam.split(",").slice(0, 2);
+      if (ids.length === 2) {
+        ids.forEach(id => addToCompare(id));
+        setTimeout(() => openCompare(), 100);
+        setSearchParams({}, { replace: true });
+      }
+    }
+  }, []);
 
   const filteredPlanets = useMemo(() => {
     if (!searchQuery.trim()) return planetsData;

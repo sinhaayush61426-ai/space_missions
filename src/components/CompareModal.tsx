@@ -1,8 +1,12 @@
-import { X, Rocket, Calendar, Globe, Moon, Clock, ArrowRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { X, Rocket, Calendar, Globe, Moon, Clock, ArrowRight, Share2, Link2, Download, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { toPng } from "html-to-image";
 import { PlanetData } from "@/data/planetsData";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 interface CompareModalProps {
   isOpen: boolean;
@@ -78,8 +82,41 @@ const PlanetHeader = ({ planet }: { planet: PlanetData }) => {
 
 const CompareModal = ({ isOpen, onClose, planets, onClear }: CompareModalProps) => {
   const [planet1, planet2] = planets;
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const { toast } = useToast();
 
   if (!planet1 || !planet2) return null;
+
+  const shareLink = `${window.location.origin}/?compare=${planet1.id},${planet2.id}`;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      setLinkCopied(true);
+      toast({ title: "Link copied!", description: "Comparison link copied to clipboard." });
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch {
+      toast({ title: "Copy failed", description: "Could not copy link.", variant: "destructive" });
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    if (!contentRef.current) return;
+    try {
+      const dataUrl = await toPng(contentRef.current, {
+        backgroundColor: "#0a0c14",
+        pixelRatio: 2,
+      });
+      const link = document.createElement("a");
+      link.download = `${planet1.name}-vs-${planet2.name}.png`;
+      link.href = dataUrl;
+      link.click();
+      toast({ title: "Image saved!", description: "Comparison exported as PNG." });
+    } catch {
+      toast({ title: "Export failed", description: "Could not generate image.", variant: "destructive" });
+    }
+  };
 
   const compareMoons = () => {
     if (planet1.moons > planet2.moons) return "first";
@@ -130,6 +167,24 @@ const CompareModal = ({ isOpen, onClose, planets, onClear }: CompareModalProps) 
                 Planet Comparison
               </h2>
               <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopyLink}
+                  className="gap-1.5 text-muted-foreground"
+                >
+                  {linkCopied ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
+                  <span className="hidden sm:inline">{linkCopied ? "Copied" : "Copy Link"}</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleDownloadImage}
+                  className="gap-1.5 text-muted-foreground"
+                >
+                  <Download className="w-4 h-4" />
+                  <span className="hidden sm:inline">Save Image</span>
+                </Button>
                 <button
                   onClick={() => {
                     onClear();
@@ -149,7 +204,7 @@ const CompareModal = ({ isOpen, onClose, planets, onClear }: CompareModalProps) 
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-4 md:p-6">
+            <div ref={contentRef} className="flex-1 overflow-y-auto p-4 md:p-6">
               {/* Planet Headers */}
               <div className="grid grid-cols-3 gap-4 mb-8">
                 <div /> {/* Empty space for labels column */}

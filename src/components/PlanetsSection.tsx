@@ -1,16 +1,42 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import PlanetCard from "./PlanetCard";
 import PlanetSearch from "./PlanetSearch";
 import CompareBar from "./CompareBar";
 import CompareModal from "./CompareModal";
-import { planetsData } from "@/data/planetsData";
+import { planetsData, PlanetData } from "@/data/planetsData";
 import { useCompare } from "@/hooks/useCompare";
+import { Button } from "@/components/ui/button";
+
+type SortKey = "default" | "distance" | "size" | "moons" | "missions";
+type SortDir = "asc" | "desc";
+
+const sortLabels: Record<SortKey, string> = {
+  default: "Default",
+  distance: "Distance",
+  size: "Size",
+  moons: "Moons",
+  missions: "Missions",
+};
+
+const parseDistance = (d: string): number => {
+  if (d === "Home") return 149.6; // Earth
+  const num = parseFloat(d.replace(/,/g, ""));
+  if (d.includes("billion")) return num * 1000;
+  return num;
+};
+
+const parseDiameter = (d: string): number => {
+  return parseFloat(d.replace(/,/g, ""));
+};
 
 const PlanetsSection = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("default");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
   const {
     compareIds,
     comparePlanets,
@@ -39,19 +65,46 @@ const PlanetsSection = () => {
   }, []);
 
   const filteredPlanets = useMemo(() => {
-    if (!searchQuery.trim()) return planetsData;
+    let result = [...planetsData];
     
-    const query = searchQuery.toLowerCase();
-    return planetsData.filter((planet) => {
-      if (planet.name.toLowerCase().includes(query)) return true;
-      if (planet.description.toLowerCase().includes(query)) return true;
-      if (planet.distance.toLowerCase().includes(query)) return true;
-      if (planet.facts.some(fact => fact.toLowerCase().includes(query))) return true;
-      if (planet.missions.some(m => m.name.toLowerCase().includes(query))) return true;
-      if (planet.longDescription?.toLowerCase().includes(query)) return true;
-      return false;
-    });
-  }, [searchQuery]);
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((planet) => {
+        if (planet.name.toLowerCase().includes(query)) return true;
+        if (planet.description.toLowerCase().includes(query)) return true;
+        if (planet.distance.toLowerCase().includes(query)) return true;
+        if (planet.facts.some(fact => fact.toLowerCase().includes(query))) return true;
+        if (planet.missions.some(m => m.name.toLowerCase().includes(query))) return true;
+        if (planet.longDescription?.toLowerCase().includes(query)) return true;
+        return false;
+      });
+    }
+
+    if (sortKey !== "default") {
+      const multiplier = sortDir === "asc" ? 1 : -1;
+      result.sort((a, b) => {
+        let valA = 0, valB = 0;
+        switch (sortKey) {
+          case "distance": valA = parseDistance(a.distance); valB = parseDistance(b.distance); break;
+          case "size": valA = parseDiameter(a.diameter); valB = parseDiameter(b.diameter); break;
+          case "moons": valA = a.moons; valB = b.moons; break;
+          case "missions": valA = a.missions.length; valB = b.missions.length; break;
+        }
+        return (valA - valB) * multiplier;
+      });
+    }
+
+    return result;
+  }, [searchQuery, sortKey, sortDir]);
+
+  const handleSort = (key: SortKey) => {
+    if (key === sortKey) {
+      setSortDir(d => d === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
 
   return (
     <section id="planets" className="relative py-12 sm:py-16 md:py-24 px-4 sm:px-6">
@@ -75,6 +128,27 @@ const PlanetsSection = () => {
           resultCount={filteredPlanets.length}
           totalCount={planetsData.length}
         />
+
+        {/* Sort Controls */}
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+          <span className="text-xs text-muted-foreground mr-1 flex items-center gap-1">
+            <ArrowUpDown className="w-3.5 h-3.5" /> Sort:
+          </span>
+          {(Object.keys(sortLabels) as SortKey[]).map((key) => (
+            <Button
+              key={key}
+              variant={sortKey === key ? "default" : "ghost"}
+              size="sm"
+              onClick={() => key === "default" ? (setSortKey("default"), setSortDir("asc")) : handleSort(key)}
+              className="h-7 px-3 text-xs gap-1"
+            >
+              {sortLabels[key]}
+              {sortKey === key && key !== "default" && (
+                sortDir === "asc" ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+              )}
+            </Button>
+          ))}
+        </div>
 
         <AnimatePresence mode="popLayout">
           <motion.div 

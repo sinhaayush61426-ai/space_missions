@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Rocket, ArrowRight } from "lucide-react";
+import { Rocket, ArrowRight, Thermometer, Scale, Wind } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
 
@@ -20,54 +20,29 @@ interface PlanetCardProps {
   delay: number;
   isInCompare?: boolean;
   onToggleCompare?: (id: string) => void;
+  diameter?: string;
+  gravity?: string;
+  temperature?: string;
+  moons?: number;
+  type?: string;
 }
 
 // Realistic planet gradient configurations
 const planetGradients: Record<string, { colors: string[]; shadow: string }> = {
-  mercury: {
-    colors: ["#8c8c8c", "#5a5a5a", "#3d3d3d"],
-    shadow: "#5a5a5a",
-  },
-  venus: {
-    colors: ["#f4d59e", "#e6c87a", "#c9a84a"],
-    shadow: "#c9a84a",
-  },
-  earth: {
-    colors: ["#4a90d9", "#2d6a4f", "#1a4731"],
-    shadow: "#4a90d9",
-  },
-  mars: {
-    colors: ["#e25822", "#c1440e", "#8b3a0e"],
-    shadow: "#c1440e",
-  },
-  jupiter: {
-    colors: ["#e8c89e", "#d4a574", "#8b6914", "#c9a56c"],
-    shadow: "#d4a574",
-  },
-  saturn: {
-    colors: ["#f4d59e", "#e8d4a8", "#c9a86c"],
-    shadow: "#f4d59e",
-  },
-  uranus: {
-    colors: ["#7de3f4", "#4fd1c5", "#38b2ac"],
-    shadow: "#4fd1c5",
-  },
-  neptune: {
-    colors: ["#6b8cce", "#3d5fc4", "#1a3a8a"],
-    shadow: "#3d5fc4",
-  },
+  mercury: { colors: ["#8c8c8c", "#5a5a5a", "#3d3d3d"], shadow: "#5a5a5a" },
+  venus: { colors: ["#f4d59e", "#e6c87a", "#c9a84a"], shadow: "#c9a84a" },
+  earth: { colors: ["#4a90d9", "#2d6a4f", "#1a4731"], shadow: "#4a90d9" },
+  mars: { colors: ["#e25822", "#c1440e", "#8b3a0e"], shadow: "#c1440e" },
+  jupiter: { colors: ["#e8c89e", "#d4a574", "#8b6914", "#c9a56c"], shadow: "#d4a574" },
+  saturn: { colors: ["#f4d59e", "#e8d4a8", "#c9a86c"], shadow: "#f4d59e" },
+  uranus: { colors: ["#7de3f4", "#4fd1c5", "#38b2ac"], shadow: "#4fd1c5" },
+  neptune: { colors: ["#6b8cce", "#3d5fc4", "#1a3a8a"], shadow: "#3d5fc4" },
 };
 
 const PlanetCard = ({ 
-  id, 
-  name, 
-  description, 
-  color, 
-  missions, 
-  distance, 
-  delay,
-  isInCompare = false,
-  onToggleCompare,
+  id, name, description, color, missions, distance, delay,
+  isInCompare = false, onToggleCompare,
+  diameter, gravity, temperature, moons, type,
 }: PlanetCardProps) => {
   const statusColors = {
     completed: "bg-planet-earth",
@@ -93,26 +68,27 @@ const PlanetCard = ({
       {/* Action buttons */}
       <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
         {onToggleCompare && (
-          <CompareButton
-            planetId={id}
-            isInCompare={isInCompare}
-            onToggle={onToggleCompare}
-            size="sm"
-          />
+          <CompareButton planetId={id} isInCompare={isInCompare} onToggle={onToggleCompare} size="sm" />
         )}
         <FavoriteButton planetId={id} size="sm" />
       </div>
+
+      {/* Type badge */}
+      {type && (
+        <span className="absolute top-4 left-4 text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-secondary/80 text-muted-foreground border border-border/50">
+          {type}
+        </span>
+      )}
       
       {/* Realistic planet sphere */}
       <div 
-        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative"
+        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
         style={{ 
           background: gradientStyle,
           boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
           animationDelay: `${delay * 0.5}s`
         }}
       >
-        {/* Saturn/Uranus rings */}
         {(id === 'saturn' || id === 'uranus') && (
           <div 
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-3 rounded-full border-2 opacity-60"
@@ -124,15 +100,51 @@ const PlanetCard = ({
         )}
       </div>
 
-      <h3 className="font-display text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
+      <h3 className="font-display text-2xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
         {name}
       </h3>
-      
-      <p className="text-muted-foreground text-sm mb-1">
-        Distance: {distance}
+
+      <p className="text-muted-foreground text-xs mb-3">
+        {distance} from Sun
       </p>
+
+      {/* Quick Stats Grid */}
+      {(diameter || gravity || temperature || moons !== undefined) && (
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {diameter && (
+            <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Diameter</p>
+              <p className="text-xs font-semibold text-foreground">{diameter}</p>
+            </div>
+          )}
+          {moons !== undefined && (
+            <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Moons</p>
+              <p className="text-xs font-semibold text-foreground">{moons}</p>
+            </div>
+          )}
+          {gravity && (
+            <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30 flex items-start gap-1.5">
+              <Scale className="w-3 h-3 text-primary mt-0.5 shrink-0" />
+              <div>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Gravity</p>
+                <p className="text-xs font-semibold text-foreground">{gravity}</p>
+              </div>
+            </div>
+          )}
+          {temperature && (
+            <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30 flex items-start gap-1.5">
+              <Thermometer className="w-3 h-3 text-primary mt-0.5 shrink-0" />
+              <div>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Temp</p>
+                <p className="text-xs font-semibold text-foreground truncate">{temperature}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       
-      <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+      <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-2">
         {description}
       </p>
 

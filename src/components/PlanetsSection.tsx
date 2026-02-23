@@ -170,6 +170,11 @@ const PlanetsSection = () => {
                   description={planet.description}
                   color={planet.color}
                   distance={planet.distance}
+                  diameter={planet.diameter}
+                  gravity={planet.gravity}
+                  temperature={planet.temperature}
+                  moons={planet.moons}
+                  type={planet.type}
                   missions={planet.missions.map(m => ({
                     name: m.name,
                     year: m.year,

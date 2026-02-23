@@ -1,6 +1,6 @@
 import { useParams, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Globe, Clock, Calendar, Moon, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Globe, Clock, Calendar, Moon, ChevronLeft, ChevronRight, Thermometer, Scale, Wind } from "lucide-react";
 import { motion } from "framer-motion";
 import { getPlanetById, planetsData } from "@/data/planetsData";
 import Starfield from "@/components/Starfield";
@@ -8,6 +8,8 @@ import Navbar from "@/components/Navbar";
 import Planet3D from "@/components/Planet3D";
 import MissionTimeline from "@/components/MissionTimeline";
 import SpacecraftGallery from "@/components/SpacecraftGallery";
+import PlanetInternalStructure from "@/components/PlanetInternalStructure";
+import MajorMoonsSection from "@/components/MajorMoonsSection";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import FavoriteButton from "@/components/FavoriteButton";
 import PlanetDetailSkeleton from "@/components/PlanetDetailSkeleton";
@@ -53,6 +55,8 @@ const PlanetDetail = () => {
     { icon: Clock, label: "Day Length", value: planet.dayLength },
     { icon: Calendar, label: "Year Length", value: planet.yearLength },
     { icon: Moon, label: "Moons", value: planet.moons.toString() },
+    { icon: Scale, label: "Gravity", value: planet.gravity },
+    { icon: Thermometer, label: "Temperature", value: planet.temperature },
   ];
 
   // Swipe navigation for mobile
@@ -136,12 +140,20 @@ const PlanetDetail = () => {
                   </h1>
                   <FavoriteButton planetId={planet.id} size="lg" />
                 </div>
-                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-8">
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-4">
                   {planet.longDescription}
                 </p>
+                
+                {/* Atmosphere badge */}
+                <div className="flex items-center gap-2 mb-6 sm:mb-8">
+                  <Wind className="w-4 h-4 text-primary" />
+                  <span className="text-sm text-muted-foreground">
+                    <span className="text-foreground font-medium">Atmosphere:</span> {planet.atmosphere}
+                  </span>
+                </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {stats.map((stat, index) => (
                     <div 
                       key={stat.label}
@@ -203,6 +215,20 @@ const PlanetDetail = () => {
             </div>
           </div>
         </section>
+
+        {/* Internal Structure */}
+        <PlanetInternalStructure 
+          layers={planet.structure} 
+          planetColor={planet.color} 
+          planetName={planet.name} 
+        />
+
+        {/* Major Moons */}
+        <MajorMoonsSection 
+          moons={planet.majorMoons} 
+          planetColor={planet.color} 
+          planetName={planet.name} 
+        />
 
         {/* Planet Image (if available) */}
         {planetImages[planet.id] && (

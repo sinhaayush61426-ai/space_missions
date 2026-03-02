@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import type { StructureLayer } from "@/data/planetsData";
 
@@ -18,6 +18,7 @@ const PlanetInternalStructure = ({ layers, planetColor, planetName }: PlanetInte
   const outerR = 200;
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const [hoveredLayer, setHoveredLayer] = useState<number | null>(null);
 
   // Precompute radii for each layer (outermost first in the data, innermost last)
   const layerRadii = useMemo(() => {
@@ -95,8 +96,11 @@ const PlanetInternalStructure = ({ layers, planetColor, planetName }: PlanetInte
                     cy={cy}
                     r={layerRadii[i]}
                     fill={layer.color}
-                    stroke="rgba(255,255,255,0.08)"
-                    strokeWidth={1}
+                    stroke={hoveredLayer === i ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.08)"}
+                    strokeWidth={hoveredLayer === i ? 2.5 : 1}
+                    style={{ cursor: "pointer", transition: "stroke 0.2s, stroke-width 0.2s" }}
+                    onMouseEnter={() => setHoveredLayer(i)}
+                    onMouseLeave={() => setHoveredLayer(null)}
                   />
                 ))}
                 <rect x={cx - 12} y={cy - outerR} width={12} height={outerR * 2} fill="url(#cut-shadow)" />
@@ -142,14 +146,25 @@ const PlanetInternalStructure = ({ layers, planetColor, planetName }: PlanetInte
             {layers.map((layer, index) => (
               <motion.div
                 key={layer.name}
-                className="flex items-start gap-4 bg-card border border-border/50 rounded-xl p-4"
+                className="flex items-start gap-4 rounded-xl p-4 cursor-pointer transition-colors duration-200"
+                style={{
+                  backgroundColor: hoveredLayer === index ? `${layer.color}15` : 'hsl(var(--card))',
+                  border: hoveredLayer === index ? `1px solid ${layer.color}50` : '1px solid hsl(var(--border) / 0.5)',
+                  boxShadow: hoveredLayer === index ? `0 0 20px ${layer.color}20` : 'none',
+                }}
                 initial={{ opacity: 0, x: 30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+                animate={isInView ? { opacity: 1, x: 0, scale: hoveredLayer === index ? 1.02 : 1 } : { opacity: 0, x: 30 }}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.12, ease: "easeOut" }}
+                onMouseEnter={() => setHoveredLayer(index)}
+                onMouseLeave={() => setHoveredLayer(null)}
               >
                 <div
-                  className="w-5 h-5 rounded-full shrink-0 mt-0.5 border border-white/20 shadow-lg"
-                  style={{ backgroundColor: layer.color, boxShadow: `0 0 12px ${layer.color}55` }}
+                  className="w-5 h-5 rounded-full shrink-0 mt-0.5 border border-white/20 shadow-lg transition-transform duration-200"
+                  style={{
+                    backgroundColor: layer.color,
+                    boxShadow: `0 0 12px ${layer.color}55`,
+                    transform: hoveredLayer === index ? 'scale(1.3)' : 'scale(1)',
+                  }}
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">

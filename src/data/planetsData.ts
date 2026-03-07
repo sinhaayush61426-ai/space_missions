@@ -72,10 +72,10 @@ export const planetsData: PlanetData[] = [
       "The Caloris Basin is one of the largest impact craters in the solar system"
     ],
     structure: [
-      { name: "Crust", depth: "100-300 km", description: "Silicate rock crust, heavily cratered", color: "#8c8c8c" },
-      { name: "Mantle", depth: "~600 km", description: "Thin silicate mantle layer", color: "#6b5b4f" },
-      { name: "Outer Core", depth: "~1,800 km", description: "Liquid iron-sulfur outer core", color: "#d4944a" },
-      { name: "Inner Core", depth: "~1,200 km radius", description: "Solid iron inner core — unusually large, 85% of planet's radius", color: "#c0c0c0" },
+      { name: "Crust", depth: "100-300 km", description: "Silicate rock crust, heavily cratered", color: "#8c8c8c", temperature: "~430°C (day) / -180°C (night)", pressure: "~0 atm", composition: "Silicates, oxygen, sodium" },
+      { name: "Mantle", depth: "~600 km", description: "Thin silicate mantle layer", color: "#6b5b4f", temperature: "~1,600°C", pressure: "~24 GPa", composition: "Iron-magnesium silicates" },
+      { name: "Outer Core", depth: "~1,800 km", description: "Liquid iron-sulfur outer core", color: "#d4944a", temperature: "~2,000°C", pressure: "~40 GPa", composition: "Liquid iron, sulfur" },
+      { name: "Inner Core", depth: "~1,200 km radius", description: "Solid iron inner core — unusually large, 85% of planet's radius", color: "#c0c0c0", temperature: "~2,500°C", pressure: "~40+ GPa", composition: "Solid iron, nickel" },
     ],
     majorMoons: [],
     missions: [

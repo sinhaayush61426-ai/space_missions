@@ -268,9 +268,9 @@ export const planetsData: PlanetData[] = [
       "Dust storms can engulf the entire planet"
     ],
     structure: [
-      { name: "Crust", depth: "50-125 km", description: "Iron-rich basaltic crust, thicker than Earth's", color: "#c1440e" },
-      { name: "Mantle", depth: "~1,500 km", description: "Silicate rocky mantle, likely no longer convecting", color: "#8b4513" },
-      { name: "Core", depth: "~1,700 km radius", description: "Liquid iron-sulfur core — no global magnetic field today", color: "#d4944a" },
+      { name: "Crust", depth: "50-125 km", description: "Iron-rich basaltic crust, thicker than Earth's", color: "#c1440e", temperature: "~-60°C (surface avg)", pressure: "~0.006 atm", composition: "Iron oxide, basalt, regolith" },
+      { name: "Mantle", depth: "~1,500 km", description: "Silicate rocky mantle, likely no longer convecting", color: "#8b4513", temperature: "~1,500°C", pressure: "~23 GPa", composition: "Iron-magnesium silicates" },
+      { name: "Core", depth: "~1,700 km radius", description: "Liquid iron-sulfur core — no global magnetic field today", color: "#d4944a", temperature: "~1,500–2,000°C", pressure: "~40 GPa", composition: "Iron, sulfur, nickel" },
     ],
     majorMoons: [
       {

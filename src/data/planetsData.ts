@@ -371,11 +371,11 @@ export const planetsData: PlanetData[] = [
       "Europa may harbor conditions suitable for life"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~50 km", description: "Ammonia ice, ammonium hydrosulfide, and water clouds in colorful bands", color: "#e8c89e" },
-      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere transitioning to denser layers", color: "#d4a574" },
-      { name: "Liquid Hydrogen", depth: "~20,000 km", description: "Hydrogen compressed into liquid state under immense pressure", color: "#8b6914" },
-      { name: "Metallic Hydrogen", depth: "~40,000 km", description: "Hydrogen compressed into metallic state — conducts electricity, generates magnetic field", color: "#6b5b95" },
-      { name: "Rocky Core", depth: "~1.5 Earth masses", description: "Dense rocky/icy core, possibly diffuse rather than solid", color: "#8b4513" },
+      { name: "Cloud Layer", depth: "~50 km", description: "Ammonia ice, ammonium hydrosulfide, and water clouds in colorful bands", color: "#e8c89e", temperature: "-145°C to -110°C", pressure: "0.5–2 atm", composition: "Ammonia ice, ammonium hydrosulfide, water" },
+      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere transitioning to denser layers", color: "#d4a574", temperature: "-110°C to 2,000°C", pressure: "2–200 atm", composition: "H₂, He (~10%)" },
+      { name: "Liquid Hydrogen", depth: "~20,000 km", description: "Hydrogen compressed into liquid state under immense pressure", color: "#8b6914", temperature: "~2,000–5,000°C", pressure: "~200 GPa", composition: "Liquid molecular hydrogen" },
+      { name: "Metallic Hydrogen", depth: "~40,000 km", description: "Hydrogen compressed into metallic state — conducts electricity, generates magnetic field", color: "#6b5b95", temperature: "~10,000°C", pressure: "~200–4,000 GPa", composition: "Metallic hydrogen (ionized)" },
+      { name: "Rocky Core", depth: "~1.5 Earth masses", description: "Dense rocky/icy core, possibly diffuse rather than solid", color: "#8b4513", temperature: "~20,000°C", pressure: "~4,000+ GPa", composition: "Silicates, iron, heavy elements" },
     ],
     majorMoons: [
       {

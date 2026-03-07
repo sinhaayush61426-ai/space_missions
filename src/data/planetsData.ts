@@ -133,9 +133,9 @@ export const planetsData: PlanetData[] = [
       "Sulfuric acid clouds blanket the entire planet"
     ],
     structure: [
-      { name: "Crust", depth: "~50 km", description: "Basaltic rock crust with volcanic plains", color: "#f4d59e" },
-      { name: "Mantle", depth: "~3,000 km", description: "Rocky silicate mantle, possibly still convecting", color: "#c9874a" },
-      { name: "Core", depth: "~3,000 km radius", description: "Iron-nickel core, likely liquid (no magnetic field detected)", color: "#d4944a" },
+      { name: "Crust", depth: "~50 km", description: "Basaltic rock crust with volcanic plains", color: "#f4d59e", temperature: "~462°C", pressure: "~92 atm (surface)", composition: "Basalt, granite" },
+      { name: "Mantle", depth: "~3,000 km", description: "Rocky silicate mantle, possibly still convecting", color: "#c9874a", temperature: "~3,000°C", pressure: "~140 GPa", composition: "Iron-magnesium silicates" },
+      { name: "Core", depth: "~3,000 km radius", description: "Iron-nickel core, likely liquid (no magnetic field detected)", color: "#d4944a", temperature: "~5,000°C", pressure: "~300 GPa", composition: "Iron, nickel" },
     ],
     majorMoons: [],
     missions: [

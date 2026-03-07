@@ -483,11 +483,11 @@ export const planetsData: PlanetData[] = [
       "Enceladus shoots water geysers into space"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~100 km", description: "Ammonia and water ice clouds forming banded patterns", color: "#f4d59e" },
-      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere", color: "#e8d4a8" },
-      { name: "Liquid Hydrogen", depth: "~14,000 km", description: "Liquid molecular hydrogen ocean", color: "#c9a86c" },
-      { name: "Metallic Hydrogen", depth: "~28,000 km", description: "Metallic hydrogen layer generating Saturn's magnetic field", color: "#6b5b95" },
-      { name: "Rocky/Icy Core", depth: "~9-22 Earth masses", description: "Dense core of rock, ice, and metals", color: "#8b4513" },
+      { name: "Cloud Layer", depth: "~100 km", description: "Ammonia and water ice clouds forming banded patterns", color: "#f4d59e", temperature: "-180°C to -130°C", pressure: "0.5–2 atm", composition: "Ammonia ice, water ice" },
+      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere", color: "#e8d4a8", temperature: "-130°C to 2,000°C", pressure: "2–100 atm", composition: "H₂, He (~3%)" },
+      { name: "Liquid Hydrogen", depth: "~14,000 km", description: "Liquid molecular hydrogen ocean", color: "#c9a86c", temperature: "~2,000–5,000°C", pressure: "~100 GPa", composition: "Liquid molecular hydrogen" },
+      { name: "Metallic Hydrogen", depth: "~28,000 km", description: "Metallic hydrogen layer generating Saturn's magnetic field", color: "#6b5b95", temperature: "~8,000°C", pressure: "~100–1,000 GPa", composition: "Metallic hydrogen (ionized)" },
+      { name: "Rocky/Icy Core", depth: "~9-22 Earth masses", description: "Dense core of rock, ice, and metals", color: "#8b4513", temperature: "~12,000°C", pressure: "~1,000+ GPa", composition: "Silicates, iron, water ice" },
     ],
     majorMoons: [
       {

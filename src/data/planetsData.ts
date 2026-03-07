@@ -14,6 +14,9 @@ export interface StructureLayer {
   depth: string;
   description: string;
   color: string;
+  temperature?: string;
+  pressure?: string;
+  composition?: string;
 }
 
 export interface MajorMoon {

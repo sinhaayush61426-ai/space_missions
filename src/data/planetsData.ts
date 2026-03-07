@@ -586,10 +586,10 @@ export const planetsData: PlanetData[] = [
       "Temperatures drop to -224°C in the atmosphere"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds giving blue-green color", color: "#7de3f4" },
-      { name: "Hydrogen/Helium Atmosphere", depth: "~4,000 km", description: "Gaseous envelope of hydrogen and helium with methane", color: "#4fd1c5" },
-      { name: "Water-Ammonia-Methane Ice", depth: "~8,000 km", description: "Supercritical water, ammonia, and methane 'ices' — possibly with diamond rain", color: "#2c7a7b" },
-      { name: "Rocky/Icy Core", depth: "~1.5 Earth masses", description: "Small rocky core surrounded by compressed ices", color: "#6b5b95" },
+      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds giving blue-green color", color: "#7de3f4", temperature: "-224°C to -210°C", pressure: "1–2 atm", composition: "Methane ice, hydrogen sulfide" },
+      { name: "Hydrogen/Helium Atmosphere", depth: "~4,000 km", description: "Gaseous envelope of hydrogen and helium with methane", color: "#4fd1c5", temperature: "-210°C to 2,000°C", pressure: "~2–100 atm", composition: "H₂ (83%), He (15%), CH₄ (2%)" },
+      { name: "Water-Ammonia-Methane Ice", depth: "~8,000 km", description: "Supercritical water, ammonia, and methane 'ices' — possibly with diamond rain", color: "#2c7a7b", temperature: "~2,000–5,000°C", pressure: "~100–800 GPa", composition: "Supercritical water, ammonia, methane" },
+      { name: "Rocky/Icy Core", depth: "~1.5 Earth masses", description: "Small rocky core surrounded by compressed ices", color: "#6b5b95", temperature: "~5,000°C", pressure: "~800+ GPa", composition: "Silicates, iron, nickel" },
     ],
     majorMoons: [
       {

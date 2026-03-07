@@ -14,6 +14,9 @@ export interface StructureLayer {
   depth: string;
   description: string;
   color: string;
+  temperature?: string;
+  pressure?: string;
+  composition?: string;
 }
 
 export interface MajorMoon {
@@ -69,10 +72,10 @@ export const planetsData: PlanetData[] = [
       "The Caloris Basin is one of the largest impact craters in the solar system"
     ],
     structure: [
-      { name: "Crust", depth: "100-300 km", description: "Silicate rock crust, heavily cratered", color: "#8c8c8c" },
-      { name: "Mantle", depth: "~600 km", description: "Thin silicate mantle layer", color: "#6b5b4f" },
-      { name: "Outer Core", depth: "~1,800 km", description: "Liquid iron-sulfur outer core", color: "#d4944a" },
-      { name: "Inner Core", depth: "~1,200 km radius", description: "Solid iron inner core — unusually large, 85% of planet's radius", color: "#c0c0c0" },
+      { name: "Crust", depth: "100-300 km", description: "Silicate rock crust, heavily cratered", color: "#8c8c8c", temperature: "~430°C (day) / -180°C (night)", pressure: "~0 atm", composition: "Silicates, oxygen, sodium" },
+      { name: "Mantle", depth: "~600 km", description: "Thin silicate mantle layer", color: "#6b5b4f", temperature: "~1,600°C", pressure: "~24 GPa", composition: "Iron-magnesium silicates" },
+      { name: "Outer Core", depth: "~1,800 km", description: "Liquid iron-sulfur outer core", color: "#d4944a", temperature: "~2,000°C", pressure: "~40 GPa", composition: "Liquid iron, sulfur" },
+      { name: "Inner Core", depth: "~1,200 km radius", description: "Solid iron inner core — unusually large, 85% of planet's radius", color: "#c0c0c0", temperature: "~2,500°C", pressure: "~40+ GPa", composition: "Solid iron, nickel" },
     ],
     majorMoons: [],
     missions: [
@@ -130,9 +133,9 @@ export const planetsData: PlanetData[] = [
       "Sulfuric acid clouds blanket the entire planet"
     ],
     structure: [
-      { name: "Crust", depth: "~50 km", description: "Basaltic rock crust with volcanic plains", color: "#f4d59e" },
-      { name: "Mantle", depth: "~3,000 km", description: "Rocky silicate mantle, possibly still convecting", color: "#c9874a" },
-      { name: "Core", depth: "~3,000 km radius", description: "Iron-nickel core, likely liquid (no magnetic field detected)", color: "#d4944a" },
+      { name: "Crust", depth: "~50 km", description: "Basaltic rock crust with volcanic plains", color: "#f4d59e", temperature: "~462°C", pressure: "~92 atm (surface)", composition: "Basalt, granite" },
+      { name: "Mantle", depth: "~3,000 km", description: "Rocky silicate mantle, possibly still convecting", color: "#c9874a", temperature: "~3,000°C", pressure: "~140 GPa", composition: "Iron-magnesium silicates" },
+      { name: "Core", depth: "~3,000 km radius", description: "Iron-nickel core, likely liquid (no magnetic field detected)", color: "#d4944a", temperature: "~5,000°C", pressure: "~300 GPa", composition: "Iron, nickel" },
     ],
     majorMoons: [],
     missions: [
@@ -198,11 +201,11 @@ export const planetsData: PlanetData[] = [
       "Over 8,000 satellites currently orbit Earth"
     ],
     structure: [
-      { name: "Crust", depth: "5-70 km", description: "Oceanic (thin basalt) and continental (thick granite) crust", color: "#4a6741" },
-      { name: "Upper Mantle", depth: "~670 km", description: "Partially molten asthenosphere drives tectonic plates", color: "#8b5e3c" },
-      { name: "Lower Mantle", depth: "~2,230 km", description: "Dense silicate rock under extreme pressure", color: "#a0522d" },
-      { name: "Outer Core", depth: "~2,180 km", description: "Liquid iron-nickel generating Earth's magnetic field", color: "#d4944a" },
-      { name: "Inner Core", depth: "~1,220 km radius", description: "Solid iron-nickel ball, temperature ~5,400°C", color: "#ffd700" },
+      { name: "Crust", depth: "5-70 km", description: "Oceanic (thin basalt) and continental (thick granite) crust", color: "#4a6741", temperature: "~15°C (surface avg)", pressure: "1 atm (surface)", composition: "Silicates, aluminium, iron oxides" },
+      { name: "Upper Mantle", depth: "~670 km", description: "Partially molten asthenosphere drives tectonic plates", color: "#8b5e3c", temperature: "500–900°C", pressure: "~24 GPa", composition: "Olivine, pyroxene, garnet" },
+      { name: "Lower Mantle", depth: "~2,230 km", description: "Dense silicate rock under extreme pressure", color: "#a0522d", temperature: "~1,900–2,600°C", pressure: "~24–136 GPa", composition: "Bridgmanite, ferropericlase" },
+      { name: "Outer Core", depth: "~2,180 km", description: "Liquid iron-nickel generating Earth's magnetic field", color: "#d4944a", temperature: "~4,400–5,000°C", pressure: "~136–330 GPa", composition: "Liquid iron, nickel, sulfur" },
+      { name: "Inner Core", depth: "~1,220 km radius", description: "Solid iron-nickel ball, temperature ~5,400°C", color: "#ffd700", temperature: "~5,400°C", pressure: "~330–360 GPa", composition: "Solid iron-nickel alloy" },
     ],
     majorMoons: [
       {
@@ -265,9 +268,9 @@ export const planetsData: PlanetData[] = [
       "Dust storms can engulf the entire planet"
     ],
     structure: [
-      { name: "Crust", depth: "50-125 km", description: "Iron-rich basaltic crust, thicker than Earth's", color: "#c1440e" },
-      { name: "Mantle", depth: "~1,500 km", description: "Silicate rocky mantle, likely no longer convecting", color: "#8b4513" },
-      { name: "Core", depth: "~1,700 km radius", description: "Liquid iron-sulfur core — no global magnetic field today", color: "#d4944a" },
+      { name: "Crust", depth: "50-125 km", description: "Iron-rich basaltic crust, thicker than Earth's", color: "#c1440e", temperature: "~-60°C (surface avg)", pressure: "~0.006 atm", composition: "Iron oxide, basalt, regolith" },
+      { name: "Mantle", depth: "~1,500 km", description: "Silicate rocky mantle, likely no longer convecting", color: "#8b4513", temperature: "~1,500°C", pressure: "~23 GPa", composition: "Iron-magnesium silicates" },
+      { name: "Core", depth: "~1,700 km radius", description: "Liquid iron-sulfur core — no global magnetic field today", color: "#d4944a", temperature: "~1,500–2,000°C", pressure: "~40 GPa", composition: "Iron, sulfur, nickel" },
     ],
     majorMoons: [
       {
@@ -368,11 +371,11 @@ export const planetsData: PlanetData[] = [
       "Europa may harbor conditions suitable for life"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~50 km", description: "Ammonia ice, ammonium hydrosulfide, and water clouds in colorful bands", color: "#e8c89e" },
-      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere transitioning to denser layers", color: "#d4a574" },
-      { name: "Liquid Hydrogen", depth: "~20,000 km", description: "Hydrogen compressed into liquid state under immense pressure", color: "#8b6914" },
-      { name: "Metallic Hydrogen", depth: "~40,000 km", description: "Hydrogen compressed into metallic state — conducts electricity, generates magnetic field", color: "#6b5b95" },
-      { name: "Rocky Core", depth: "~1.5 Earth masses", description: "Dense rocky/icy core, possibly diffuse rather than solid", color: "#8b4513" },
+      { name: "Cloud Layer", depth: "~50 km", description: "Ammonia ice, ammonium hydrosulfide, and water clouds in colorful bands", color: "#e8c89e", temperature: "-145°C to -110°C", pressure: "0.5–2 atm", composition: "Ammonia ice, ammonium hydrosulfide, water" },
+      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere transitioning to denser layers", color: "#d4a574", temperature: "-110°C to 2,000°C", pressure: "2–200 atm", composition: "H₂, He (~10%)" },
+      { name: "Liquid Hydrogen", depth: "~20,000 km", description: "Hydrogen compressed into liquid state under immense pressure", color: "#8b6914", temperature: "~2,000–5,000°C", pressure: "~200 GPa", composition: "Liquid molecular hydrogen" },
+      { name: "Metallic Hydrogen", depth: "~40,000 km", description: "Hydrogen compressed into metallic state — conducts electricity, generates magnetic field", color: "#6b5b95", temperature: "~10,000°C", pressure: "~200–4,000 GPa", composition: "Metallic hydrogen (ionized)" },
+      { name: "Rocky Core", depth: "~1.5 Earth masses", description: "Dense rocky/icy core, possibly diffuse rather than solid", color: "#8b4513", temperature: "~20,000°C", pressure: "~4,000+ GPa", composition: "Silicates, iron, heavy elements" },
     ],
     majorMoons: [
       {
@@ -480,11 +483,11 @@ export const planetsData: PlanetData[] = [
       "Enceladus shoots water geysers into space"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~100 km", description: "Ammonia and water ice clouds forming banded patterns", color: "#f4d59e" },
-      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere", color: "#e8d4a8" },
-      { name: "Liquid Hydrogen", depth: "~14,000 km", description: "Liquid molecular hydrogen ocean", color: "#c9a86c" },
-      { name: "Metallic Hydrogen", depth: "~28,000 km", description: "Metallic hydrogen layer generating Saturn's magnetic field", color: "#6b5b95" },
-      { name: "Rocky/Icy Core", depth: "~9-22 Earth masses", description: "Dense core of rock, ice, and metals", color: "#8b4513" },
+      { name: "Cloud Layer", depth: "~100 km", description: "Ammonia and water ice clouds forming banded patterns", color: "#f4d59e", temperature: "-180°C to -130°C", pressure: "0.5–2 atm", composition: "Ammonia ice, water ice" },
+      { name: "Hydrogen Gas", depth: "~1,000 km", description: "Molecular hydrogen atmosphere", color: "#e8d4a8", temperature: "-130°C to 2,000°C", pressure: "2–100 atm", composition: "H₂, He (~3%)" },
+      { name: "Liquid Hydrogen", depth: "~14,000 km", description: "Liquid molecular hydrogen ocean", color: "#c9a86c", temperature: "~2,000–5,000°C", pressure: "~100 GPa", composition: "Liquid molecular hydrogen" },
+      { name: "Metallic Hydrogen", depth: "~28,000 km", description: "Metallic hydrogen layer generating Saturn's magnetic field", color: "#6b5b95", temperature: "~8,000°C", pressure: "~100–1,000 GPa", composition: "Metallic hydrogen (ionized)" },
+      { name: "Rocky/Icy Core", depth: "~9-22 Earth masses", description: "Dense core of rock, ice, and metals", color: "#8b4513", temperature: "~12,000°C", pressure: "~1,000+ GPa", composition: "Silicates, iron, water ice" },
     ],
     majorMoons: [
       {
@@ -583,10 +586,10 @@ export const planetsData: PlanetData[] = [
       "Temperatures drop to -224°C in the atmosphere"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds giving blue-green color", color: "#7de3f4" },
-      { name: "Hydrogen/Helium Atmosphere", depth: "~4,000 km", description: "Gaseous envelope of hydrogen and helium with methane", color: "#4fd1c5" },
-      { name: "Water-Ammonia-Methane Ice", depth: "~8,000 km", description: "Supercritical water, ammonia, and methane 'ices' — possibly with diamond rain", color: "#2c7a7b" },
-      { name: "Rocky/Icy Core", depth: "~1.5 Earth masses", description: "Small rocky core surrounded by compressed ices", color: "#6b5b95" },
+      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds giving blue-green color", color: "#7de3f4", temperature: "-224°C to -210°C", pressure: "1–2 atm", composition: "Methane ice, hydrogen sulfide" },
+      { name: "Hydrogen/Helium Atmosphere", depth: "~4,000 km", description: "Gaseous envelope of hydrogen and helium with methane", color: "#4fd1c5", temperature: "-210°C to 2,000°C", pressure: "~2–100 atm", composition: "H₂ (83%), He (15%), CH₄ (2%)" },
+      { name: "Water-Ammonia-Methane Ice", depth: "~8,000 km", description: "Supercritical water, ammonia, and methane 'ices' — possibly with diamond rain", color: "#2c7a7b", temperature: "~2,000–5,000°C", pressure: "~100–800 GPa", composition: "Supercritical water, ammonia, methane" },
+      { name: "Rocky/Icy Core", depth: "~1.5 Earth masses", description: "Small rocky core surrounded by compressed ices", color: "#6b5b95", temperature: "~5,000°C", pressure: "~800+ GPa", composition: "Silicates, iron, nickel" },
     ],
     majorMoons: [
       {
@@ -665,10 +668,10 @@ export const planetsData: PlanetData[] = [
       "Its moon Triton orbits in the opposite direction"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds creating deep blue appearance", color: "#6b8cce" },
-      { name: "Hydrogen/Helium Atmosphere", depth: "~3,000 km", description: "Gaseous hydrogen-helium envelope with methane traces", color: "#3d5fc4" },
-      { name: "Water-Ammonia-Methane Ice", depth: "~7,000 km", description: "Superheated 'icy' mantle — possibly raining diamonds from compressed carbon", color: "#1a3a8a" },
-      { name: "Rocky/Icy Core", depth: "~1.2 Earth masses", description: "Dense core of silicates, iron, and compressed ices", color: "#6b5b95" },
+      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds creating deep blue appearance", color: "#6b8cce", temperature: "-218°C to -200°C", pressure: "1–3 atm", composition: "Methane ice, ethane" },
+      { name: "Hydrogen/Helium Atmosphere", depth: "~3,000 km", description: "Gaseous hydrogen-helium envelope with methane traces", color: "#3d5fc4", temperature: "-200°C to 2,000°C", pressure: "~3–100 atm", composition: "H₂ (80%), He (19%), CH₄ (1%)" },
+      { name: "Water-Ammonia-Methane Ice", depth: "~7,000 km", description: "Superheated 'icy' mantle — possibly raining diamonds from compressed carbon", color: "#1a3a8a", temperature: "~2,000–5,000°C", pressure: "~100–700 GPa", composition: "Supercritical water, ammonia, methane" },
+      { name: "Rocky/Icy Core", depth: "~1.2 Earth masses", description: "Dense core of silicates, iron, and compressed ices", color: "#6b5b95", temperature: "~5,100°C", pressure: "~700+ GPa", composition: "Silicates, iron, nickel" },
     ],
     majorMoons: [
       {

@@ -668,10 +668,10 @@ export const planetsData: PlanetData[] = [
       "Its moon Triton orbits in the opposite direction"
     ],
     structure: [
-      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds creating deep blue appearance", color: "#6b8cce" },
-      { name: "Hydrogen/Helium Atmosphere", depth: "~3,000 km", description: "Gaseous hydrogen-helium envelope with methane traces", color: "#3d5fc4" },
-      { name: "Water-Ammonia-Methane Ice", depth: "~7,000 km", description: "Superheated 'icy' mantle — possibly raining diamonds from compressed carbon", color: "#1a3a8a" },
-      { name: "Rocky/Icy Core", depth: "~1.2 Earth masses", description: "Dense core of silicates, iron, and compressed ices", color: "#6b5b95" },
+      { name: "Cloud Layer", depth: "~50 km", description: "Methane ice clouds creating deep blue appearance", color: "#6b8cce", temperature: "-218°C to -200°C", pressure: "1–3 atm", composition: "Methane ice, ethane" },
+      { name: "Hydrogen/Helium Atmosphere", depth: "~3,000 km", description: "Gaseous hydrogen-helium envelope with methane traces", color: "#3d5fc4", temperature: "-200°C to 2,000°C", pressure: "~3–100 atm", composition: "H₂ (80%), He (19%), CH₄ (1%)" },
+      { name: "Water-Ammonia-Methane Ice", depth: "~7,000 km", description: "Superheated 'icy' mantle — possibly raining diamonds from compressed carbon", color: "#1a3a8a", temperature: "~2,000–5,000°C", pressure: "~100–700 GPa", composition: "Supercritical water, ammonia, methane" },
+      { name: "Rocky/Icy Core", depth: "~1.2 Earth masses", description: "Dense core of silicates, iron, and compressed ices", color: "#6b5b95", temperature: "~5,100°C", pressure: "~700+ GPa", composition: "Silicates, iron, nickel" },
     ],
     majorMoons: [
       {

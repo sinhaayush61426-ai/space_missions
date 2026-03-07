@@ -201,11 +201,11 @@ export const planetsData: PlanetData[] = [
       "Over 8,000 satellites currently orbit Earth"
     ],
     structure: [
-      { name: "Crust", depth: "5-70 km", description: "Oceanic (thin basalt) and continental (thick granite) crust", color: "#4a6741" },
-      { name: "Upper Mantle", depth: "~670 km", description: "Partially molten asthenosphere drives tectonic plates", color: "#8b5e3c" },
-      { name: "Lower Mantle", depth: "~2,230 km", description: "Dense silicate rock under extreme pressure", color: "#a0522d" },
-      { name: "Outer Core", depth: "~2,180 km", description: "Liquid iron-nickel generating Earth's magnetic field", color: "#d4944a" },
-      { name: "Inner Core", depth: "~1,220 km radius", description: "Solid iron-nickel ball, temperature ~5,400°C", color: "#ffd700" },
+      { name: "Crust", depth: "5-70 km", description: "Oceanic (thin basalt) and continental (thick granite) crust", color: "#4a6741", temperature: "~15°C (surface avg)", pressure: "1 atm (surface)", composition: "Silicates, aluminium, iron oxides" },
+      { name: "Upper Mantle", depth: "~670 km", description: "Partially molten asthenosphere drives tectonic plates", color: "#8b5e3c", temperature: "500–900°C", pressure: "~24 GPa", composition: "Olivine, pyroxene, garnet" },
+      { name: "Lower Mantle", depth: "~2,230 km", description: "Dense silicate rock under extreme pressure", color: "#a0522d", temperature: "~1,900–2,600°C", pressure: "~24–136 GPa", composition: "Bridgmanite, ferropericlase" },
+      { name: "Outer Core", depth: "~2,180 km", description: "Liquid iron-nickel generating Earth's magnetic field", color: "#d4944a", temperature: "~4,400–5,000°C", pressure: "~136–330 GPa", composition: "Liquid iron, nickel, sulfur" },
+      { name: "Inner Core", depth: "~1,220 km radius", description: "Solid iron-nickel ball, temperature ~5,400°C", color: "#ffd700", temperature: "~5,400°C", pressure: "~330–360 GPa", composition: "Solid iron-nickel alloy" },
     ],
     majorMoons: [
       {

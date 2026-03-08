@@ -174,8 +174,8 @@ export const planetsData: PlanetData[] = [
         agency: "NASA",
         status: "upcoming",
         type: "probe",
-        description: "Deep Atmosphere Venus Investigation of Noble gases, Chemistry, and Imaging mission.",
-        achievements: ["First US Venus atmospheric probe since 1978", "Will descend through Venus atmosphere", "High-resolution surface imaging", "Study atmospheric composition"]
+        description: "Deep Atmosphere Venus Investigation of Noble gases, Chemistry, and Imaging mission. Launch timeline shifted to early 2030s.",
+        achievements: ["First US Venus atmospheric probe since 1978", "Will descend through Venus atmosphere", "High-resolution surface imaging", "Launch expected early 2030s"]
       }
     ]
   },

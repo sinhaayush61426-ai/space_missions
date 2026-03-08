@@ -48,6 +48,7 @@ const PlanetCard = ({
     completed: "bg-planet-earth",
     active: "bg-primary",
     upcoming: "bg-accent",
+    canceled: "bg-destructive",
   };
 
   const gradient = planetGradients[id] || { colors: [color, color], shadow: color };

@@ -1,4 +1,4 @@
-import { Globe, Map, Rocket, Home, HelpCircle } from "lucide-react";
+import { Globe, Map, Rocket, Home, Sparkles } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const MobileBottomNav = () => {

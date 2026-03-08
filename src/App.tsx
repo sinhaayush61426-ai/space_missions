@@ -21,6 +21,7 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
         <Route path="/planet/:planetId" element={<PlanetDetail />} />
+        <Route path="/exoplanet/:exoplanetId" element={<ExoplanetDetail />} />
         <Route path="/map" element={<SolarSystemMapPage />} />
         <Route path="/quiz" element={<QuizPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

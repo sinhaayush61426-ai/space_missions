@@ -16,6 +16,7 @@ const Index = () => {
       <main className="relative z-10 pb-16 md:pb-0">
         <Hero />
         <PlanetsSection />
+        <ExoplanetsSection />
         <section id="outer">
           <OuterMissions />
         </section>

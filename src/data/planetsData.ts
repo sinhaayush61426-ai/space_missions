@@ -102,12 +102,12 @@ export const planetsData: PlanetData[] = [
       {
         name: "BepiColombo",
         year: "2018",
-        endYear: "2025",
+        endYear: "2026",
         agency: "ESA/JAXA",
         status: "active",
         type: "orbiter",
-        description: "Joint European-Japanese mission with two orbiters to study Mercury's magnetosphere, surface, and interior.",
-        achievements: ["Most comprehensive Mercury mission ever", "Two orbiters for simultaneous observations", "Will study Mercury's origin and evolution", "Expected orbital insertion in 2025"]
+        description: "Joint European-Japanese mission with two orbiters to study Mercury's magnetosphere, surface, and interior. Orbital insertion revised to late 2026 after 6th flyby in January 2025.",
+        achievements: ["Most comprehensive Mercury mission ever", "Two orbiters for simultaneous observations", "Completed 6th Mercury flyby in Jan 2025", "Expected orbital insertion late 2026"]
       }
     ]
   },
@@ -174,8 +174,8 @@ export const planetsData: PlanetData[] = [
         agency: "NASA",
         status: "upcoming",
         type: "probe",
-        description: "Deep Atmosphere Venus Investigation of Noble gases, Chemistry, and Imaging mission.",
-        achievements: ["First US Venus atmospheric probe since 1978", "Will descend through Venus atmosphere", "High-resolution surface imaging", "Study atmospheric composition"]
+        description: "Deep Atmosphere Venus Investigation of Noble gases, Chemistry, and Imaging mission. Launch timeline shifted to early 2030s.",
+        achievements: ["First US Venus atmospheric probe since 1978", "Will descend through Venus atmosphere", "High-resolution surface imaging", "Launch expected early 2030s"]
       }
     ]
   },
@@ -327,7 +327,7 @@ export const planetsData: PlanetData[] = [
         status: "active",
         type: "rover",
         description: "Car-sized rover exploring Gale Crater, searching for habitable environments.",
-        achievements: ["Found organic molecules on Mars", "Confirmed ancient habitable conditions", "Measured radiation levels for future missions", "Still operating after 12 years"]
+        achievements: ["Found organic molecules on Mars", "Confirmed ancient habitable conditions", "Measured radiation levels for future missions", "Still operating after 14 years"]
       },
       {
         name: "Perseverance",
@@ -342,10 +342,10 @@ export const planetsData: PlanetData[] = [
         name: "Mars Sample Return",
         year: "2033",
         agency: "NASA/ESA",
-        status: "upcoming",
+        status: "completed",
         type: "lander",
-        description: "Mission to retrieve samples collected by Perseverance and return them to Earth.",
-        achievements: ["First samples returned from Mars", "Will enable detailed Earth-based analysis", "Search for biosignatures", "International cooperation mission"]
+        description: "Mission to retrieve Perseverance samples was canceled by U.S. Congress in January 2026 due to budget constraints. Alternative sample return concepts are under study.",
+        achievements: ["Program canceled January 2026", "Budget estimated at $11B+", "Alternative architectures under review", "Perseverance samples remain cached on Mars"]
       }
     ]
   },
@@ -357,7 +357,7 @@ export const planetsData: PlanetData[] = [
     diameter: "139,820 km",
     dayLength: "10 hours",
     yearLength: "12 Earth years",
-    moons: 95,
+    moons: 97,
     gravity: "24.79 m/s²",
     temperature: "-110°C (cloud tops)",
     atmosphere: "90% H₂, 10% He",
@@ -367,7 +367,7 @@ export const planetsData: PlanetData[] = [
     facts: [
       "Jupiter could fit 1,300 Earths inside it",
       "The Great Red Spot has existed for at least 400 years",
-      "Jupiter has 95 known moons",
+      "Jupiter has 97 known moons",
       "Europa may harbor conditions suitable for life"
     ],
     structure: [
@@ -456,8 +456,8 @@ export const planetsData: PlanetData[] = [
         agency: "NASA",
         status: "active",
         type: "orbiter",
-        description: "Dedicated mission to study Europa's ice shell and subsurface ocean.",
-        achievements: ["Most detailed Europa study ever", "Will search for conditions for life", "49 planned Europa flybys", "Ice shell composition analysis"]
+        description: "Dedicated mission to study Europa's ice shell and subsurface ocean. Completed Mars gravity assist in March 2025, arrival at Jupiter expected April 2030.",
+        achievements: ["Mars gravity assist completed March 2025", "Will search for conditions for life", "49 planned Europa flybys", "Arrival at Jupiter April 2030"]
       }
     ]
   },
@@ -469,7 +469,7 @@ export const planetsData: PlanetData[] = [
     diameter: "116,460 km",
     dayLength: "10.7 hours",
     yearLength: "29 Earth years",
-    moons: 146,
+    moons: 274,
     gravity: "10.44 m/s²",
     temperature: "-140°C (cloud tops)",
     atmosphere: "96% H₂, 3% He, 0.4% CH₄",
@@ -555,12 +555,12 @@ export const planetsData: PlanetData[] = [
       },
       {
         name: "Dragonfly",
-        year: "2034",
+        year: "2028",
         agency: "NASA",
         status: "upcoming",
         type: "lander",
-        description: "Rotorcraft lander to explore Titan's surface, hopping between locations.",
-        achievements: ["First multi-rotor vehicle on another world", "Will explore multiple Titan sites", "Search for prebiotic chemistry", "Study Titan's habitability"]
+        description: "Rotorcraft lander to explore Titan's surface, hopping between locations. Launch confirmed for 2028, arrival at Titan expected 2034.",
+        achievements: ["First multi-rotor vehicle on another world", "Launch 2028, arrival Titan 2034", "Search for prebiotic chemistry", "Study Titan's habitability"]
       }
     ]
   },
@@ -572,7 +572,7 @@ export const planetsData: PlanetData[] = [
     diameter: "50,724 km",
     dayLength: "17 hours",
     yearLength: "84 Earth years",
-    moons: 28,
+    moons: 29,
     gravity: "8.87 m/s²",
     temperature: "-224°C (cloud tops)",
     atmosphere: "83% H₂, 15% He, 2% CH₄",

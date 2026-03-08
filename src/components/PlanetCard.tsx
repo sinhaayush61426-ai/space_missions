@@ -7,7 +7,7 @@ interface Mission {
   name: string;
   year: string;
   agency: string;
-  status: "completed" | "active" | "upcoming";
+  status: "completed" | "active" | "upcoming" | "canceled";
 }
 
 interface PlanetCardProps {

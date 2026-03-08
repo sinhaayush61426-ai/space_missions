@@ -123,6 +123,7 @@ const Navbar = () => {
                       onClick={() => scrollToSection("planets")}
                       className="flex items-center gap-3 text-base text-muted-foreground hover:text-foreground transition-colors font-medium p-3 rounded-lg hover:bg-muted/30 text-left"
                     >
+                      <Globe className="w-5 h-5" />
                       Planets
                     </button>
                     <button 
@@ -136,6 +137,7 @@ const Navbar = () => {
                       onClick={() => scrollToSection("outer")}
                       className="flex items-center gap-3 text-base text-muted-foreground hover:text-foreground transition-colors font-medium p-3 rounded-lg hover:bg-muted/30 text-left"
                     >
+                      <Rocket className="w-5 h-5" />
                       Outer Missions
                     </button>
                   </div>

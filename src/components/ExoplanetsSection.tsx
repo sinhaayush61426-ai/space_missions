@@ -66,10 +66,11 @@ const ExoplanetsSection = () => {
                     {exo.type}
                   </span>
                 </div>
-                <div className="absolute top-3 right-3">
+                <div className="absolute top-3 right-3 flex items-center gap-2">
                   <span className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 backdrop-blur-sm">
                     {exo.habitabilityIndex.split(" — ")[0]}
                   </span>
+                  <FavoriteButton planetId={`exo:${exo.id}`} size="sm" />
                 </div>
               </div>
 

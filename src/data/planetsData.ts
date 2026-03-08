@@ -327,7 +327,7 @@ export const planetsData: PlanetData[] = [
         status: "active",
         type: "rover",
         description: "Car-sized rover exploring Gale Crater, searching for habitable environments.",
-        achievements: ["Found organic molecules on Mars", "Confirmed ancient habitable conditions", "Measured radiation levels for future missions", "Still operating after 12 years"]
+        achievements: ["Found organic molecules on Mars", "Confirmed ancient habitable conditions", "Measured radiation levels for future missions", "Still operating after 14 years"]
       },
       {
         name: "Perseverance",

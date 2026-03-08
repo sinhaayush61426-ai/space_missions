@@ -7,7 +7,7 @@ interface Mission {
   name: string;
   year: string;
   agency: string;
-  status: "completed" | "active" | "upcoming";
+  status: "completed" | "active" | "upcoming" | "canceled";
 }
 
 interface PlanetCardProps {
@@ -48,6 +48,7 @@ const PlanetCard = ({
     completed: "bg-planet-earth",
     active: "bg-primary",
     upcoming: "bg-accent",
+    canceled: "bg-destructive",
   };
 
   const gradient = planetGradients[id] || { colors: [color, color], shadow: color };

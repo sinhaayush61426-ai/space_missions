@@ -21,7 +21,7 @@ const PlanetsComparisonChart = () => (
     planets={solarPlanets}
     title="Planetary Comparison"
     subtitle="Compare The Worlds"
-    gradientColors={["hsl(45, 93%, 58%)", "hsl(30, 80%, 55%)"}
+    gradientColors={["hsl(45, 93%, 58%)", "hsl(30, 80%, 55%)"]}
     defaultRefId="earth"
   />
 );

@@ -104,11 +104,11 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       id: "curiosity",
       name: "Curiosity Rover",
       image: "curiosity-rover",
-      mission: "Active since 2012",
+      mission: "Active since 2012 (14 years)",
       status: "active",
       launchDate: "November 26, 2011",
       agency: "NASA",
-      description: "A car-sized Mars rover designed to explore Gale Crater as part of NASA's Mars Science Laboratory mission.",
+      description: "A car-sized Mars rover exploring Gale Crater as part of NASA's Mars Science Laboratory mission. Now in its 14th year of operations, far exceeding its original 2-year mission.",
       objectives: [
         "Investigate Mars's climate and geology",
         "Assess whether Gale Crater ever had conditions favorable for life",
@@ -130,13 +130,13 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
         { label: "Dimensions", value: "2.9 × 2.7 × 2.2 m" },
         { label: "Power Source", value: "RTG (110 W)" },
         { label: "Top Speed", value: "0.14 km/h" },
-        { label: "Distance Traveled", value: "30+ km" }
+        { label: "Distance Traveled", value: "32+ km" }
       ],
       achievements: [
         "Found evidence of ancient riverbeds",
         "Detected organic molecules on Mars",
         "Discovered seasonal methane variations",
-        "First powered drill on another planet"
+        "Still operating after 14 years — far beyond 2-year design life"
       ]
     },
     {
@@ -147,11 +147,11 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       status: "active",
       launchDate: "July 30, 2020",
       agency: "NASA",
-      description: "The most sophisticated rover NASA has sent to Mars, carrying the Ingenuity helicopter and collecting samples for future Earth return.",
+      description: "NASA's most advanced Mars rover, exploring Jezero Crater's ancient river delta. Ingenuity helicopter completed 72 flights before its mission ended in January 2024. In February 2026, Perseverance completed its first AI-planned autonomous drive.",
       objectives: [
         "Seek signs of ancient microbial life",
-        "Collect and cache rock samples",
-        "Test oxygen production from CO2",
+        "Collect and cache rock samples for future return",
+        "Test oxygen production from CO₂ (MOXIE)",
         "Demonstrate helicopter flight on Mars"
       ],
       instruments: [
@@ -159,7 +159,7 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
         "SuperCam (laser spectrometer)",
         "PIXL (X-ray lithochemistry)",
         "SHERLOC (UV Raman spectrometer)",
-        "MOXIE (oxygen production)",
+        "MOXIE (oxygen production — experiment complete)",
         "MEDA (environmental sensors)",
         "RIMFAX (ground-penetrating radar)"
       ],
@@ -168,13 +168,13 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
         { label: "Dimensions", value: "3.0 × 2.7 × 2.2 m" },
         { label: "Power Source", value: "RTG (110 W)" },
         { label: "Sample Tubes", value: "43 titanium tubes" },
-        { label: "Microphones", value: "2 (first Mars audio)" }
+        { label: "Ingenuity Flights", value: "72 total (ended Jan 2024)" }
       ],
       achievements: [
-        "First powered flight on another planet (Ingenuity)",
-        "Produced oxygen from Martian atmosphere",
+        "First powered flight on another planet (Ingenuity, 72 flights)",
+        "Produced oxygen from Martian atmosphere (MOXIE complete)",
         "Recorded first sounds from Mars",
-        "Collected samples for future Earth return"
+        "First AI-planned autonomous drive (Feb 2026)"
       ]
     }
   ],
@@ -183,11 +183,11 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       id: "voyager-jupiter",
       name: "Voyager 1 & 2",
       image: "voyager-spacecraft",
-      mission: "Flyby 1979",
+      mission: "Flyby 1979 — now in interstellar space",
       status: "active",
       launchDate: "1977",
       agency: "NASA",
-      description: "Twin spacecraft that provided humanity's first detailed views of Jupiter and its moons before continuing to the outer solar system.",
+      description: "Twin spacecraft that provided humanity's first detailed views of Jupiter and its moons. Now over 48 years into their mission, both are in interstellar space. Voyager 1 is ~172 AU from the Sun (as of early 2026), the most distant human-made object.",
       objectives: [
         "Study Jupiter's atmosphere",
         "Investigate the Galilean moons",
@@ -204,32 +204,33 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       ],
       specs: [
         { label: "Mass", value: "825 kg each" },
-        { label: "Power", value: "470 W at launch" },
+        { label: "Power", value: "~220 W (declining RTG)" },
         { label: "Antenna", value: "3.7 m dish" },
-        { label: "Data Rate", value: "160 bps (current)" },
-        { label: "Status", value: "In interstellar space" }
+        { label: "Voyager 1 Distance", value: "~172 AU" },
+        { label: "Voyager 2 Distance", value: "~147 AU" }
       ],
       achievements: [
         "Discovered volcanic activity on Io",
         "First images of Europa's ice shell",
         "Discovered Jupiter's ring system",
-        "Now the farthest human-made objects"
+        "Most distant human-made objects — still transmitting data"
       ]
     },
     {
       id: "juno",
       name: "Juno",
       image: "juno-spacecraft",
-      mission: "Active since 2016",
+      mission: "Active since 2016 (extended mission)",
       status: "active",
       launchDate: "August 5, 2011",
       agency: "NASA",
-      description: "The first solar-powered spacecraft at Jupiter, studying the planet's composition, gravity field, magnetic field, and polar magnetosphere.",
+      description: "The first solar-powered spacecraft at Jupiter, now in its extended mission studying Jupiter's moons. In 2026, Juno refined Jupiter's size — it's ~8 km smaller in diameter than previously estimated. Juno also measured Europa's ice shell thickness in January 2026.",
       objectives: [
         "Determine Jupiter's water abundance",
         "Study the deep atmospheric structure",
         "Map the magnetic and gravity fields",
-        "Explore the polar magnetosphere"
+        "Explore the polar magnetosphere",
+        "Study Galilean moons (extended mission)"
       ],
       instruments: [
         "JunoCam (visible light camera)",
@@ -247,10 +248,49 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
         { label: "Closest Approach", value: "4,200 km" }
       ],
       achievements: [
-        "First solar-powered Jupiter orbiter",
+        "Refined Jupiter's diameter — ~8 km smaller than thought (2026)",
+        "Measured Europa's ice shell thickness (Jan 2026)",
         "Revealed Jupiter's core structure",
-        "Discovered deep atmospheric storms",
-        "Captured closest ever images of Jupiter"
+        "First solar-powered Jupiter orbiter"
+      ]
+    },
+    {
+      id: "europa-clipper",
+      name: "Europa Clipper",
+      image: "juno-spacecraft",
+      mission: "En route — arrival April 2030",
+      status: "active",
+      launchDate: "October 14, 2024",
+      agency: "NASA",
+      description: "NASA's flagship mission to study Jupiter's moon Europa. Launched October 2024, it completed a Mars gravity assist in March 2025 (passing ~884 km above Mars at 24.4 km/s). Europa Clipper will arrive at Jupiter in April 2030 and perform 49 close flybys of Europa to search for conditions suitable for life.",
+      objectives: [
+        "Determine the thickness of Europa's ice shell",
+        "Investigate the subsurface ocean composition",
+        "Characterize the geology and surface features",
+        "Search for signs of habitability"
+      ],
+      instruments: [
+        "Europa Imaging System (EIS)",
+        "Mapping Imaging Spectrometer for Europa (MISE)",
+        "Europa Ultraviolet Spectrograph (Europa-UVS)",
+        "Radar for Europa Assessment and Sounding (REASON)",
+        "Europa Thermal Emission Imaging System (E-THEMIS)",
+        "Mass Spectrometer for Planetary Exploration (MASPEX)",
+        "Surface Dust Analyzer (SUDA)",
+        "Interior Characterization of Europa using Magnetometry (ICEMAG)"
+      ],
+      specs: [
+        { label: "Mass", value: "6,065 kg" },
+        { label: "Solar Panel Span", value: "30.5 m" },
+        { label: "Europa Flybys", value: "49 planned" },
+        { label: "Closest Flyby", value: "25 km above surface" },
+        { label: "Jupiter Arrival", value: "April 2030" }
+      ],
+      achievements: [
+        "Largest spacecraft NASA has built for a planetary mission",
+        "Mars gravity assist completed March 2025",
+        "Earth gravity assist planned December 2026",
+        "Will determine if Europa's ocean could support life"
       ]
     }
   ],
@@ -298,7 +338,7 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       status: "completed",
       launchDate: "October 15, 1997",
       agency: "NASA/ESA/ASI",
-      description: "The most ambitious outer planet mission ever launched, Cassini spent 13 years studying Saturn and deployed the Huygens probe to Titan.",
+      description: "The most ambitious outer planet mission ever launched, Cassini spent 13 years studying Saturn and deployed the Huygens probe to Titan. Its Grand Finale orbits in 2017 provided unprecedented data before its planned plunge into Saturn's atmosphere.",
       objectives: [
         "Study Saturn's atmosphere and rings",
         "Land on Titan (Huygens probe)",
@@ -322,9 +362,9 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       ],
       achievements: [
         "First Saturn orbiter",
-        "Landed Huygens on Titan",
-        "Discovered ocean beneath Enceladus",
-        "Revealed seasonal changes on Titan"
+        "Landed Huygens on Titan — most distant landing ever",
+        "Discovered subsurface ocean beneath Enceladus",
+        "Revealed seasonal changes and methane lakes on Titan"
       ]
     }
   ],
@@ -337,7 +377,7 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       status: "active",
       launchDate: "August 20, 1977",
       agency: "NASA",
-      description: "The only spacecraft to have visited Uranus, Voyager 2 flew within 81,500 km of the planet's cloud tops on January 24, 1986.",
+      description: "The only spacecraft to have visited Uranus, Voyager 2 flew within 81,500 km of the planet's cloud tops on January 24, 1986. No return mission has yet been launched, though a Uranus Orbiter and Probe was recommended as the top flagship priority by the 2023-2032 Planetary Science Decadal Survey.",
       objectives: [
         "Image Uranus and its moons",
         "Study the planet's atmosphere",
@@ -356,13 +396,13 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
         { label: "Flyby Date", value: "Jan 24, 1986" },
         { label: "New Moons Found", value: "10" },
         { label: "New Rings Found", value: "2" },
-        { label: "Data Collected", value: "Limited by distance" }
+        { label: "Current Status", value: "~147 AU from Sun" }
       ],
       achievements: [
         "Only Uranus visitor to date",
         "Discovered 10 new moons",
         "Found 2 additional rings",
-        "Revealed Uranus's tilted magnetic field"
+        "Revealed Uranus's tilted magnetic field (59° offset)"
       ]
     }
   ],
@@ -375,7 +415,7 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       status: "active",
       launchDate: "August 20, 1977",
       agency: "NASA",
-      description: "Voyager 2 remains the only spacecraft to have visited Neptune, passing within 4,951 km of the planet on August 25, 1989.",
+      description: "Voyager 2 remains the only spacecraft to have visited Neptune, passing within 4,951 km of the planet on August 25, 1989. Over 36 years later, no return mission has been approved.",
       objectives: [
         "Image Neptune and Triton",
         "Study Neptune's atmosphere",
@@ -394,29 +434,29 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
         { label: "Flyby Date", value: "Aug 25, 1989" },
         { label: "New Moons Found", value: "6" },
         { label: "Triton Flyby", value: "40,000 km" },
-        { label: "Travel Time", value: "12 years" }
+        { label: "Travel Time", value: "12 years to Neptune" }
       ],
       achievements: [
         "Only Neptune visitor to date",
         "Discovered Great Dark Spot",
-        "Found geysers on Triton",
-        "Discovered 6 new moons"
+        "Found nitrogen geysers on Triton",
+        "Discovered 6 new moons and confirmed ring arcs"
       ]
     },
     {
       id: "new-horizons-neptune",
       name: "New Horizons",
       image: "new-horizons-spacecraft",
-      mission: "Extended mission observation",
+      mission: "Extended mission — in hibernation",
       status: "active",
       launchDate: "January 19, 2006",
       agency: "NASA",
-      description: "After its Pluto flyby, New Horizons continues to study the outer solar system including distant observations of Neptune.",
+      description: "After its historic Pluto flyby (2015) and Arrokoth encounter (2019), New Horizons entered its longest hibernation period in August 2025. Operating at 57+ AU from the Sun with updated fault-protection software, it continues heliophysics and astrophysics observations from the outer solar system.",
       objectives: [
         "Study Kuiper Belt objects",
-        "Observe outer planets from unique angles",
-        "Map interplanetary dust",
-        "Measure cosmic background"
+        "Observe outer planets from unique vantage points",
+        "Map interplanetary dust environment",
+        "Conduct heliophysics measurements from deep space"
       ],
       instruments: [
         "Ralph (visible/IR imager)",
@@ -428,16 +468,16 @@ export const spacecraftDatabase: Record<string, SpacecraftData[]> = {
       ],
       specs: [
         { label: "Mass", value: "478 kg" },
-        { label: "Power", value: "228 W (RTG)" },
-        { label: "Speed", value: "16.26 km/s" },
+        { label: "Power", value: "~190 W (declining RTG)" },
+        { label: "Speed", value: "14.5 km/s" },
         { label: "Pluto Flyby", value: "July 14, 2015" },
-        { label: "Current Distance", value: "50+ AU" }
+        { label: "Current Distance", value: "57+ AU" }
       ],
       achievements: [
-        "First Pluto flyby",
-        "Flyby of Arrokoth (2019)",
-        "Most distant object explored",
-        "Continues Kuiper Belt exploration"
+        "First Pluto flyby — revealed mountains, glaciers, and haze layers",
+        "Flyby of Arrokoth (2019) — most distant object ever explored",
+        "Entered longest hibernation period (Aug 2025)",
+        "Continues heliophysics science from deep Kuiper Belt"
       ]
     }
   ]

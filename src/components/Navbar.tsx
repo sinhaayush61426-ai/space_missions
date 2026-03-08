@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Rocket, Map, Menu, Heart, HelpCircle, Sparkles } from "lucide-react";
+import { Rocket, Map, Menu, Heart, HelpCircle, Sparkles, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import FavoritesPanel from "@/components/FavoritesPanel";

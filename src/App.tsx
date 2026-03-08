@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import PlanetDetail from "./pages/PlanetDetail";
+import ExoplanetDetail from "./pages/ExoplanetDetail";
 import SolarSystemMapPage from "./pages/SolarSystemMapPage";
 import QuizPage from "./pages/QuizPage";
 import NotFound from "./pages/NotFound";

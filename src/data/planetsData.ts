@@ -456,8 +456,8 @@ export const planetsData: PlanetData[] = [
         agency: "NASA",
         status: "active",
         type: "orbiter",
-        description: "Dedicated mission to study Europa's ice shell and subsurface ocean.",
-        achievements: ["Most detailed Europa study ever", "Will search for conditions for life", "49 planned Europa flybys", "Ice shell composition analysis"]
+        description: "Dedicated mission to study Europa's ice shell and subsurface ocean. Completed Mars gravity assist in March 2025, arrival at Jupiter expected April 2030.",
+        achievements: ["Mars gravity assist completed March 2025", "Will search for conditions for life", "49 planned Europa flybys", "Arrival at Jupiter April 2030"]
       }
     ]
   },

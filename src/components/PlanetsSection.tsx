@@ -203,6 +203,9 @@ const PlanetsSection = () => {
             </p>
           </motion.div>
         )}
+
+        {/* Planets Comparison Chart */}
+        <PlanetsComparisonChart />
       </div>
 
       {/* Compare Bar */}

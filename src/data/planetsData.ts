@@ -469,7 +469,7 @@ export const planetsData: PlanetData[] = [
     diameter: "116,460 km",
     dayLength: "10.7 hours",
     yearLength: "29 Earth years",
-    moons: 146,
+    moons: 274,
     gravity: "10.44 m/s²",
     temperature: "-140°C (cloud tops)",
     atmosphere: "96% H₂, 3% He, 0.4% CH₄",

@@ -555,12 +555,12 @@ export const planetsData: PlanetData[] = [
       },
       {
         name: "Dragonfly",
-        year: "2034",
+        year: "2028",
         agency: "NASA",
         status: "upcoming",
         type: "lander",
-        description: "Rotorcraft lander to explore Titan's surface, hopping between locations.",
-        achievements: ["First multi-rotor vehicle on another world", "Will explore multiple Titan sites", "Search for prebiotic chemistry", "Study Titan's habitability"]
+        description: "Rotorcraft lander to explore Titan's surface, hopping between locations. Launch confirmed for 2028, arrival at Titan expected 2034.",
+        achievements: ["First multi-rotor vehicle on another world", "Launch 2028, arrival Titan 2034", "Search for prebiotic chemistry", "Study Titan's habitability"]
       }
     ]
   },

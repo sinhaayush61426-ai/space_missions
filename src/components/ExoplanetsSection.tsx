@@ -122,6 +122,9 @@ const ExoplanetsSection = () => {
             </Link>
           ))}
         </div>
+
+        {/* Habitability Comparison Chart */}
+        <HabitabilityChart />
       </div>
     </section>
   );

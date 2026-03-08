@@ -2,6 +2,7 @@ import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import PlanetsSection from "@/components/PlanetsSection";
+import ExoplanetsSection from "@/components/ExoplanetsSection";
 import OuterMissions from "@/components/OuterMissions";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
@@ -15,6 +16,7 @@ const Index = () => {
       <main className="relative z-10 pb-16 md:pb-0">
         <Hero />
         <PlanetsSection />
+        <ExoplanetsSection />
         <section id="outer">
           <OuterMissions />
         </section>

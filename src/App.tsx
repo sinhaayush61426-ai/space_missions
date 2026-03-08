@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import PlanetDetail from "./pages/PlanetDetail";
+import ExoplanetDetail from "./pages/ExoplanetDetail";
 import SolarSystemMapPage from "./pages/SolarSystemMapPage";
 import QuizPage from "./pages/QuizPage";
 import NotFound from "./pages/NotFound";
@@ -20,6 +21,7 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
         <Route path="/planet/:planetId" element={<PlanetDetail />} />
+        <Route path="/exoplanet/:exoplanetId" element={<ExoplanetDetail />} />
         <Route path="/map" element={<SolarSystemMapPage />} />
         <Route path="/quiz" element={<QuizPage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

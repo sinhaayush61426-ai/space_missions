@@ -1,4 +1,4 @@
-import { Globe, Map, Rocket, Home, HelpCircle } from "lucide-react";
+import { Globe, Map, Rocket, Home, Sparkles } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const MobileBottomNav = () => {
@@ -48,22 +48,20 @@ const MobileBottomNav = () => {
         </Link>
 
         <button
+          onClick={() => scrollToSection("exoplanets")}
+          className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <Sparkles className="w-5 h-5" />
+          <span className="text-[10px] font-medium">Exoplanets</span>
+        </button>
+
+        <button
           onClick={() => scrollToSection("outer")}
           className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
         >
           <Rocket className="w-5 h-5" />
           <span className="text-[10px] font-medium">Missions</span>
         </button>
-
-        <Link
-          to="/quiz"
-          className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
-            isActive("/quiz") ? "text-primary" : "text-muted-foreground"
-          }`}
-        >
-          <HelpCircle className="w-5 h-5" />
-          <span className="text-[10px] font-medium">Quiz</span>
-        </Link>
       </div>
     </nav>
   );

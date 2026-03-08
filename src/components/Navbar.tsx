@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Rocket, Map, Menu, Heart, HelpCircle } from "lucide-react";
+import { Rocket, Map, Menu, Heart, HelpCircle, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import FavoritesPanel from "@/components/FavoritesPanel";
@@ -52,6 +52,13 @@ const Navbar = () => {
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
               >
                 Planets
+              </button>
+              <button 
+                onClick={() => scrollToSection("exoplanets")}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+              >
+                <Sparkles className="w-4 h-4" />
+                Exoplanets
               </button>
               <button 
                 onClick={() => scrollToSection("outer")}
@@ -117,6 +124,13 @@ const Navbar = () => {
                       className="flex items-center gap-3 text-base text-muted-foreground hover:text-foreground transition-colors font-medium p-3 rounded-lg hover:bg-muted/30 text-left"
                     >
                       Planets
+                    </button>
+                    <button 
+                      onClick={() => scrollToSection("exoplanets")}
+                      className="flex items-center gap-3 text-base text-muted-foreground hover:text-foreground transition-colors font-medium p-3 rounded-lg hover:bg-muted/30 text-left"
+                    >
+                      <Sparkles className="w-5 h-5" />
+                      Exoplanets
                     </button>
                     <button 
                       onClick={() => scrollToSection("outer")}

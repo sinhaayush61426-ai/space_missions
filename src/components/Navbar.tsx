@@ -54,6 +54,13 @@ const Navbar = () => {
                 Planets
               </button>
               <button 
+                onClick={() => scrollToSection("exoplanets")}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
+              >
+                <Sparkles className="w-4 h-4" />
+                Exoplanets
+              </button>
+              <button 
                 onClick={() => scrollToSection("outer")}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors font-medium"
               >

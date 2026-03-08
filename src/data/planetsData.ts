@@ -3,7 +3,7 @@ export interface Mission {
   year: string;
   endYear?: string;
   agency: string;
-  status: "completed" | "active" | "upcoming";
+  status: "completed" | "active" | "upcoming" | "canceled";
   type: "flyby" | "orbiter" | "lander" | "rover" | "probe" | "observatory";
   description: string;
   achievements: string[];

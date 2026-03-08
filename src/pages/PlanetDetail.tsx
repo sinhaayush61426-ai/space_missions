@@ -15,10 +15,24 @@ import FavoriteButton from "@/components/FavoriteButton";
 import PlanetDetailSkeleton from "@/components/PlanetDetailSkeleton";
 import { usePlanetSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
+import mercuryImage from "@/assets/mercury.png";
+import venusImage from "@/assets/venus.png";
+import earthImage from "@/assets/earth.png";
 import marsImage from "@/assets/mars.png";
+import jupiterImage from "@/assets/jupiter.png";
+import saturnImage from "@/assets/saturn.png";
+import uranusImage from "@/assets/uranus.png";
+import neptuneImage from "@/assets/neptune.png";
 
 const planetImages: Record<string, string> = {
+  mercury: mercuryImage,
+  venus: venusImage,
+  earth: earthImage,
   mars: marsImage,
+  jupiter: jupiterImage,
+  saturn: saturnImage,
+  uranus: uranusImage,
+  neptune: neptuneImage,
 };
 
 const planetIds = planetsData.map((p) => p.id);

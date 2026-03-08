@@ -342,10 +342,10 @@ export const planetsData: PlanetData[] = [
         name: "Mars Sample Return",
         year: "2033",
         agency: "NASA/ESA",
-        status: "upcoming",
+        status: "completed",
         type: "lander",
-        description: "Mission to retrieve samples collected by Perseverance and return them to Earth.",
-        achievements: ["First samples returned from Mars", "Will enable detailed Earth-based analysis", "Search for biosignatures", "International cooperation mission"]
+        description: "Mission to retrieve Perseverance samples was canceled by U.S. Congress in January 2026 due to budget constraints. Alternative sample return concepts are under study.",
+        achievements: ["Program canceled January 2026", "Budget estimated at $11B+", "Alternative architectures under review", "Perseverance samples remain cached on Mars"]
       }
     ]
   },

@@ -102,12 +102,12 @@ export const planetsData: PlanetData[] = [
       {
         name: "BepiColombo",
         year: "2018",
-        endYear: "2025",
+        endYear: "2026",
         agency: "ESA/JAXA",
         status: "active",
         type: "orbiter",
-        description: "Joint European-Japanese mission with two orbiters to study Mercury's magnetosphere, surface, and interior.",
-        achievements: ["Most comprehensive Mercury mission ever", "Two orbiters for simultaneous observations", "Will study Mercury's origin and evolution", "Expected orbital insertion in 2025"]
+        description: "Joint European-Japanese mission with two orbiters to study Mercury's magnetosphere, surface, and interior. Orbital insertion revised to late 2026 after 6th flyby in January 2025.",
+        achievements: ["Most comprehensive Mercury mission ever", "Two orbiters for simultaneous observations", "Completed 6th Mercury flyby in Jan 2025", "Expected orbital insertion late 2026"]
       }
     ]
   },

@@ -7,6 +7,7 @@ import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
 import PlanetInternalStructure from "@/components/PlanetInternalStructure";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import FavoriteButton from "@/components/FavoriteButton";
 
 import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
 import trappist1eImage from "@/assets/trappist-1e.png";
@@ -107,9 +108,12 @@ const ExoplanetDetail = () => {
                   </span>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold text-foreground mb-4">
-                  {exoplanet.name}
-                </h1>
+                <div className="flex items-center gap-4 mb-4">
+                  <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold text-foreground">
+                    {exoplanet.name}
+                  </h1>
+                  <FavoriteButton planetId={`exo:${exoplanet.id}`} size="lg" />
+                </div>
 
                 <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-4">
                   {exoplanet.longDescription}

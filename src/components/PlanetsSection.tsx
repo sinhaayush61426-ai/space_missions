@@ -9,6 +9,7 @@ import CompareModal from "./CompareModal";
 import { planetsData, PlanetData } from "@/data/planetsData";
 import { useCompare } from "@/hooks/useCompare";
 import { Button } from "@/components/ui/button";
+import PlanetsComparisonChart from "@/components/PlanetsComparisonChart";
 
 type SortKey = "default" | "distance" | "size" | "moons" | "missions";
 type SortDir = "asc" | "desc";
@@ -202,6 +203,9 @@ const PlanetsSection = () => {
             </p>
           </motion.div>
         )}
+
+        {/* Planets Comparison Chart */}
+        <PlanetsComparisonChart />
       </div>
 
       {/* Compare Bar */}

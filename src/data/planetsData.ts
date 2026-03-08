@@ -367,7 +367,7 @@ export const planetsData: PlanetData[] = [
     facts: [
       "Jupiter could fit 1,300 Earths inside it",
       "The Great Red Spot has existed for at least 400 years",
-      "Jupiter has 95 known moons",
+      "Jupiter has 97 known moons",
       "Europa may harbor conditions suitable for life"
     ],
     structure: [

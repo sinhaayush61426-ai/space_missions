@@ -1,4 +1,4 @@
-import { Rocket, CheckCircle, Clock, Calendar } from "lucide-react";
+import { Rocket, CheckCircle, Clock, Calendar, XCircle } from "lucide-react";
 import type { Mission } from "@/data/planetsData";
 
 interface MissionTimelineProps {
@@ -11,6 +11,7 @@ const MissionTimeline = ({ missions, planetColor }: MissionTimelineProps) => {
     completed: { icon: CheckCircle, label: "Completed", color: "text-planet-earth" },
     active: { icon: Rocket, label: "Active", color: "text-primary" },
     upcoming: { icon: Clock, label: "Upcoming", color: "text-accent" },
+    canceled: { icon: XCircle, label: "Canceled", color: "text-destructive" },
   };
 
   const typeLabels = {

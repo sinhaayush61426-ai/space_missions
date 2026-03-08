@@ -7,6 +7,7 @@ import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
 import PlanetInternalStructure from "@/components/PlanetInternalStructure";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import FavoriteButton from "@/components/FavoriteButton";
 
 import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
 import trappist1eImage from "@/assets/trappist-1e.png";

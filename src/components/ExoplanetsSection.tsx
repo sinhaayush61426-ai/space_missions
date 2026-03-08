@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Star, Telescope, MapPin } from "lucide-react";
 import { exoplanetsData } from "@/data/exoplanetsData";
+import HabitabilityChart from "@/components/HabitabilityChart";
 
 import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
 import trappist1eImage from "@/assets/trappist-1e.png";
@@ -121,6 +122,9 @@ const ExoplanetsSection = () => {
             </Link>
           ))}
         </div>
+
+        {/* Habitability Comparison Chart */}
+        <HabitabilityChart />
       </div>
     </section>
   );

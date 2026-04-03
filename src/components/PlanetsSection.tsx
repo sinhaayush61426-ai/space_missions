@@ -205,6 +205,9 @@ const PlanetsSection = () => {
           </motion.div>
         )}
 
+        {/* Orbital Period Visualization */}
+        <OrbitalPeriodChart />
+
         {/* Planets Comparison Chart */}
         <PlanetsComparisonChart />
       </div>

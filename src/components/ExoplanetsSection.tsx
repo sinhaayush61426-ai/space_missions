@@ -1,8 +1,10 @@
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Star, Telescope, MapPin } from "lucide-react";
 import { exoplanetsData } from "@/data/exoplanetsData";
 import FavoriteButton from "@/components/FavoriteButton";
 import HabitabilityChart from "@/components/HabitabilityChart";
+import ExoplanetFilters from "@/components/ExoplanetFilters";
 
 import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
 import trappist1eImage from "@/assets/trappist-1e.png";
@@ -21,6 +23,59 @@ const exoplanetImages: Record<string, string> = {
 };
 
 const ExoplanetsSection = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedHabitability, setSelectedHabitability] = useState<string[]>([]);
+  const [distanceRange, setDistanceRange] = useState<[number, number]>([0, 2000]);
+
+  const toggleType = (type: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
+  };
+
+  const toggleHabitability = (hab: string) => {
+    setSelectedHabitability((prev) =>
+      prev.includes(hab) ? prev.filter((h) => h !== hab) : [...prev, hab]
+    );
+  };
+
+  const clearAll = () => {
+    setSearchQuery("");
+    setSelectedTypes([]);
+    setSelectedHabitability([]);
+    setDistanceRange([0, 2000]);
+  };
+
+  const filteredExoplanets = useMemo(() => {
+    return exoplanetsData.filter((exo) => {
+      // Search
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const matchesSearch =
+          exo.name.toLowerCase().includes(q) ||
+          exo.description.toLowerCase().includes(q) ||
+          exo.hostStar.name.toLowerCase().includes(q) ||
+          exo.discoveryMethod.toLowerCase().includes(q) ||
+          exo.type.toLowerCase().includes(q);
+        if (!matchesSearch) return false;
+      }
+
+      // Type filter
+      if (selectedTypes.length > 0 && !selectedTypes.includes(exo.type)) {
+        return false;
+      }
+
+      // Habitability filter
+      if (selectedHabitability.length > 0) {
+        const habLevel = exo.habitabilityIndex.split(" — ")[0];
+        if (!selectedHabitability.includes(habLevel)) return false;
+      }
+
+      return true;
+    });
+  }, [searchQuery, selectedTypes, selectedHabitability]);
+
   return (
     <section id="exoplanets" className="py-20 px-6">
       <div className="container mx-auto">
@@ -38,9 +93,24 @@ const ExoplanetsSection = () => {
           </p>
         </div>
 
+        {/* Filters */}
+        <ExoplanetFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedTypes={selectedTypes}
+          onTypeToggle={toggleType}
+          selectedHabitability={selectedHabitability}
+          onHabitabilityToggle={toggleHabitability}
+          distanceRange={distanceRange}
+          onDistanceRangeChange={setDistanceRange}
+          resultCount={filteredExoplanets.length}
+          totalCount={exoplanetsData.length}
+          onClearAll={clearAll}
+        />
+
         {/* Exoplanet Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {exoplanetsData.map((exo, index) => (
+          {filteredExoplanets.map((exo, index) => (
             <Link
               key={exo.id}
               to={`/exoplanet/${exo.id}`}
@@ -124,6 +194,15 @@ const ExoplanetsSection = () => {
             </Link>
           ))}
         </div>
+
+        {filteredExoplanets.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg mb-2">No exoplanets found</p>
+            <p className="text-muted-foreground/60 text-sm">
+              Try adjusting your filters or search for "TRAPPIST", "rocky", or "Kepler"
+            </p>
+          </div>
+        )}
 
         {/* Habitability Comparison Chart */}
         <HabitabilityChart />

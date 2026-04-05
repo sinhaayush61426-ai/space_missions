@@ -1,16 +1,27 @@
+import { useCallback } from "react";
 import { Globe, Map, Rocket, Home, Sparkles, HelpCircle } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const MobileBottomNav = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   
-  const scrollToSection = (id: string) => {
+  const scrollToSection = useCallback((id: string) => {
+    const doScroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        const navHeight = 64;
+        const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    };
     if (location.pathname !== "/") {
-      window.location.href = `/#${id}`;
+      navigate("/");
+      setTimeout(doScroll, 400);
     } else {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      doScroll();
     }
-  };
+  }, [location.pathname, navigate]);
 
   const isActive = (path: string) => location.pathname === path;
   const isHome = location.pathname === "/";

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Rocket, Map, Menu, Heart, HelpCircle, Sparkles, Globe } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import FavoritesPanel from "@/components/FavoritesPanel";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -9,13 +9,26 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [favoritesOpen, setFavoritesOpen] = useState(false);
   const { favorites } = useFavorites();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = useCallback((id: string) => {
     setIsOpen(false);
-    setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  };
+    const doScroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        const navHeight = 64;
+        const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    };
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(doScroll, 400);
+    } else {
+      setTimeout(doScroll, 100);
+    }
+  }, [location.pathname, navigate]);
 
   return (
     <>

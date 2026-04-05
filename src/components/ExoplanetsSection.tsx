@@ -205,6 +205,9 @@ const ExoplanetsSection = () => {
           </div>
         )}
 
+        {/* Exoplanet Orbital Period Chart */}
+        <ExoplanetOrbitalChart />
+
         {/* Habitability Comparison Chart */}
         <HabitabilityChart />
       </div>

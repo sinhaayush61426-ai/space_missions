@@ -4,6 +4,7 @@ import { ArrowRight, Star, Telescope, MapPin } from "lucide-react";
 import { exoplanetsData } from "@/data/exoplanetsData";
 import FavoriteButton from "@/components/FavoriteButton";
 import HabitabilityChart from "@/components/HabitabilityChart";
+import ExoplanetOrbitalChart from "@/components/ExoplanetOrbitalChart";
 import ExoplanetFilters from "@/components/ExoplanetFilters";
 
 import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";

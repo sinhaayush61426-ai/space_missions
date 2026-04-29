@@ -30,6 +30,23 @@ const parseYearLength = (s: string): number => {
   return 365.25;
 };
 
+const formatEarthYears = (periodDays: number): string => {
+  const earthYears = periodDays / earthPeriod;
+
+  if (earthYears < 0.01) return `${earthYears.toFixed(4)} Earth years`;
+  if (earthYears < 1) return `${earthYears.toFixed(3)} Earth years`;
+  return `${earthYears.toFixed(2)} Earth years`;
+};
+
+const formatPercentDifference = (ratio: number): string => {
+  const percentDifference = (ratio - 1) * 100;
+
+  if (Math.abs(percentDifference) < 0.05) return "0.0% difference vs Earth";
+
+  const direction = percentDifference > 0 ? "longer" : "shorter";
+  return `${Math.abs(percentDifference).toFixed(1)}% ${direction} than Earth`;
+};
+
 const orbitalData: OrbitalData[] = exoplanetsData.map((p) => ({
   name: p.name,
   color: p.color,

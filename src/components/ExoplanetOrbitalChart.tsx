@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { exoplanetsData } from "@/data/exoplanetsData";
@@ -11,6 +11,11 @@ interface OrbitalData {
 }
 
 type ScaleMode = "linear" | "logarithmic";
+
+const scalePreferenceKey = "exoplanet-orbital-chart-scale";
+
+const isScaleMode = (value: string | null): value is ScaleMode =>
+  value === "linear" || value === "logarithmic";
 
 const parseYearLength = (s: string): number => {
   const lower = s.toLowerCase();
@@ -50,7 +55,12 @@ const drawRoundedRect = (
 const ExoplanetOrbitalChart = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-  const [scaleMode, setScaleMode] = useState<ScaleMode>("logarithmic");
+  const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
+    if (typeof window === "undefined") return "logarithmic";
+
+    const savedScale = window.localStorage.getItem(scalePreferenceKey);
+    return isScaleMode(savedScale) ? savedScale : "logarithmic";
+  });
 
   const allData: OrbitalData[] = [
     ...orbitalData,
@@ -59,6 +69,10 @@ const ExoplanetOrbitalChart = () => {
 
   const maxRatio = Math.max(...allData.map((d) => d.periodDays / earthPeriod));
   const logMax = Math.log10(maxRatio + 1);
+
+  useEffect(() => {
+    window.localStorage.setItem(scalePreferenceKey, scaleMode);
+  }, [scaleMode]);
 
   const focusRow = (index: number) => {
     const row = document.querySelector<HTMLElement>(`[data-exoplanet-orbit-row="${index}"]`);

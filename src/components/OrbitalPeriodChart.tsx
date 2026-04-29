@@ -9,6 +9,8 @@ interface OrbitalData {
   periodLabel: string;
 }
 
+type ScaleMode = "linear" | "logarithmic";
+
 const parseYearLength = (s: string): number => {
   const lower = s.toLowerCase();
   if (lower.includes("earth days")) {
@@ -33,8 +35,10 @@ const earthPeriod = 365.25;
 
 const OrbitalPeriodChart = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [scaleMode, setScaleMode] = useState<ScaleMode>("logarithmic");
 
   const maxRatio = Math.max(...orbitalData.map((d) => d.periodDays / earthPeriod));
+  const logMax = Math.log10(maxRatio + 1);
 
   return (
     <div className="mt-16 mb-8">
@@ -51,15 +55,32 @@ const OrbitalPeriodChart = () => {
         <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
           How long each planet takes to orbit the Sun, compared to Earth's 365-day year
         </p>
+        <div className="inline-flex mt-5 rounded-full border border-border bg-secondary/40 p-1">
+          {(["linear", "logarithmic"] as ScaleMode[]).map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setScaleMode(mode)}
+              aria-pressed={scaleMode === mode}
+              className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
+                scaleMode === mode
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {mode === "logarithmic" ? "Log" : "Linear"}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="max-w-3xl mx-auto space-y-3">
         {orbitalData.map((planet, index) => {
           const ratio = planet.periodDays / earthPeriod;
-          // Use log scale for extreme ranges
-          const logMax = Math.log10(maxRatio + 1);
           const logRatio = Math.log10(ratio + 1);
-          const barPercent = Math.max(2, (logRatio / logMax) * 100);
+          const scaledPercent =
+            scaleMode === "logarithmic" ? (logRatio / logMax) * 100 : (ratio / maxRatio) * 100;
+          const barPercent = Math.max(2, scaledPercent);
           const isEarth = planet.name === "Earth";
           const isHovered = hoveredIndex === index;
 
@@ -118,7 +139,7 @@ const OrbitalPeriodChart = () => {
 
       {/* Earth reference line note */}
       <p className="text-center text-[10px] text-muted-foreground mt-4">
-        1× = Earth's orbital period (365.25 days) · Logarithmic scale
+        1× = Earth's orbital period (365.25 days) · {scaleMode === "logarithmic" ? "Logarithmic" : "Linear"} scale
       </p>
     </div>
   );

@@ -9,6 +9,8 @@ interface OrbitalData {
   periodLabel: string;
 }
 
+type ScaleMode = "linear" | "logarithmic";
+
 const parseYearLength = (s: string): number => {
   const lower = s.toLowerCase();
   if (lower.includes("earth days") || lower.includes("earth day")) {
@@ -33,6 +35,7 @@ const earthPeriod = 365.25;
 
 const ExoplanetOrbitalChart = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [scaleMode, setScaleMode] = useState<ScaleMode>("logarithmic");
 
   const allData: OrbitalData[] = [
     ...orbitalData,
@@ -57,13 +60,32 @@ const ExoplanetOrbitalChart = () => {
         <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
           Most known exoplanets orbit far closer to their stars, completing a "year" in just days
         </p>
+        <div className="inline-flex mt-5 rounded-full border border-border bg-secondary/40 p-1">
+          {(["linear", "logarithmic"] as ScaleMode[]).map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setScaleMode(mode)}
+              aria-pressed={scaleMode === mode}
+              className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
+                scaleMode === mode
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {mode === "logarithmic" ? "Log" : "Linear"}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="max-w-3xl mx-auto space-y-3">
         {allData.map((planet, index) => {
           const ratio = planet.periodDays / earthPeriod;
           const logRatio = Math.log10(ratio + 1);
-          const barPercent = Math.max(2, (logRatio / logMax) * 100);
+          const scaledPercent =
+            scaleMode === "logarithmic" ? (logRatio / logMax) * 100 : (ratio / maxRatio) * 100;
+          const barPercent = Math.max(2, scaledPercent);
           const isEarth = planet.name === "Earth";
           const isHovered = hoveredIndex === index;
 
@@ -127,7 +149,7 @@ const ExoplanetOrbitalChart = () => {
       </div>
 
       <p className="text-center text-[10px] text-muted-foreground mt-4">
-        1× = Earth's orbital period (365.25 days) · Logarithmic scale · Earth shown as reference
+        1× = Earth's orbital period (365.25 days) · {scaleMode === "logarithmic" ? "Logarithmic" : "Linear"} scale · Earth shown as reference
       </p>
     </div>
   );

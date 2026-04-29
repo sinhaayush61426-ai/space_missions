@@ -1,11 +1,18 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Star, Telescope, MapPin } from "lucide-react";
-import { exoplanetsData } from "@/data/exoplanetsData";
+import { exoplanetsData, type ExoplanetData } from "@/data/exoplanetsData";
 import FavoriteButton from "@/components/FavoriteButton";
 import HabitabilityChart from "@/components/HabitabilityChart";
 import ExoplanetOrbitalChart from "@/components/ExoplanetOrbitalChart";
 import ExoplanetFilters from "@/components/ExoplanetFilters";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 
 import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
 import trappist1eImage from "@/assets/trappist-1e.png";
@@ -23,11 +30,33 @@ const exoplanetImages: Record<string, string> = {
   "toi-700d": toi700dImage,
 };
 
+const earthOrbitalPeriodDays = 365.25;
+
+const parseOrbitalPeriodDays = (period: string): number => {
+  const lower = period.toLowerCase();
+  const value = parseFloat(lower.replace(/[^\d.]/g, ""));
+
+  if (Number.isNaN(value)) return earthOrbitalPeriodDays;
+  if (lower.includes("earth year")) return value * earthOrbitalPeriodDays;
+
+  return value;
+};
+
+const formatEarthComparison = (period: string) => {
+  const periodDays = parseOrbitalPeriodDays(period);
+  const ratio = periodDays / earthOrbitalPeriodDays;
+
+  if (ratio < 0.01) return `${ratio.toFixed(3)}× Earth's year`;
+  if (ratio < 1) return `${ratio.toFixed(2)}× Earth's year`;
+  return `${ratio.toFixed(1)}× Earth's year`;
+};
+
 const ExoplanetsSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedHabitability, setSelectedHabitability] = useState<string[]>([]);
   const [distanceRange, setDistanceRange] = useState<[number, number]>([0, 2000]);
+  const [selectedExoplanet, setSelectedExoplanet] = useState<ExoplanetData | null>(null);
 
   const toggleType = (type: string) => {
     setSelectedTypes((prev) =>
@@ -112,10 +141,18 @@ const ExoplanetsSection = () => {
         {/* Exoplanet Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredExoplanets.map((exo, index) => (
-            <Link
+            <article
               key={exo.id}
-              to={`/exoplanet/${exo.id}`}
-              className="group relative bg-card border border-border/50 rounded-2xl overflow-hidden hover:border-border transition-all duration-300 opacity-0 animate-fade-in block"
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedExoplanet(exo)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setSelectedExoplanet(exo);
+                }
+              }}
+              className="group relative bg-card border border-border/50 rounded-2xl overflow-hidden hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all duration-300 opacity-0 animate-fade-in block cursor-pointer"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image */}
@@ -141,7 +178,9 @@ const ExoplanetsSection = () => {
                   <span className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 backdrop-blur-sm">
                     {exo.habitabilityIndex.split(" — ")[0]}
                   </span>
-                  <FavoriteButton planetId={`exo:${exo.id}`} size="sm" />
+                  <div onClick={(event) => event.stopPropagation()}>
+                    <FavoriteButton planetId={`exo:${exo.id}`} size="sm" />
+                  </div>
                 </div>
               </div>
 
@@ -187,12 +226,16 @@ const ExoplanetsSection = () => {
                   <span className="text-xs text-muted-foreground">
                     {exo.missions.length} observation missions
                   </span>
-                  <span className="flex items-center gap-1 text-sm text-primary group-hover:gap-2 transition-all">
+                  <Link
+                    to={`/exoplanet/${exo.id}`}
+                    onClick={(event) => event.stopPropagation()}
+                    className="flex items-center gap-1 text-sm text-primary group-hover:gap-2 transition-all"
+                  >
                     Explore <ArrowRight className="w-4 h-4" />
-                  </span>
+                  </Link>
                 </div>
               </div>
-            </Link>
+            </article>
           ))}
         </div>
 
@@ -211,6 +254,44 @@ const ExoplanetsSection = () => {
         {/* Habitability Comparison Chart */}
         <HabitabilityChart />
       </div>
+
+      <Drawer open={Boolean(selectedExoplanet)} onOpenChange={(open) => !open && setSelectedExoplanet(null)}>
+        <DrawerContent className="border-border/70 bg-card/95 backdrop-blur-xl">
+          {selectedExoplanet && (
+            <div className="mx-auto w-full max-w-xl px-6 pb-8">
+              <DrawerHeader className="px-0 text-left">
+                <DrawerDescription className="font-display text-xs uppercase tracking-[0.3em] text-primary">
+                  Exoplanet Snapshot
+                </DrawerDescription>
+                <DrawerTitle className="font-display text-3xl text-foreground">
+                  {selectedExoplanet.name}
+                </DrawerTitle>
+              </DrawerHeader>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-lg border border-border/50 bg-secondary/40 p-4">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Distance</p>
+                  <p className="mt-1 text-sm font-semibold text-foreground">{selectedExoplanet.distance}</p>
+                </div>
+                <div className="rounded-lg border border-border/50 bg-secondary/40 p-4">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Orbital period</p>
+                  <p className="mt-1 text-sm font-semibold text-foreground">{selectedExoplanet.yearLength}</p>
+                </div>
+                <div className="rounded-lg border border-border/50 bg-secondary/40 p-4">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Earth comparison</p>
+                  <p className="mt-1 text-sm font-semibold text-foreground">
+                    {formatEarthComparison(selectedExoplanet.yearLength)}
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-4 text-xs text-muted-foreground">
+                Earth completes one orbit in 365.25 days, shown here as the 1× reference year.
+              </p>
+            </div>
+          )}
+        </DrawerContent>
+      </Drawer>
     </section>
   );
 };

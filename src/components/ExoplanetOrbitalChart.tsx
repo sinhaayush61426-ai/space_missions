@@ -35,6 +35,7 @@ const earthPeriod = 365.25;
 
 const ExoplanetOrbitalChart = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [scaleMode, setScaleMode] = useState<ScaleMode>("logarithmic");
 
   const allData: OrbitalData[] = [
@@ -45,13 +46,30 @@ const ExoplanetOrbitalChart = () => {
   const maxRatio = Math.max(...allData.map((d) => d.periodDays / earthPeriod));
   const logMax = Math.log10(maxRatio + 1);
 
+  const focusRow = (index: number) => {
+    const row = document.querySelector<HTMLElement>(`[data-exoplanet-orbit-row="${index}"]`);
+    row?.focus();
+  };
+
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, index: number) => {
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      event.preventDefault();
+      focusRow((index + 1) % allData.length);
+    }
+
+    if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      event.preventDefault();
+      focusRow((index - 1 + allData.length) % allData.length);
+    }
+  };
+
   return (
-    <div className="mt-16 mb-8">
+    <div className="mt-16 mb-8" aria-labelledby="exoplanet-orbital-chart-title">
       <div className="text-center mb-8">
         <p className="font-display text-sm tracking-[0.3em] uppercase text-primary mb-2">
           Orbital Dynamics
         </p>
-        <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground">
+        <h3 id="exoplanet-orbital-chart-title" className="font-display text-2xl md:text-3xl font-bold text-foreground">
           Exoplanet Years vs{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
             Earth
@@ -60,13 +78,18 @@ const ExoplanetOrbitalChart = () => {
         <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
           Most known exoplanets orbit far closer to their stars, completing a "year" in just days
         </p>
-        <div className="inline-flex mt-5 rounded-full border border-border bg-secondary/40 p-1">
+        <div
+          className="inline-flex mt-5 rounded-full border border-border bg-secondary/40 p-1"
+          role="group"
+          aria-label="Choose orbital period chart scale"
+        >
           {(["linear", "logarithmic"] as ScaleMode[]).map((mode) => (
             <button
               key={mode}
               type="button"
               onClick={() => setScaleMode(mode)}
               aria-pressed={scaleMode === mode}
+              aria-label={`Show orbital periods on a ${mode} scale`}
               className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
                 scaleMode === mode
                   ? "bg-primary text-primary-foreground"
@@ -79,7 +102,11 @@ const ExoplanetOrbitalChart = () => {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto space-y-3">
+      <div
+        className="max-w-3xl mx-auto space-y-3"
+        role="list"
+        aria-label={`Exoplanet orbital periods compared with Earth's year on a ${scaleMode} scale`}
+      >
         {allData.map((planet, index) => {
           const ratio = planet.periodDays / earthPeriod;
           const logRatio = Math.log10(ratio + 1);
@@ -87,14 +114,23 @@ const ExoplanetOrbitalChart = () => {
             scaleMode === "logarithmic" ? (logRatio / logMax) * 100 : (ratio / maxRatio) * 100;
           const barPercent = Math.max(2, scaledPercent);
           const isEarth = planet.name === "Earth";
-          const isHovered = hoveredIndex === index;
+          const isHovered = hoveredIndex === index || focusedIndex === index;
+          const ratioLabel =
+            ratio < 0.01 ? ratio.toFixed(3) : ratio < 1 ? ratio.toFixed(2) : ratio.toFixed(1);
 
           return (
             <div
               key={planet.name}
+              role="listitem"
+              tabIndex={0}
+              data-exoplanet-orbit-row={index}
+              aria-label={`${planet.name}: orbital period ${planet.periodLabel}, ${ratioLabel} times Earth's orbital period`}
               className="group flex items-center gap-3 cursor-default"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onFocus={() => setFocusedIndex(index)}
+              onBlur={() => setFocusedIndex(null)}
+              onKeyDown={(event) => handleRowKeyDown(event, index)}
             >
               <span
                 className={`w-28 text-right text-xs font-medium shrink-0 transition-colors ${
@@ -131,12 +167,7 @@ const ExoplanetOrbitalChart = () => {
                   transition={{ delay: index * 0.08 + 0.5 }}
                 >
                   <span className="text-foreground">
-                    {ratio < 0.01
-                      ? ratio.toFixed(3)
-                      : ratio < 1
-                      ? ratio.toFixed(2)
-                      : ratio.toFixed(1)}
-                    ×
+                    {ratioLabel}×
                   </span>
                   <span className="text-muted-foreground ml-1.5 hidden sm:inline">
                     ({planet.periodLabel})

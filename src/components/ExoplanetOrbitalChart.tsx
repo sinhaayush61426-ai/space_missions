@@ -264,6 +264,9 @@ const ExoplanetOrbitalChart = () => {
           const isHovered = hoveredIndex === index || focusedIndex === index;
           const ratioLabel =
             ratio < 0.01 ? ratio.toFixed(3) : ratio < 1 ? ratio.toFixed(2) : ratio.toFixed(1);
+          const earthYearsLabel = formatEarthYears(planet.periodDays);
+          const percentDifferenceLabel = formatPercentDifference(ratio);
+          const tooltipId = `exoplanet-orbit-tooltip-${index}`;
 
           return (
             <div
@@ -271,7 +274,8 @@ const ExoplanetOrbitalChart = () => {
               role="listitem"
               tabIndex={0}
               data-exoplanet-orbit-row={index}
-              aria-label={`${planet.name}: orbital period ${planet.periodLabel}, ${ratioLabel} times Earth's orbital period`}
+              aria-label={`${planet.name}: orbital period ${planet.periodLabel}, ${earthYearsLabel}, ${percentDifferenceLabel}`}
+              aria-describedby={tooltipId}
               className="group flex items-center gap-3 cursor-default"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
@@ -291,18 +295,20 @@ const ExoplanetOrbitalChart = () => {
                 {planet.name}
               </span>
 
-              <div className="flex-1 h-7 relative bg-secondary/30 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full relative"
-                  style={{
-                    backgroundColor: isEarth ? "#3b82f6" : planet.color,
-                    opacity: isEarth ? 0.9 : 0.7,
-                  }}
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${barPercent}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: index * 0.08, ease: "easeOut" }}
-                />
+              <div className="flex-1 h-7 relative">
+                <div className="absolute inset-0 bg-secondary/30 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full rounded-full relative"
+                    style={{
+                      backgroundColor: isEarth ? "#3b82f6" : planet.color,
+                      opacity: isEarth ? 0.9 : 0.7,
+                    }}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${barPercent}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: index * 0.08, ease: "easeOut" }}
+                  />
+                </div>
                 <motion.span
                   className={`absolute top-1/2 -translate-y-1/2 text-[10px] font-semibold whitespace-nowrap transition-opacity ${
                     isHovered || isEarth ? "opacity-100" : "opacity-60"
@@ -320,6 +326,17 @@ const ExoplanetOrbitalChart = () => {
                     ({planet.periodLabel})
                   </span>
                 </motion.span>
+                <div
+                  id={tooltipId}
+                  role="tooltip"
+                  className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
+                    isHovered ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <p className="font-semibold text-foreground">{planet.name}</p>
+                  <p className="mt-1 text-muted-foreground">Orbital period: {earthYearsLabel}</p>
+                  <p className="text-muted-foreground">{percentDifferenceLabel}</p>
+                </div>
               </div>
             </div>
           );

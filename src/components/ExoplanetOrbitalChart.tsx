@@ -426,6 +426,10 @@ const ExoplanetOrbitalChart = () => {
                 {planet.name}
               </span>
 
+              <span id={descriptionId} className="sr-only">
+                {`Orbital period ${tooltipPeriodLabel}, ${percentDifferenceLabel}.`}
+              </span>
+
               <div className="flex-1 h-7 relative">
                 <div className="absolute inset-0 bg-secondary/30 rounded-full overflow-hidden">
                   <motion.div

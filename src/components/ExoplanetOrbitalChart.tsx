@@ -14,9 +14,15 @@ type ScaleMode = "linear" | "logarithmic";
 
 const scalePreferenceKey = "exoplanet-orbital-chart-scale";
 const tooltipsPreferenceKey = "exoplanet-orbital-chart-tooltips";
+const tooltipUnitPreferenceKey = "exoplanet-orbital-chart-tooltip-unit";
+
+type TooltipUnit = "years" | "days";
 
 const isScaleMode = (value: string | null): value is ScaleMode =>
   value === "linear" || value === "logarithmic";
+
+const isTooltipUnit = (value: string | null): value is TooltipUnit =>
+  value === "years" || value === "days";
 
 const parseYearLength = (s: string): number => {
   const lower = s.toLowerCase();

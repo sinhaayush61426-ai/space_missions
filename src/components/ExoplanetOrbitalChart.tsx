@@ -79,6 +79,10 @@ const ExoplanetOrbitalChart = () => {
     const savedScale = window.localStorage.getItem(scalePreferenceKey);
     return isScaleMode(savedScale) ? savedScale : "logarithmic";
   });
+  const [tooltipsEnabled, setTooltipsEnabled] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return window.localStorage.getItem(tooltipsPreferenceKey) !== "false";
+  });
 
   const allData: OrbitalData[] = [
     ...orbitalData,

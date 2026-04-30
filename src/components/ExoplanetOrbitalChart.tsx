@@ -447,7 +447,7 @@ const ExoplanetOrbitalChart = () => {
                     }`}
                   >
                     <p className="font-semibold text-foreground">{planet.name}</p>
-                    <p className="mt-1 text-muted-foreground">Orbital period: {earthYearsLabel}</p>
+                    <p className="mt-1 text-muted-foreground">Orbital period: {tooltipPeriodLabel}</p>
                     <p className="text-muted-foreground">{percentDifferenceLabel}</p>
                   </div>
                 )}

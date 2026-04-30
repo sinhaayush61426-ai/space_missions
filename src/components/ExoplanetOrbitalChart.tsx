@@ -304,7 +304,7 @@ const ExoplanetOrbitalChart = () => {
           <Download className="h-3.5 w-3.5" aria-hidden="true" />
           Export PNG
         </button>
-        <div className="mt-4 flex items-center justify-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <button
             type="button"
             role="switch"
@@ -327,6 +327,29 @@ const ExoplanetOrbitalChart = () => {
             </span>
             Hover tooltips: {tooltipsEnabled ? "On" : "Off"}
           </button>
+          <div
+            className="inline-flex rounded-full border border-border bg-secondary/40 p-1"
+            role="group"
+            aria-label="Choose tooltip orbital period units"
+          >
+            {(["years", "days"] as TooltipUnit[]).map((unit) => (
+              <button
+                key={unit}
+                type="button"
+                onClick={() => setTooltipUnit(unit)}
+                aria-pressed={tooltipUnit === unit}
+                aria-label={`Show tooltip orbital periods in Earth ${unit}`}
+                disabled={!tooltipsEnabled}
+                className={`rounded-full px-3 py-1 text-xs font-semibold capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  tooltipUnit === unit
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {unit === "years" ? "Years" : "Days"}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

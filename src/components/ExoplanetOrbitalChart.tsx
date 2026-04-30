@@ -73,6 +73,9 @@ const drawRoundedRect = (
 const ExoplanetOrbitalChart = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const [tooltipShift, setTooltipShift] = useState(0);
+  const tooltipRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
     if (typeof window === "undefined") return "logarithmic";
 

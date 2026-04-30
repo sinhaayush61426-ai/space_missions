@@ -45,6 +45,15 @@ const formatEarthYears = (periodDays: number): string => {
   return `${earthYears.toFixed(2)} Earth years`;
 };
 
+const formatEarthDays = (periodDays: number): string => {
+  if (periodDays < 1) return `${periodDays.toFixed(3)} Earth days`;
+  if (periodDays < 10) return `${periodDays.toFixed(2)} Earth days`;
+  return `${periodDays.toFixed(1)} Earth days`;
+};
+
+const formatOrbitalPeriod = (periodDays: number, unit: TooltipUnit): string =>
+  unit === "days" ? formatEarthDays(periodDays) : formatEarthYears(periodDays);
+
 const formatPercentDifference = (ratio: number): string => {
   const percentDifference = (ratio - 1) * 100;
 

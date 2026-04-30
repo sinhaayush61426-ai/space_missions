@@ -359,17 +359,19 @@ const ExoplanetOrbitalChart = () => {
                     ({planet.periodLabel})
                   </span>
                 </motion.span>
-                <div
-                  id={tooltipId}
-                  role="tooltip"
-                  className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
-                    isHovered ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  <p className="font-semibold text-foreground">{planet.name}</p>
-                  <p className="mt-1 text-muted-foreground">Orbital period: {earthYearsLabel}</p>
-                  <p className="text-muted-foreground">{percentDifferenceLabel}</p>
-                </div>
+                {tooltipsEnabled && (
+                  <div
+                    id={tooltipId}
+                    role="tooltip"
+                    className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
+                      isHovered ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <p className="font-semibold text-foreground">{planet.name}</p>
+                    <p className="mt-1 text-muted-foreground">Orbital period: {earthYearsLabel}</p>
+                    <p className="text-muted-foreground">{percentDifferenceLabel}</p>
+                  </div>
+                )}
               </div>
             </div>
           );

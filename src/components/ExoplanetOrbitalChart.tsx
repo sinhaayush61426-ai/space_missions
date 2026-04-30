@@ -14,9 +14,15 @@ type ScaleMode = "linear" | "logarithmic";
 
 const scalePreferenceKey = "exoplanet-orbital-chart-scale";
 const tooltipsPreferenceKey = "exoplanet-orbital-chart-tooltips";
+const tooltipUnitPreferenceKey = "exoplanet-orbital-chart-tooltip-unit";
+
+type TooltipUnit = "years" | "days";
 
 const isScaleMode = (value: string | null): value is ScaleMode =>
   value === "linear" || value === "logarithmic";
+
+const isTooltipUnit = (value: string | null): value is TooltipUnit =>
+  value === "years" || value === "days";
 
 const parseYearLength = (s: string): number => {
   const lower = s.toLowerCase();
@@ -38,6 +44,15 @@ const formatEarthYears = (periodDays: number): string => {
   if (earthYears < 1) return `${earthYears.toFixed(3)} Earth years`;
   return `${earthYears.toFixed(2)} Earth years`;
 };
+
+const formatEarthDays = (periodDays: number): string => {
+  if (periodDays < 1) return `${periodDays.toFixed(3)} Earth days`;
+  if (periodDays < 10) return `${periodDays.toFixed(2)} Earth days`;
+  return `${periodDays.toFixed(1)} Earth days`;
+};
+
+const formatOrbitalPeriod = (periodDays: number, unit: TooltipUnit): string =>
+  unit === "days" ? formatEarthDays(periodDays) : formatEarthYears(periodDays);
 
 const formatPercentDifference = (ratio: number): string => {
   const percentDifference = (ratio - 1) * 100;
@@ -86,6 +101,11 @@ const ExoplanetOrbitalChart = () => {
     if (typeof window === "undefined") return true;
     return window.localStorage.getItem(tooltipsPreferenceKey) !== "false";
   });
+  const [tooltipUnit, setTooltipUnit] = useState<TooltipUnit>(() => {
+    if (typeof window === "undefined") return "years";
+    const saved = window.localStorage.getItem(tooltipUnitPreferenceKey);
+    return isTooltipUnit(saved) ? saved : "years";
+  });
 
   const allData: OrbitalData[] = [
     ...orbitalData,
@@ -102,6 +122,10 @@ const ExoplanetOrbitalChart = () => {
   useEffect(() => {
     window.localStorage.setItem(tooltipsPreferenceKey, String(tooltipsEnabled));
   }, [tooltipsEnabled]);
+
+  useEffect(() => {
+    window.localStorage.setItem(tooltipUnitPreferenceKey, tooltipUnit);
+  }, [tooltipUnit]);
 
   useLayoutEffect(() => {
     if (activeIndex === null) {
@@ -280,7 +304,7 @@ const ExoplanetOrbitalChart = () => {
           <Download className="h-3.5 w-3.5" aria-hidden="true" />
           Export PNG
         </button>
-        <div className="mt-4 flex items-center justify-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <button
             type="button"
             role="switch"
@@ -303,6 +327,29 @@ const ExoplanetOrbitalChart = () => {
             </span>
             Hover tooltips: {tooltipsEnabled ? "On" : "Off"}
           </button>
+          <div
+            className="inline-flex rounded-full border border-border bg-secondary/40 p-1"
+            role="group"
+            aria-label="Choose tooltip orbital period units"
+          >
+            {(["years", "days"] as TooltipUnit[]).map((unit) => (
+              <button
+                key={unit}
+                type="button"
+                onClick={() => setTooltipUnit(unit)}
+                aria-pressed={tooltipUnit === unit}
+                aria-label={`Show tooltip orbital periods in Earth ${unit}`}
+                disabled={!tooltipsEnabled}
+                className={`rounded-full px-3 py-1 text-xs font-semibold capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  tooltipUnit === unit
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {unit === "years" ? "Years" : "Days"}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -322,6 +369,7 @@ const ExoplanetOrbitalChart = () => {
           const ratioLabel =
             ratio < 0.01 ? ratio.toFixed(3) : ratio < 1 ? ratio.toFixed(2) : ratio.toFixed(1);
           const earthYearsLabel = formatEarthYears(planet.periodDays);
+          const tooltipPeriodLabel = formatOrbitalPeriod(planet.periodDays, tooltipUnit);
           const percentDifferenceLabel = formatPercentDifference(ratio);
           const tooltipId = `exoplanet-orbit-tooltip-${index}`;
 
@@ -399,7 +447,7 @@ const ExoplanetOrbitalChart = () => {
                     }`}
                   >
                     <p className="font-semibold text-foreground">{planet.name}</p>
-                    <p className="mt-1 text-muted-foreground">Orbital period: {earthYearsLabel}</p>
+                    <p className="mt-1 text-muted-foreground">Orbital period: {tooltipPeriodLabel}</p>
                     <p className="text-muted-foreground">{percentDifferenceLabel}</p>
                   </div>
                 )}

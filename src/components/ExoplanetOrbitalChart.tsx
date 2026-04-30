@@ -309,7 +309,7 @@ const ExoplanetOrbitalChart = () => {
               data-exoplanet-orbit-row={index}
               aria-label={`${planet.name}: orbital period ${planet.periodLabel}, ${earthYearsLabel}, ${percentDifferenceLabel}`}
               aria-describedby={tooltipsEnabled ? tooltipId : undefined}
-              className="group flex items-center gap-3 cursor-default"
+              className="group flex items-center gap-3 cursor-default rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               onFocus={() => setFocusedIndex(index)}

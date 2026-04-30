@@ -353,6 +353,15 @@ const ExoplanetOrbitalChart = () => {
         </div>
       </div>
 
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {focusedIndex !== null && allData[focusedIndex]
+          ? `${allData[focusedIndex].name}: orbital period ${formatOrbitalPeriod(
+              allData[focusedIndex].periodDays,
+              tooltipUnit,
+            )}, ${formatPercentDifference(allData[focusedIndex].periodDays / earthPeriod)}`
+          : ""}
+      </div>
+
       <div
         className="max-w-3xl mx-auto space-y-3"
         role="list"

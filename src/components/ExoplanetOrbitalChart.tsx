@@ -123,6 +123,10 @@ const ExoplanetOrbitalChart = () => {
     window.localStorage.setItem(tooltipsPreferenceKey, String(tooltipsEnabled));
   }, [tooltipsEnabled]);
 
+  useEffect(() => {
+    window.localStorage.setItem(tooltipUnitPreferenceKey, tooltipUnit);
+  }, [tooltipUnit]);
+
   useLayoutEffect(() => {
     if (activeIndex === null) {
       setTooltipShift(0);

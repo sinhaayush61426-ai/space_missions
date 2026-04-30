@@ -13,6 +13,7 @@ interface OrbitalData {
 type ScaleMode = "linear" | "logarithmic";
 
 const scalePreferenceKey = "exoplanet-orbital-chart-scale";
+const tooltipsPreferenceKey = "exoplanet-orbital-chart-tooltips";
 
 const isScaleMode = (value: string | null): value is ScaleMode =>
   value === "linear" || value === "logarithmic";

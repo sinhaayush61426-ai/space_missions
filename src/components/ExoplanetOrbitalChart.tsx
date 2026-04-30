@@ -256,6 +256,30 @@ const ExoplanetOrbitalChart = () => {
           <Download className="h-3.5 w-3.5" aria-hidden="true" />
           Export PNG
         </button>
+        <div className="mt-4 flex items-center justify-center gap-2">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={tooltipsEnabled}
+            aria-label={`${tooltipsEnabled ? "Disable" : "Enable"} hover tooltips on orbital chart bars`}
+            onClick={() => setTooltipsEnabled((prev) => !prev)}
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/40 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <span
+              aria-hidden="true"
+              className={`relative inline-block h-4 w-7 rounded-full transition-colors ${
+                tooltipsEnabled ? "bg-primary" : "bg-muted"
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 h-3 w-3 rounded-full bg-background transition-transform ${
+                  tooltipsEnabled ? "translate-x-3.5" : "translate-x-0.5"
+                }`}
+              />
+            </span>
+            Hover tooltips: {tooltipsEnabled ? "On" : "Off"}
+          </button>
+        </div>
       </div>
 
       <div

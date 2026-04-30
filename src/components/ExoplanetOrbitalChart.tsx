@@ -308,7 +308,7 @@ const ExoplanetOrbitalChart = () => {
               tabIndex={0}
               data-exoplanet-orbit-row={index}
               aria-label={`${planet.name}: orbital period ${planet.periodLabel}, ${earthYearsLabel}, ${percentDifferenceLabel}`}
-              aria-describedby={tooltipId}
+              aria-describedby={tooltipsEnabled ? tooltipId : undefined}
               className="group flex items-center gap-3 cursor-default"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}

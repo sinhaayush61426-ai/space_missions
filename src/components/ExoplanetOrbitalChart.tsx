@@ -96,6 +96,10 @@ const ExoplanetOrbitalChart = () => {
     window.localStorage.setItem(scalePreferenceKey, scaleMode);
   }, [scaleMode]);
 
+  useEffect(() => {
+    window.localStorage.setItem(tooltipsPreferenceKey, String(tooltipsEnabled));
+  }, [tooltipsEnabled]);
+
   const focusRow = (index: number) => {
     const row = document.querySelector<HTMLElement>(`[data-exoplanet-orbit-row="${index}"]`);
     row?.focus();

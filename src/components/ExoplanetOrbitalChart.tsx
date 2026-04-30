@@ -369,6 +369,7 @@ const ExoplanetOrbitalChart = () => {
           const ratioLabel =
             ratio < 0.01 ? ratio.toFixed(3) : ratio < 1 ? ratio.toFixed(2) : ratio.toFixed(1);
           const earthYearsLabel = formatEarthYears(planet.periodDays);
+          const tooltipPeriodLabel = formatOrbitalPeriod(planet.periodDays, tooltipUnit);
           const percentDifferenceLabel = formatPercentDifference(ratio);
           const tooltipId = `exoplanet-orbit-tooltip-${index}`;
 

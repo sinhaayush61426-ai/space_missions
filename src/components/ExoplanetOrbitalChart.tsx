@@ -288,84 +288,111 @@ const ExoplanetOrbitalChart = () => {
         <p className="text-muted-foreground text-sm mt-2 max-w-md mx-auto">
           Most known exoplanets orbit far closer to their stars, completing a "year" in just days
         </p>
-        <div
-          className="inline-flex mt-5 rounded-full border border-border bg-secondary/40 p-1"
-          role="group"
-          aria-label="Choose orbital period chart scale"
+        <section
+          aria-labelledby="exoplanet-chart-settings-heading"
+          className="mt-6 mx-auto max-w-2xl rounded-2xl border border-border bg-secondary/20 backdrop-blur-sm p-4 sm:p-5 text-left"
         >
-          {(["linear", "logarithmic"] as ScaleMode[]).map((mode) => (
+          <header className="flex items-center justify-between mb-4">
+            <h4
+              id="exoplanet-chart-settings-heading"
+              className="font-display text-xs tracking-[0.2em] uppercase text-primary"
+            >
+              Chart Settings
+            </h4>
             <button
-              key={mode}
               type="button"
-              onClick={() => setScaleMode(mode)}
-              aria-pressed={scaleMode === mode}
-              aria-label={`Show orbital periods on a ${mode} scale`}
-              className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
-                scaleMode === mode
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={exportChartAsPng}
+              aria-label={`Export Exoplanet Years vs Earth chart as a PNG using the ${scaleMode} scale`}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              {mode === "logarithmic" ? "Log" : "Linear"}
+              <Download className="h-3.5 w-3.5" aria-hidden="true" />
+              Export PNG
             </button>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={exportChartAsPng}
-          aria-label={`Export Exoplanet Years vs Earth chart as a PNG using the ${scaleMode} scale`}
-          className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/40 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Download className="h-3.5 w-3.5" aria-hidden="true" />
-          Export PNG
-        </button>
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-          <button
-            type="button"
-            role="switch"
-            aria-checked={tooltipsEnabled}
-            aria-label={`${tooltipsEnabled ? "Disable" : "Enable"} hover tooltips on orbital chart bars`}
-            onClick={() => setTooltipsEnabled((prev) => !prev)}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/40 px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <span
-              aria-hidden="true"
-              className={`relative inline-block h-4 w-7 rounded-full transition-colors ${
-                tooltipsEnabled ? "bg-primary" : "bg-muted"
-              }`}
-            >
-              <span
-                className={`absolute top-0.5 h-3 w-3 rounded-full bg-background transition-transform ${
-                  tooltipsEnabled ? "translate-x-3.5" : "translate-x-0.5"
-                }`}
-              />
-            </span>
-            Hover tooltips: {tooltipsEnabled ? "On" : "Off"}
-          </button>
-          <div
-            className="inline-flex rounded-full border border-border bg-secondary/40 p-1"
-            role="group"
-            aria-label="Choose tooltip orbital period units"
-          >
-            {(["years", "days"] as TooltipUnit[]).map((unit) => (
-              <button
-                key={unit}
-                type="button"
-                onClick={() => setTooltipUnit(unit)}
-                aria-pressed={tooltipUnit === unit}
-                aria-label={`Show tooltip orbital periods in Earth ${unit}`}
-                disabled={!tooltipsEnabled}
-                className={`rounded-full px-3 py-1 text-xs font-semibold capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                  tooltipUnit === unit
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+          </header>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Scale
+              </p>
+              <div
+                className="inline-flex rounded-full border border-border bg-background/40 p-1"
+                role="group"
+                aria-label="Choose orbital period chart scale"
               >
-                {unit === "years" ? "Years" : "Days"}
-              </button>
-            ))}
+                {(["linear", "logarithmic"] as ScaleMode[]).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setScaleMode(mode)}
+                    aria-pressed={scaleMode === mode}
+                    aria-label={`Show orbital periods on a ${mode} scale`}
+                    className={`rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
+                      scaleMode === mode
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {mode === "logarithmic" ? "Log" : "Linear"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Hover Tooltips
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={tooltipsEnabled}
+                  aria-label={`${tooltipsEnabled ? "Disable" : "Enable"} hover tooltips on orbital chart bars`}
+                  onClick={() => setTooltipsEnabled((prev) => !prev)}
+                  className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`relative inline-block h-4 w-7 rounded-full transition-colors ${
+                      tooltipsEnabled ? "bg-primary" : "bg-muted"
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-0.5 h-3 w-3 rounded-full bg-background transition-transform ${
+                        tooltipsEnabled ? "translate-x-3.5" : "translate-x-0.5"
+                      }`}
+                    />
+                  </span>
+                  {tooltipsEnabled ? "On" : "Off"}
+                </button>
+                <div
+                  className="inline-flex rounded-full border border-border bg-background/40 p-1"
+                  role="group"
+                  aria-label="Choose tooltip orbital period units"
+                >
+                  {(["years", "days"] as TooltipUnit[]).map((unit) => (
+                    <button
+                      key={unit}
+                      type="button"
+                      onClick={() => setTooltipUnit(unit)}
+                      aria-pressed={tooltipUnit === unit}
+                      aria-label={`Show tooltip orbital periods in Earth ${unit}`}
+                      disabled={!tooltipsEnabled}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold capitalize transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                        tooltipUnit === unit
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {unit === "years" ? "Years" : "Days"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
 
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">

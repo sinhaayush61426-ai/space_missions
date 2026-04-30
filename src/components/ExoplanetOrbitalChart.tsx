@@ -157,11 +157,26 @@ const ExoplanetOrbitalChart = () => {
     if (event.key === "ArrowDown" || event.key === "ArrowRight") {
       event.preventDefault();
       focusRow((index + 1) % allData.length);
+      return;
     }
 
     if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
       event.preventDefault();
       focusRow((index - 1 + allData.length) % allData.length);
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setFocusedIndex(index);
+      return;
+    }
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setFocusedIndex(null);
+      setHoveredIndex(null);
+      event.currentTarget.blur();
     }
   };
 

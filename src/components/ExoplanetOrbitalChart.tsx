@@ -387,7 +387,14 @@ const ExoplanetOrbitalChart = () => {
                   <div
                     id={tooltipId}
                     role="tooltip"
-                    className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
+                    ref={(node) => {
+                      if (node) tooltipRefs.current.set(index, node);
+                      else tooltipRefs.current.delete(index);
+                    }}
+                    style={{
+                      transform: `translateX(calc(-50% + ${activeIndex === index ? tooltipShift : 0}px))`,
+                    }}
+                    className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
                       isHovered ? "opacity-100" : "opacity-0"
                     }`}
                   >

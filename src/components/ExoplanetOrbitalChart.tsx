@@ -103,6 +103,27 @@ const ExoplanetOrbitalChart = () => {
     window.localStorage.setItem(tooltipsPreferenceKey, String(tooltipsEnabled));
   }, [tooltipsEnabled]);
 
+  useLayoutEffect(() => {
+    if (activeIndex === null) {
+      setTooltipShift(0);
+      return;
+    }
+    const tooltip = tooltipRefs.current.get(activeIndex);
+    if (!tooltip) return;
+
+    // Temporarily clear transform to measure natural position
+    const prevTransform = tooltip.style.transform;
+    tooltip.style.transform = "translateX(-50%)";
+    const rect = tooltip.getBoundingClientRect();
+    tooltip.style.transform = prevTransform;
+
+    const margin = 8;
+    let shift = 0;
+    if (rect.left < margin) shift = margin - rect.left;
+    else if (rect.right > window.innerWidth - margin) shift = window.innerWidth - margin - rect.right;
+    setTooltipShift(shift);
+  }, [activeIndex]);
+
   const focusRow = (index: number) => {
     const row = document.querySelector<HTMLElement>(`[data-exoplanet-orbit-row="${index}"]`);
     row?.focus();

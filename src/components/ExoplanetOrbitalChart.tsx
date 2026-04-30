@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { exoplanetsData } from "@/data/exoplanetsData";
@@ -73,6 +73,9 @@ const drawRoundedRect = (
 const ExoplanetOrbitalChart = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const [tooltipShift, setTooltipShift] = useState(0);
+  const tooltipRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
     if (typeof window === "undefined") return "logarithmic";
 
@@ -99,6 +102,27 @@ const ExoplanetOrbitalChart = () => {
   useEffect(() => {
     window.localStorage.setItem(tooltipsPreferenceKey, String(tooltipsEnabled));
   }, [tooltipsEnabled]);
+
+  useLayoutEffect(() => {
+    if (activeIndex === null) {
+      setTooltipShift(0);
+      return;
+    }
+    const tooltip = tooltipRefs.current.get(activeIndex);
+    if (!tooltip) return;
+
+    // Temporarily clear transform to measure natural position
+    const prevTransform = tooltip.style.transform;
+    tooltip.style.transform = "translateX(-50%)";
+    const rect = tooltip.getBoundingClientRect();
+    tooltip.style.transform = prevTransform;
+
+    const margin = 8;
+    let shift = 0;
+    if (rect.left < margin) shift = margin - rect.left;
+    else if (rect.right > window.innerWidth - margin) shift = window.innerWidth - margin - rect.right;
+    setTooltipShift(shift);
+  }, [activeIndex]);
 
   const focusRow = (index: number) => {
     const row = document.querySelector<HTMLElement>(`[data-exoplanet-orbit-row="${index}"]`);
@@ -363,7 +387,14 @@ const ExoplanetOrbitalChart = () => {
                   <div
                     id={tooltipId}
                     role="tooltip"
-                    className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
+                    ref={(node) => {
+                      if (node) tooltipRefs.current.set(index, node);
+                      else tooltipRefs.current.delete(index);
+                    }}
+                    style={{
+                      transform: `translateX(calc(-50% + ${activeIndex === index ? tooltipShift : 0}px))`,
+                    }}
+                    className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
                       isHovered ? "opacity-100" : "opacity-0"
                     }`}
                   >

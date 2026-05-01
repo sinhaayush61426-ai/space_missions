@@ -461,7 +461,7 @@ const ExoplanetOrbitalChart = () => {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                onClick={exportChartAsPng}
+                onClick={openExportDialog}
                 aria-label={`Export Exoplanet Years vs Earth chart as a PNG using the ${scaleMode} scale`}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >

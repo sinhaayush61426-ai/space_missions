@@ -567,6 +567,9 @@ const ExoplanetOrbitalChart = () => {
       </div>
 
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {settingsAnnouncement}
+      </div>
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {focusedIndex !== null && allData[focusedIndex]
           ? `${allData[focusedIndex].name}: orbital period ${formatOrbitalPeriod(
               allData[focusedIndex].periodDays,

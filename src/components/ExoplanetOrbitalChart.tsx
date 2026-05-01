@@ -144,6 +144,42 @@ const ExoplanetOrbitalChart = () => {
     window.localStorage.setItem(tooltipUnitPreferenceKey, tooltipUnit);
   }, [tooltipUnit]);
 
+  useEffect(() => {
+    window.localStorage.setItem(tooltipDelayPreferenceKey, String(tooltipDelay));
+  }, [tooltipDelay]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current !== null) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const clearHoverTimeout = () => {
+    if (hoverTimeoutRef.current !== null) {
+      window.clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+  };
+
+  const handleRowMouseEnter = (index: number) => {
+    clearHoverTimeout();
+    if (tooltipDelay <= 0) {
+      setHoveredIndex(index);
+      return;
+    }
+    hoverTimeoutRef.current = window.setTimeout(() => {
+      setHoveredIndex(index);
+      hoverTimeoutRef.current = null;
+    }, tooltipDelay);
+  };
+
+  const handleRowMouseLeave = () => {
+    clearHoverTimeout();
+    setHoveredIndex(null);
+  };
+
   useLayoutEffect(() => {
     if (activeIndex === null) {
       setTooltipShift(0);

@@ -151,6 +151,18 @@ const ExoplanetOrbitalChart = () => {
   }, [tooltipDelay]);
 
   useEffect(() => {
+    if (!settingsHydratedRef.current) {
+      settingsHydratedRef.current = true;
+      return;
+    }
+    const unitLabel = tooltipUnit === "years" ? "Earth years" : "Earth days";
+    const message = tooltipsEnabled
+      ? `Hover tooltips enabled. Showing orbital periods in ${unitLabel}.`
+      : "Hover tooltips disabled.";
+    setSettingsAnnouncement(message);
+  }, [tooltipsEnabled, tooltipUnit]);
+
+  useEffect(() => {
     return () => {
       if (hoverTimeoutRef.current !== null) {
         window.clearTimeout(hoverTimeoutRef.current);

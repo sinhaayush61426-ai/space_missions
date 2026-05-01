@@ -345,6 +345,40 @@ const ExoplanetOrbitalChart = () => {
     link.click();
   };
 
+  const buildDefaultExportFilename = () => {
+    const tooltipPart = tooltipsEnabled ? `tooltips-on-${tooltipUnit}` : "tooltips-off";
+    return `exoplanet-years-vs-earth-${scaleMode}-${tooltipPart}`;
+  };
+
+  const openExportDialog = () => {
+    setExportFilename(buildDefaultExportFilename());
+    setExportDialogOpen(true);
+  };
+
+  const confirmExport = () => {
+    exportChartAsPng(exportFilename);
+    setExportDialogOpen(false);
+  };
+
+  useEffect(() => {
+    if (!exportDialogOpen) return;
+    const id = window.requestAnimationFrame(() => {
+      exportFilenameInputRef.current?.focus();
+      exportFilenameInputRef.current?.select();
+    });
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setExportDialogOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.cancelAnimationFrame(id);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [exportDialogOpen]);
+
   const resetChartSettings = () => {
     clearHoverTimeout();
     setScaleMode("logarithmic");

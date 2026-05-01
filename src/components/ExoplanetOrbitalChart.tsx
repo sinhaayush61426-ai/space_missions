@@ -15,6 +15,16 @@ type ScaleMode = "linear" | "logarithmic";
 const scalePreferenceKey = "exoplanet-orbital-chart-scale";
 const tooltipsPreferenceKey = "exoplanet-orbital-chart-tooltips";
 const tooltipUnitPreferenceKey = "exoplanet-orbital-chart-tooltip-unit";
+const tooltipDelayPreferenceKey = "exoplanet-orbital-chart-tooltip-delay";
+
+const MIN_TOOLTIP_DELAY = 0;
+const MAX_TOOLTIP_DELAY = 300;
+const DEFAULT_TOOLTIP_DELAY = 120;
+
+const clampTooltipDelay = (value: number): number => {
+  if (Number.isNaN(value)) return DEFAULT_TOOLTIP_DELAY;
+  return Math.min(MAX_TOOLTIP_DELAY, Math.max(MIN_TOOLTIP_DELAY, Math.round(value)));
+};
 
 type TooltipUnit = "years" | "days";
 

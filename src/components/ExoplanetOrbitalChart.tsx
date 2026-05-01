@@ -248,7 +248,7 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
-  const exportChartAsPng = () => {
+  const exportChartAsPng = (filename: string) => {
     const canvas = document.createElement("canvas");
     const width = 1200;
     const height = 860;

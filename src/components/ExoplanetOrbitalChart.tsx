@@ -117,6 +117,12 @@ const ExoplanetOrbitalChart = () => {
     const saved = window.localStorage.getItem(tooltipUnitPreferenceKey);
     return isTooltipUnit(saved) ? saved : "years";
   });
+  const [tooltipDelay, setTooltipDelay] = useState<number>(() => {
+    if (typeof window === "undefined") return DEFAULT_TOOLTIP_DELAY;
+    const saved = window.localStorage.getItem(tooltipDelayPreferenceKey);
+    if (saved === null) return DEFAULT_TOOLTIP_DELAY;
+    return clampTooltipDelay(Number(saved));
+  });
 
   const allData: OrbitalData[] = [
     ...orbitalData,

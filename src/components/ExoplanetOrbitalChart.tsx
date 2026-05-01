@@ -101,6 +101,8 @@ const ExoplanetOrbitalChart = () => {
   const [tooltipShift, setTooltipShift] = useState(0);
   const tooltipRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const hoverTimeoutRef = useRef<number | null>(null);
+  const settingsHydratedRef = useRef(false);
+  const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
     if (typeof window === "undefined") return "logarithmic";
@@ -147,6 +149,18 @@ const ExoplanetOrbitalChart = () => {
   useEffect(() => {
     window.localStorage.setItem(tooltipDelayPreferenceKey, String(tooltipDelay));
   }, [tooltipDelay]);
+
+  useEffect(() => {
+    if (!settingsHydratedRef.current) {
+      settingsHydratedRef.current = true;
+      return;
+    }
+    const unitLabel = tooltipUnit === "years" ? "Earth years" : "Earth days";
+    const message = tooltipsEnabled
+      ? `Hover tooltips enabled. Showing orbital periods in ${unitLabel}.`
+      : "Hover tooltips disabled.";
+    setSettingsAnnouncement(message);
+  }, [tooltipsEnabled, tooltipUnit]);
 
   useEffect(() => {
     return () => {
@@ -553,6 +567,9 @@ const ExoplanetOrbitalChart = () => {
       </div>
 
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {settingsAnnouncement}
+      </div>
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {focusedIndex !== null && allData[focusedIndex]
           ? `${allData[focusedIndex].name}: orbital period ${formatOrbitalPeriod(
               allData[focusedIndex].periodDays,
@@ -581,7 +598,9 @@ const ExoplanetOrbitalChart = () => {
           const percentDifferenceLabel = formatPercentDifference(ratio);
           const tooltipId = `exoplanet-orbit-tooltip-${index}`;
           const descriptionId = `exoplanet-orbit-description-${index}`;
+          const planetNameId = `exoplanet-orbit-name-${index}`;
           const describedBy = tooltipsEnabled ? `${descriptionId} ${tooltipId}` : descriptionId;
+          const tooltipVisible = tooltipsEnabled && isHovered;
 
           return (
             <div
@@ -599,6 +618,7 @@ const ExoplanetOrbitalChart = () => {
               onKeyDown={(event) => handleRowKeyDown(event, index)}
             >
               <span
+                id={planetNameId}
                 className={`w-28 text-right text-xs font-medium shrink-0 transition-colors ${
                   isEarth
                     ? "text-blue-400"
@@ -649,6 +669,8 @@ const ExoplanetOrbitalChart = () => {
                   <div
                     id={tooltipId}
                     role="tooltip"
+                    aria-labelledby={planetNameId}
+                    aria-hidden={!tooltipVisible}
                     ref={(node) => {
                       if (node) tooltipRefs.current.set(index, node);
                       else tooltipRefs.current.delete(index);
@@ -657,7 +679,7 @@ const ExoplanetOrbitalChart = () => {
                       transform: `translateX(calc(-50% + ${activeIndex === index ? tooltipShift : 0}px))`,
                     }}
                     className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
-                      isHovered ? "opacity-100" : "opacity-0"
+                      tooltipVisible ? "opacity-100" : "opacity-0"
                     }`}
                   >
                     <p className="font-semibold text-foreground">{planet.name}</p>

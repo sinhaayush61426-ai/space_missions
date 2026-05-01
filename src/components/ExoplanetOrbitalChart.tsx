@@ -101,6 +101,8 @@ const ExoplanetOrbitalChart = () => {
   const [tooltipShift, setTooltipShift] = useState(0);
   const tooltipRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const hoverTimeoutRef = useRef<number | null>(null);
+  const settingsHydratedRef = useRef(false);
+  const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
     if (typeof window === "undefined") return "logarithmic";

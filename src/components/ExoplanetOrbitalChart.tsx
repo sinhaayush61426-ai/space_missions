@@ -335,8 +335,9 @@ const ExoplanetOrbitalChart = () => {
     context.font = "500 15px Inter, sans-serif";
     context.fillText("1× = Earth's orbital period (365.25 days) · Earth shown as reference", width / 2, height - 64);
 
+    const safeName = filename.trim().replace(/\.png$/i, "") || "exoplanet-years-vs-earth";
     const link = document.createElement("a");
-    link.download = `exoplanet-years-vs-earth-${scaleMode}.png`;
+    link.download = `${safeName}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   };

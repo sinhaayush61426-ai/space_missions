@@ -327,6 +327,45 @@ const ExoplanetOrbitalChart = () => {
     link.click();
   };
 
+  const exportChartAsCsv = () => {
+    const escapeCsv = (value: string): string => {
+      if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
+      return value;
+    };
+
+    const headers = [
+      "Planet",
+      "Orbital period (Earth days)",
+      "Orbital period (Earth years)",
+      "Ratio vs Earth",
+      "Percent difference vs Earth",
+    ];
+
+    const rows = allData.map((planet) => {
+      const earthYears = planet.periodDays / earthPeriod;
+      const ratio = earthYears;
+      const percentDifference = (ratio - 1) * 100;
+      return [
+        planet.name,
+        planet.periodDays.toFixed(4),
+        earthYears.toFixed(6),
+        ratio.toFixed(6),
+        percentDifference.toFixed(2),
+      ].map(escapeCsv).join(",");
+    });
+
+    const csv = [headers.map(escapeCsv).join(","), ...rows].join("\n");
+    const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "exoplanet-years-vs-earth.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="mt-16 mb-8" aria-labelledby="exoplanet-orbital-chart-title">
       <div className="text-center mb-8">

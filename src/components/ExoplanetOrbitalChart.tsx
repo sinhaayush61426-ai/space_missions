@@ -15,6 +15,16 @@ type ScaleMode = "linear" | "logarithmic";
 const scalePreferenceKey = "exoplanet-orbital-chart-scale";
 const tooltipsPreferenceKey = "exoplanet-orbital-chart-tooltips";
 const tooltipUnitPreferenceKey = "exoplanet-orbital-chart-tooltip-unit";
+const tooltipDelayPreferenceKey = "exoplanet-orbital-chart-tooltip-delay";
+
+const MIN_TOOLTIP_DELAY = 0;
+const MAX_TOOLTIP_DELAY = 300;
+const DEFAULT_TOOLTIP_DELAY = 120;
+
+const clampTooltipDelay = (value: number): number => {
+  if (Number.isNaN(value)) return DEFAULT_TOOLTIP_DELAY;
+  return Math.min(MAX_TOOLTIP_DELAY, Math.max(MIN_TOOLTIP_DELAY, Math.round(value)));
+};
 
 type TooltipUnit = "years" | "days";
 
@@ -90,6 +100,7 @@ const ExoplanetOrbitalChart = () => {
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [tooltipShift, setTooltipShift] = useState(0);
   const tooltipRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const hoverTimeoutRef = useRef<number | null>(null);
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
     if (typeof window === "undefined") return "logarithmic";
@@ -105,6 +116,12 @@ const ExoplanetOrbitalChart = () => {
     if (typeof window === "undefined") return "years";
     const saved = window.localStorage.getItem(tooltipUnitPreferenceKey);
     return isTooltipUnit(saved) ? saved : "years";
+  });
+  const [tooltipDelay, setTooltipDelay] = useState<number>(() => {
+    if (typeof window === "undefined") return DEFAULT_TOOLTIP_DELAY;
+    const saved = window.localStorage.getItem(tooltipDelayPreferenceKey);
+    if (saved === null) return DEFAULT_TOOLTIP_DELAY;
+    return clampTooltipDelay(Number(saved));
   });
 
   const allData: OrbitalData[] = [
@@ -126,6 +143,42 @@ const ExoplanetOrbitalChart = () => {
   useEffect(() => {
     window.localStorage.setItem(tooltipUnitPreferenceKey, tooltipUnit);
   }, [tooltipUnit]);
+
+  useEffect(() => {
+    window.localStorage.setItem(tooltipDelayPreferenceKey, String(tooltipDelay));
+  }, [tooltipDelay]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current !== null) {
+        window.clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const clearHoverTimeout = () => {
+    if (hoverTimeoutRef.current !== null) {
+      window.clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+  };
+
+  const handleRowMouseEnter = (index: number) => {
+    clearHoverTimeout();
+    if (tooltipDelay <= 0) {
+      setHoveredIndex(index);
+      return;
+    }
+    hoverTimeoutRef.current = window.setTimeout(() => {
+      setHoveredIndex(index);
+      hoverTimeoutRef.current = null;
+    }, tooltipDelay);
+  };
+
+  const handleRowMouseLeave = () => {
+    clearHoverTimeout();
+    setHoveredIndex(null);
+  };
 
   useLayoutEffect(() => {
     if (activeIndex === null) {
@@ -174,6 +227,7 @@ const ExoplanetOrbitalChart = () => {
 
     if (event.key === "Escape") {
       event.preventDefault();
+      clearHoverTimeout();
       setFocusedIndex(null);
       setHoveredIndex(null);
       event.currentTarget.blur();
@@ -390,6 +444,36 @@ const ExoplanetOrbitalChart = () => {
                   ))}
                 </div>
               </div>
+              <div className="pt-2">
+                <label
+                  htmlFor="exoplanet-tooltip-delay"
+                  className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+                >
+                  <span>Hover delay</span>
+                  <span className="font-mono normal-case tracking-normal text-foreground">
+                    {tooltipDelay}ms
+                  </span>
+                </label>
+                <input
+                  id="exoplanet-tooltip-delay"
+                  type="range"
+                  min={MIN_TOOLTIP_DELAY}
+                  max={MAX_TOOLTIP_DELAY}
+                  step={10}
+                  value={tooltipDelay}
+                  onChange={(event) => setTooltipDelay(clampTooltipDelay(Number(event.target.value)))}
+                  disabled={!tooltipsEnabled}
+                  aria-valuemin={MIN_TOOLTIP_DELAY}
+                  aria-valuemax={MAX_TOOLTIP_DELAY}
+                  aria-valuenow={tooltipDelay}
+                  aria-label={`Hover delay before tooltips appear, ${tooltipDelay} milliseconds`}
+                  className="mt-2 w-full accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+                  <span>{MIN_TOOLTIP_DELAY}ms</span>
+                  <span>{MAX_TOOLTIP_DELAY}ms</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -435,8 +519,8 @@ const ExoplanetOrbitalChart = () => {
               aria-label={`${planet.name}: orbital period ${planet.periodLabel}, ${earthYearsLabel}, ${percentDifferenceLabel}`}
               aria-describedby={describedBy}
               className="group flex items-center gap-3 cursor-default rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              onMouseEnter={() => handleRowMouseEnter(index)}
+              onMouseLeave={handleRowMouseLeave}
               onFocus={() => setFocusedIndex(index)}
               onBlur={() => setFocusedIndex(null)}
               onKeyDown={(event) => handleRowKeyDown(event, index)}

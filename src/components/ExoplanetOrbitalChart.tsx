@@ -669,6 +669,8 @@ const ExoplanetOrbitalChart = () => {
                   <div
                     id={tooltipId}
                     role="tooltip"
+                    aria-labelledby={planetNameId}
+                    aria-hidden={!tooltipVisible}
                     ref={(node) => {
                       if (node) tooltipRefs.current.set(index, node);
                       else tooltipRefs.current.delete(index);
@@ -677,7 +679,7 @@ const ExoplanetOrbitalChart = () => {
                       transform: `translateX(calc(-50% + ${activeIndex === index ? tooltipShift : 0}px))`,
                     }}
                     className={`pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-max max-w-[min(18rem,calc(100vw-2rem))] rounded-lg border border-border bg-popover px-3 py-2 text-left text-xs text-popover-foreground shadow-lg transition-opacity ${
-                      isHovered ? "opacity-100" : "opacity-0"
+                      tooltipVisible ? "opacity-100" : "opacity-0"
                     }`}
                   >
                     <p className="font-semibold text-foreground">{planet.name}</p>

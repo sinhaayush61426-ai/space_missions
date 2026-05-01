@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Download, FileSpreadsheet } from "lucide-react";
+import { Download, FileSpreadsheet, RotateCcw } from "lucide-react";
 import { exoplanetsData } from "@/data/exoplanetsData";
 
 interface OrbitalData {
@@ -327,6 +327,20 @@ const ExoplanetOrbitalChart = () => {
     link.click();
   };
 
+  const resetChartSettings = () => {
+    clearHoverTimeout();
+    setScaleMode("logarithmic");
+    setTooltipsEnabled(true);
+    setTooltipUnit("years");
+    setTooltipDelay(DEFAULT_TOOLTIP_DELAY);
+    setHoveredIndex(null);
+    setFocusedIndex(null);
+    if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+      const active = document.activeElement;
+      if (active.hasAttribute("data-exoplanet-orbit-row")) active.blur();
+    }
+  };
+
   const exportChartAsCsv = () => {
     const escapeCsv = (value: string): string => {
       if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
@@ -410,6 +424,15 @@ const ExoplanetOrbitalChart = () => {
               >
                 <FileSpreadsheet className="h-3.5 w-3.5" aria-hidden="true" />
                 Export CSV
+              </button>
+              <button
+                type="button"
+                onClick={resetChartSettings}
+                aria-label="Reset chart settings to defaults and close any open tooltip"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                Reset
               </button>
             </div>
           </header>

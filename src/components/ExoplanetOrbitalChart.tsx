@@ -392,15 +392,26 @@ const ExoplanetOrbitalChart = () => {
             >
               Chart Settings
             </h4>
-            <button
-              type="button"
-              onClick={exportChartAsPng}
-              aria-label={`Export Exoplanet Years vs Earth chart as a PNG using the ${scaleMode} scale`}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <Download className="h-3.5 w-3.5" aria-hidden="true" />
-              Export PNG
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={exportChartAsPng}
+                aria-label={`Export Exoplanet Years vs Earth chart as a PNG using the ${scaleMode} scale`}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                Export PNG
+              </button>
+              <button
+                type="button"
+                onClick={exportChartAsCsv}
+                aria-label="Download orbital period and percent difference data as a CSV file"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <FileSpreadsheet className="h-3.5 w-3.5" aria-hidden="true" />
+                Export CSV
+              </button>
+            </div>
           </header>
 
           <div className="grid gap-4 sm:grid-cols-2">

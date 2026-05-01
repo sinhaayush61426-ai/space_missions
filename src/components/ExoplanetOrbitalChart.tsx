@@ -227,6 +227,7 @@ const ExoplanetOrbitalChart = () => {
 
     if (event.key === "Escape") {
       event.preventDefault();
+      clearHoverTimeout();
       setFocusedIndex(null);
       setHoveredIndex(null);
       event.currentTarget.blur();

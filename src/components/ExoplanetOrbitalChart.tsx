@@ -488,8 +488,8 @@ const ExoplanetOrbitalChart = () => {
               aria-label={`${planet.name}: orbital period ${planet.periodLabel}, ${earthYearsLabel}, ${percentDifferenceLabel}`}
               aria-describedby={describedBy}
               className="group flex items-center gap-3 cursor-default rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              onMouseEnter={() => handleRowMouseEnter(index)}
+              onMouseLeave={handleRowMouseLeave}
               onFocus={() => setFocusedIndex(index)}
               onBlur={() => setFocusedIndex(null)}
               onKeyDown={(event) => handleRowKeyDown(event, index)}

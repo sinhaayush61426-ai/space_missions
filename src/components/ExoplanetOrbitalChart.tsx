@@ -103,6 +103,9 @@ const ExoplanetOrbitalChart = () => {
   const hoverTimeoutRef = useRef<number | null>(null);
   const settingsHydratedRef = useRef(false);
   const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [exportFilename, setExportFilename] = useState("");
+  const exportFilenameInputRef = useRef<HTMLInputElement>(null);
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
     if (typeof window === "undefined") return "logarithmic";

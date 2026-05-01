@@ -327,6 +327,20 @@ const ExoplanetOrbitalChart = () => {
     link.click();
   };
 
+  const resetChartSettings = () => {
+    clearHoverTimeout();
+    setScaleMode("logarithmic");
+    setTooltipsEnabled(true);
+    setTooltipUnit("years");
+    setTooltipDelay(DEFAULT_TOOLTIP_DELAY);
+    setHoveredIndex(null);
+    setFocusedIndex(null);
+    if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+      const active = document.activeElement;
+      if (active.hasAttribute("data-exoplanet-orbit-row")) active.blur();
+    }
+  };
+
   const exportChartAsCsv = () => {
     const escapeCsv = (value: string): string => {
       if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;

@@ -598,7 +598,9 @@ const ExoplanetOrbitalChart = () => {
           const percentDifferenceLabel = formatPercentDifference(ratio);
           const tooltipId = `exoplanet-orbit-tooltip-${index}`;
           const descriptionId = `exoplanet-orbit-description-${index}`;
+          const planetNameId = `exoplanet-orbit-name-${index}`;
           const describedBy = tooltipsEnabled ? `${descriptionId} ${tooltipId}` : descriptionId;
+          const tooltipVisible = tooltipsEnabled && isHovered;
 
           return (
             <div

@@ -103,6 +103,9 @@ const ExoplanetOrbitalChart = () => {
   const hoverTimeoutRef = useRef<number | null>(null);
   const settingsHydratedRef = useRef(false);
   const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [exportFilename, setExportFilename] = useState("");
+  const exportFilenameInputRef = useRef<HTMLInputElement>(null);
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
     if (typeof window === "undefined") return "logarithmic";
@@ -248,7 +251,7 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
-  const exportChartAsPng = () => {
+  const exportChartAsPng = (filename: string) => {
     const canvas = document.createElement("canvas");
     const width = 1200;
     const height = 860;
@@ -335,11 +338,46 @@ const ExoplanetOrbitalChart = () => {
     context.font = "500 15px Inter, sans-serif";
     context.fillText("1× = Earth's orbital period (365.25 days) · Earth shown as reference", width / 2, height - 64);
 
+    const safeName = filename.trim().replace(/\.png$/i, "") || "exoplanet-years-vs-earth";
     const link = document.createElement("a");
-    link.download = `exoplanet-years-vs-earth-${scaleMode}.png`;
+    link.download = `${safeName}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   };
+
+  const buildDefaultExportFilename = () => {
+    const tooltipPart = tooltipsEnabled ? `tooltips-on-${tooltipUnit}` : "tooltips-off";
+    return `exoplanet-years-vs-earth-${scaleMode}-${tooltipPart}`;
+  };
+
+  const openExportDialog = () => {
+    setExportFilename(buildDefaultExportFilename());
+    setExportDialogOpen(true);
+  };
+
+  const confirmExport = () => {
+    exportChartAsPng(exportFilename);
+    setExportDialogOpen(false);
+  };
+
+  useEffect(() => {
+    if (!exportDialogOpen) return;
+    const id = window.requestAnimationFrame(() => {
+      exportFilenameInputRef.current?.focus();
+      exportFilenameInputRef.current?.select();
+    });
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setExportDialogOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.cancelAnimationFrame(id);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [exportDialogOpen]);
 
   const resetChartSettings = () => {
     clearHoverTimeout();
@@ -423,7 +461,7 @@ const ExoplanetOrbitalChart = () => {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
-                onClick={exportChartAsPng}
+                onClick={openExportDialog}
                 aria-label={`Export Exoplanet Years vs Earth chart as a PNG using the ${scaleMode} scale`}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
@@ -696,6 +734,78 @@ const ExoplanetOrbitalChart = () => {
       <p className="text-center text-[10px] text-muted-foreground mt-4">
         1× = Earth's orbital period (365.25 days) · {scaleMode === "logarithmic" ? "Logarithmic" : "Linear"} scale · Earth shown as reference
       </p>
+
+      {exportDialogOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="exoplanet-export-dialog-title"
+          aria-describedby="exoplanet-export-dialog-desc"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/70 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setExportDialogOpen(false);
+          }}
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              confirmExport();
+            }}
+            className="w-full max-w-md rounded-2xl border border-border bg-popover p-5 shadow-2xl"
+          >
+            <h4
+              id="exoplanet-export-dialog-title"
+              className="font-display text-base font-semibold text-foreground"
+            >
+              Export chart as PNG
+            </h4>
+            <p
+              id="exoplanet-export-dialog-desc"
+              className="mt-1 text-xs text-muted-foreground"
+            >
+              Using <span className="text-foreground font-medium">{scaleMode === "logarithmic" ? "logarithmic" : "linear"}</span> scale,
+              tooltips <span className="text-foreground font-medium">{tooltipsEnabled ? `on (${tooltipUnit === "years" ? "Earth years" : "Earth days"})` : "off"}</span>.
+            </p>
+
+            <label
+              htmlFor="exoplanet-export-filename"
+              className="mt-4 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+            >
+              Filename
+            </label>
+            <div className="mt-1 flex items-center rounded-md border border-border bg-background/40 focus-within:ring-2 focus-within:ring-ring">
+              <input
+                id="exoplanet-export-filename"
+                ref={exportFilenameInputRef}
+                type="text"
+                value={exportFilename}
+                onChange={(e) => setExportFilename(e.target.value.replace(/[\\/:*?"<>|]/g, ""))}
+                className="flex-1 bg-transparent px-3 py-2 text-sm text-foreground outline-none"
+                aria-label="Exported PNG filename, without extension"
+              />
+              <span className="pr-3 text-xs text-muted-foreground">.png</span>
+            </div>
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setExportDialogOpen(false)}
+                className="rounded-full border border-border bg-background/40 px-4 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={!exportFilename.trim()}
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                Download PNG
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

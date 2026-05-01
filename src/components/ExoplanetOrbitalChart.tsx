@@ -618,6 +618,7 @@ const ExoplanetOrbitalChart = () => {
               onKeyDown={(event) => handleRowKeyDown(event, index)}
             >
               <span
+                id={planetNameId}
                 className={`w-28 text-right text-xs font-medium shrink-0 transition-colors ${
                   isEarth
                     ? "text-blue-400"

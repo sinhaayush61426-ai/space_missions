@@ -444,6 +444,36 @@ const ExoplanetOrbitalChart = () => {
                   ))}
                 </div>
               </div>
+              <div className="pt-2">
+                <label
+                  htmlFor="exoplanet-tooltip-delay"
+                  className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-muted-foreground"
+                >
+                  <span>Hover delay</span>
+                  <span className="font-mono normal-case tracking-normal text-foreground">
+                    {tooltipDelay}ms
+                  </span>
+                </label>
+                <input
+                  id="exoplanet-tooltip-delay"
+                  type="range"
+                  min={MIN_TOOLTIP_DELAY}
+                  max={MAX_TOOLTIP_DELAY}
+                  step={10}
+                  value={tooltipDelay}
+                  onChange={(event) => setTooltipDelay(clampTooltipDelay(Number(event.target.value)))}
+                  disabled={!tooltipsEnabled}
+                  aria-valuemin={MIN_TOOLTIP_DELAY}
+                  aria-valuemax={MAX_TOOLTIP_DELAY}
+                  aria-valuenow={tooltipDelay}
+                  aria-label={`Hover delay before tooltips appear, ${tooltipDelay} milliseconds`}
+                  className="mt-2 w-full accent-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
+                  <span>{MIN_TOOLTIP_DELAY}ms</span>
+                  <span>{MAX_TOOLTIP_DELAY}ms</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>

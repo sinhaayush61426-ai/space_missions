@@ -245,9 +245,9 @@ const ExoplanetOrbitalChart = () => {
     if (event.key === "Escape") {
       event.preventDefault();
       clearHoverTimeout();
+      // Dismiss the tooltip but keep focus on the current row
       setFocusedIndex(null);
       setHoveredIndex(null);
-      event.currentTarget.blur();
     }
   };
 

@@ -105,6 +105,9 @@ const ExoplanetOrbitalChart = () => {
   const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportFilename, setExportFilename] = useState("");
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const resetCancelRef = useRef<HTMLButtonElement>(null);
+  const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const exportFilenameInputRef = useRef<HTMLInputElement>(null);
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {

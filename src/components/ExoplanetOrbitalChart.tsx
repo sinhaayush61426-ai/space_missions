@@ -841,6 +841,54 @@ const ExoplanetOrbitalChart = () => {
           </form>
         </div>
       )}
+
+      {resetDialogOpen && (
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="exoplanet-reset-dialog-title"
+          aria-describedby="exoplanet-reset-dialog-desc"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/70 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) cancelReset();
+          }}
+        >
+          <div className="w-full max-w-sm rounded-2xl border border-border bg-popover p-5 shadow-2xl">
+            <h4
+              id="exoplanet-reset-dialog-title"
+              className="font-display text-base font-semibold text-foreground"
+            >
+              Reset chart settings?
+            </h4>
+            <p
+              id="exoplanet-reset-dialog-desc"
+              className="mt-2 text-xs text-muted-foreground leading-relaxed"
+            >
+              This will restore scale to <span className="text-foreground font-medium">logarithmic</span>,
+              tooltips to <span className="text-foreground font-medium">on (Earth years)</span>,
+              and hover delay to <span className="text-foreground font-medium">{DEFAULT_TOOLTIP_DELAY}ms</span>.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                ref={resetCancelRef}
+                type="button"
+                onClick={cancelReset}
+                className="rounded-full border border-border bg-background/40 px-4 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmReset}
+                className="inline-flex items-center gap-2 rounded-full bg-destructive px-4 py-1.5 text-xs font-semibold text-destructive-foreground hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

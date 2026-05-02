@@ -403,6 +403,30 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const confirmReset = () => {
+    resetChartSettings();
+    setResetDialogOpen(false);
+    requestAnimationFrame(() => resetTriggerRef.current?.focus());
+  };
+
+  const cancelReset = () => {
+    setResetDialogOpen(false);
+    requestAnimationFrame(() => resetTriggerRef.current?.focus());
+  };
+
+  useEffect(() => {
+    if (!resetDialogOpen) return;
+    requestAnimationFrame(() => resetCancelRef.current?.focus());
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cancelReset();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [resetDialogOpen]);
+
   const exportChartAsCsv = () => {
     const escapeCsv = (value: string): string => {
       if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;

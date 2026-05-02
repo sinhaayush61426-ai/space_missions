@@ -180,20 +180,27 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const pendingIndexRef = useRef<number | null>(null);
+
   const handleRowMouseEnter = (index: number) => {
     clearHoverTimeout();
+    pendingIndexRef.current = index;
     if (tooltipDelay <= 0) {
       setHoveredIndex(index);
       return;
     }
     hoverTimeoutRef.current = window.setTimeout(() => {
-      setHoveredIndex(index);
+      // Only show if this is still the latest hovered row
+      if (pendingIndexRef.current === index) {
+        setHoveredIndex(index);
+      }
       hoverTimeoutRef.current = null;
     }, tooltipDelay);
   };
 
   const handleRowMouseLeave = () => {
     clearHoverTimeout();
+    pendingIndexRef.current = null;
     setHoveredIndex(null);
   };
 

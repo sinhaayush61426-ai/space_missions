@@ -105,6 +105,9 @@ const ExoplanetOrbitalChart = () => {
   const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportFilename, setExportFilename] = useState("");
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const resetCancelRef = useRef<HTMLButtonElement>(null);
+  const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const exportFilenameInputRef = useRef<HTMLInputElement>(null);
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
@@ -400,6 +403,30 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const confirmReset = () => {
+    resetChartSettings();
+    setResetDialogOpen(false);
+    requestAnimationFrame(() => resetTriggerRef.current?.focus());
+  };
+
+  const cancelReset = () => {
+    setResetDialogOpen(false);
+    requestAnimationFrame(() => resetTriggerRef.current?.focus());
+  };
+
+  useEffect(() => {
+    if (!resetDialogOpen) return;
+    requestAnimationFrame(() => resetCancelRef.current?.focus());
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cancelReset();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [resetDialogOpen]);
+
   const exportChartAsCsv = () => {
     const escapeCsv = (value: string): string => {
       if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
@@ -485,8 +512,9 @@ const ExoplanetOrbitalChart = () => {
                 Export CSV
               </button>
               <button
+                ref={resetTriggerRef}
                 type="button"
-                onClick={resetChartSettings}
+                onClick={() => setResetDialogOpen(true)}
                 aria-label="Reset chart settings to defaults and close any open tooltip"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
@@ -811,6 +839,54 @@ const ExoplanetOrbitalChart = () => {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {resetDialogOpen && (
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="exoplanet-reset-dialog-title"
+          aria-describedby="exoplanet-reset-dialog-desc"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/70 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) cancelReset();
+          }}
+        >
+          <div className="w-full max-w-sm rounded-2xl border border-border bg-popover p-5 shadow-2xl">
+            <h4
+              id="exoplanet-reset-dialog-title"
+              className="font-display text-base font-semibold text-foreground"
+            >
+              Reset chart settings?
+            </h4>
+            <p
+              id="exoplanet-reset-dialog-desc"
+              className="mt-2 text-xs text-muted-foreground leading-relaxed"
+            >
+              This will restore scale to <span className="text-foreground font-medium">logarithmic</span>,
+              tooltips to <span className="text-foreground font-medium">on (Earth years)</span>,
+              and hover delay to <span className="text-foreground font-medium">{DEFAULT_TOOLTIP_DELAY}ms</span>.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                ref={resetCancelRef}
+                type="button"
+                onClick={cancelReset}
+                className="rounded-full border border-border bg-background/40 px-4 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmReset}
+                className="inline-flex items-center gap-2 rounded-full bg-destructive px-4 py-1.5 text-xs font-semibold text-destructive-foreground hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                Reset
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -512,8 +512,9 @@ const ExoplanetOrbitalChart = () => {
                 Export CSV
               </button>
               <button
+                ref={resetTriggerRef}
                 type="button"
-                onClick={resetChartSettings}
+                onClick={() => setResetDialogOpen(true)}
                 aria-label="Reset chart settings to defaults and close any open tooltip"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >

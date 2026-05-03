@@ -2,6 +2,7 @@
 
 An interactive web app for exploring the solar system, discovering exoplanets, and learning about space missions — built with a dark cosmic aesthetic, rich visualizations, and mobile-first design.
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![React](https://img.shields.io/badge/React-18-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-5-purple?logo=vite)
@@ -188,4 +189,4 @@ Modern browsers with ES2020+ support: Chrome, Firefox, Safari, Edge (latest 2 ve
 
 ## 📄 License
 
-MIT
+Open source for learning, experimentation, and personal use. Fork, modify, and adapt Space Missions to your needs.

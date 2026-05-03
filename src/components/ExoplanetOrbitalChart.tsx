@@ -377,10 +377,11 @@ const ExoplanetOrbitalChart = () => {
     const finalName = exportFilename.trim() || "exoplanet-chart";
     const fullFilename = finalName.endsWith(".png") ? finalName : `${finalName}.png`;
     window.localStorage.setItem("exoplanet-orbital-chart-export-filename", finalName);
-    exportChartAsPng(exportFilename);
+    window.localStorage.setItem("exoplanet-orbital-chart-export-resolution", String(exportResolution));
+    exportChartAsPng(exportFilename, exportResolution);
     setExportDialogOpen(false);
     toast.success(`PNG saved: ${fullFilename}`, {
-      description: `Scale: ${scaleMode} · Tooltips: ${tooltipsEnabled ? "on" : "off"} (${tooltipUnit})`,
+      description: `${exportResolution}px · Scale: ${scaleMode} · Tooltips: ${tooltipsEnabled ? "on" : "off"} (${tooltipUnit})`,
     });
   };
 

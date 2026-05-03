@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Download, FileSpreadsheet, RotateCcw, Upload, Settings2 } from "lucide-react";
+import { toast } from "sonner";
 import { exoplanetsData } from "@/data/exoplanetsData";
 
 interface OrbitalData {
@@ -366,8 +367,13 @@ const ExoplanetOrbitalChart = () => {
   };
 
   const confirmExport = () => {
+    const finalName = exportFilename.trim() || "exoplanet-chart";
+    const fullFilename = finalName.endsWith(".png") ? finalName : `${finalName}.png`;
     exportChartAsPng(exportFilename);
     setExportDialogOpen(false);
+    toast.success(`PNG saved: ${fullFilename}`, {
+      description: `Scale: ${scaleMode} · Tooltips: ${tooltipsEnabled ? "on" : "off"} (${tooltipUnit})`,
+    });
   };
 
   useEffect(() => {

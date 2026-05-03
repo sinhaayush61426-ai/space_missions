@@ -414,6 +414,47 @@ const ExoplanetOrbitalChart = () => {
     requestAnimationFrame(() => resetTriggerRef.current?.focus());
   };
 
+  const exportSettings = () => {
+    const settings = {
+      version: 1,
+      scale: scaleMode,
+      tooltips: tooltipsEnabled,
+      tooltipUnit,
+      tooltipDelay,
+    };
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "exoplanet-chart-settings.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importFileRef = useRef<HTMLInputElement>(null);
+
+  const importSettings = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
+        if (data.version !== 1) throw new Error("Unknown settings version");
+        if (isScaleMode(data.scale)) setScaleMode(data.scale);
+        if (typeof data.tooltips === "boolean") setTooltipsEnabled(data.tooltips);
+        if (isTooltipUnit(data.tooltipUnit)) setTooltipUnit(data.tooltipUnit);
+        if (typeof data.tooltipDelay === "number") setTooltipDelay(clampTooltipDelay(data.tooltipDelay));
+        setSettingsAnnouncement("Chart settings imported successfully.");
+      } catch {
+        setSettingsAnnouncement("Failed to import settings. Invalid file format.");
+      }
+    };
+    reader.readAsText(file);
+    // Reset so the same file can be re-imported
+    event.target.value = "";
+  };
+
   useEffect(() => {
     if (!resetDialogOpen) return;
     requestAnimationFrame(() => resetCancelRef.current?.focus());

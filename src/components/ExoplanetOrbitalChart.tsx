@@ -905,6 +905,27 @@ const ExoplanetOrbitalChart = () => {
               <span className="pr-3 text-xs text-muted-foreground">.png</span>
             </div>
 
+            <label className="mt-4 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Resolution
+            </label>
+            <div className="mt-1 inline-flex rounded-full border border-border bg-background/40 p-1" role="group" aria-label="Choose PNG export resolution">
+              {([1200, 1800, 2400] as const).map((res) => (
+                <button
+                  key={res}
+                  type="button"
+                  onClick={() => setExportResolution(res)}
+                  aria-pressed={exportResolution === res}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                    exportResolution === res
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {res}px
+                </button>
+              ))}
+            </div>
+
             <div className="mt-5 flex justify-end gap-2">
               <button
                 type="button"

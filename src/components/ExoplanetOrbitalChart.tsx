@@ -474,24 +474,26 @@ const ExoplanetOrbitalChart = () => {
       return value;
     };
 
+    const unitLabel = tooltipUnit === "days" ? "Earth days" : "Earth years";
     const headers = [
       "Planet",
-      "Orbital period (Earth days)",
-      "Orbital period (Earth years)",
+      `Orbital Period (${unitLabel})`,
       "Ratio vs Earth",
-      "Percent difference vs Earth",
+      "Percent Difference vs Earth",
+      `Scale Mode`,
     ];
 
     const rows = allData.map((planet) => {
       const earthYears = planet.periodDays / earthPeriod;
+      const periodValue = tooltipUnit === "days" ? planet.periodDays : earthYears;
       const ratio = earthYears;
       const percentDifference = (ratio - 1) * 100;
       return [
         planet.name,
-        planet.periodDays.toFixed(4),
-        earthYears.toFixed(6),
+        tooltipUnit === "days" ? periodValue.toFixed(4) : periodValue.toFixed(6),
         ratio.toFixed(6),
         percentDifference.toFixed(2),
+        scaleMode,
       ].map(escapeCsv).join(",");
     });
 
@@ -500,7 +502,7 @@ const ExoplanetOrbitalChart = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "exoplanet-years-vs-earth.csv";
+    link.download = `exoplanet-orbital-periods-${tooltipUnit}-${scaleMode}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

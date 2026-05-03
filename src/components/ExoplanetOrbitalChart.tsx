@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Download, FileSpreadsheet, RotateCcw, Upload, Settings2 } from "lucide-react";
+import { toast } from "sonner";
 import { exoplanetsData } from "@/data/exoplanetsData";
 
 interface OrbitalData {

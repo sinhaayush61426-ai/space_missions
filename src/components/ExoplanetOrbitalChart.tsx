@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Download, FileSpreadsheet, RotateCcw } from "lucide-react";
+import { Download, FileSpreadsheet, RotateCcw, Upload, Settings2 } from "lucide-react";
 import { exoplanetsData } from "@/data/exoplanetsData";
 
 interface OrbitalData {
@@ -414,6 +414,47 @@ const ExoplanetOrbitalChart = () => {
     requestAnimationFrame(() => resetTriggerRef.current?.focus());
   };
 
+  const exportSettings = () => {
+    const settings = {
+      version: 1,
+      scale: scaleMode,
+      tooltips: tooltipsEnabled,
+      tooltipUnit,
+      tooltipDelay,
+    };
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "exoplanet-chart-settings.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importFileRef = useRef<HTMLInputElement>(null);
+
+  const importSettings = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
+        if (data.version !== 1) throw new Error("Unknown settings version");
+        if (isScaleMode(data.scale)) setScaleMode(data.scale);
+        if (typeof data.tooltips === "boolean") setTooltipsEnabled(data.tooltips);
+        if (isTooltipUnit(data.tooltipUnit)) setTooltipUnit(data.tooltipUnit);
+        if (typeof data.tooltipDelay === "number") setTooltipDelay(clampTooltipDelay(data.tooltipDelay));
+        setSettingsAnnouncement("Chart settings imported successfully.");
+      } catch {
+        setSettingsAnnouncement("Failed to import settings. Invalid file format.");
+      }
+    };
+    reader.readAsText(file);
+    // Reset so the same file can be re-imported
+    event.target.value = "";
+  };
+
   useEffect(() => {
     if (!resetDialogOpen) return;
     requestAnimationFrame(() => resetCancelRef.current?.focus());
@@ -521,6 +562,32 @@ const ExoplanetOrbitalChart = () => {
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                 Reset
               </button>
+              <button
+                type="button"
+                onClick={exportSettings}
+                aria-label="Export chart settings as a JSON file"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Settings2 className="h-3.5 w-3.5" aria-hidden="true" />
+                Export Settings
+              </button>
+              <button
+                type="button"
+                onClick={() => importFileRef.current?.click()}
+                aria-label="Import chart settings from a JSON file"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+                Import Settings
+              </button>
+              <input
+                ref={importFileRef}
+                type="file"
+                accept=".json"
+                onChange={importSettings}
+                className="hidden"
+                aria-hidden="true"
+              />
             </div>
           </header>
 

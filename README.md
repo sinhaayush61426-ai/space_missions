@@ -14,7 +14,7 @@ An interactive web app for exploring the solar system, discovering exoplanets, a
 ## ⚡ Quick Start
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/sinhaayush61426-ai/space_missions
 cd space-missions
 bun install
 bun run dev

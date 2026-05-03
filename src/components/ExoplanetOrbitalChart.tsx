@@ -106,6 +106,11 @@ const ExoplanetOrbitalChart = () => {
   const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportFilename, setExportFilename] = useState("");
+  const [exportResolution, setExportResolution] = useState<number>(() => {
+    const saved = window.localStorage.getItem("exoplanet-orbital-chart-export-resolution");
+    const parsed = saved ? Number(saved) : NaN;
+    return [1200, 1800, 2400].includes(parsed) ? parsed : 1200;
+  });
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const resetCancelRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);

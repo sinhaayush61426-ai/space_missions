@@ -367,8 +367,13 @@ const ExoplanetOrbitalChart = () => {
   };
 
   const confirmExport = () => {
+    const finalName = exportFilename.trim() || "exoplanet-chart";
+    const fullFilename = finalName.endsWith(".png") ? finalName : `${finalName}.png`;
     exportChartAsPng(exportFilename);
     setExportDialogOpen(false);
+    toast.success(`PNG saved: ${fullFilename}`, {
+      description: `Scale: ${scaleMode} · Tooltips: ${tooltipsEnabled ? "on" : "off"} (${tooltipUnit})`,
+    });
   };
 
   useEffect(() => {

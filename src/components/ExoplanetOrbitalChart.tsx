@@ -267,10 +267,11 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
-  const exportChartAsPng = (filename: string) => {
+  const exportChartAsPng = (filename: string, baseWidth: number = 1200) => {
     const canvas = document.createElement("canvas");
-    const width = 1200;
-    const height = 860;
+    const s = baseWidth / 1200;
+    const width = baseWidth;
+    const height = Math.round(860 * s);
     const scale = window.devicePixelRatio || 1;
     canvas.width = width * scale;
     canvas.height = height * scale;

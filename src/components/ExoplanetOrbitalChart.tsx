@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Download, FileSpreadsheet, RotateCcw } from "lucide-react";
+import { Download, FileSpreadsheet, RotateCcw, Upload, Settings2 } from "lucide-react";
+import { toast } from "sonner";
 import { exoplanetsData } from "@/data/exoplanetsData";
 
 interface OrbitalData {
@@ -105,6 +106,14 @@ const ExoplanetOrbitalChart = () => {
   const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportFilename, setExportFilename] = useState("");
+  const [exportResolution, setExportResolution] = useState<number>(() => {
+    const saved = window.localStorage.getItem("exoplanet-orbital-chart-export-resolution");
+    const parsed = saved ? Number(saved) : NaN;
+    return [1200, 1800, 2400].includes(parsed) ? parsed : 1200;
+  });
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const resetCancelRef = useRef<HTMLButtonElement>(null);
+  const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const exportFilenameInputRef = useRef<HTMLInputElement>(null);
   const activeIndex = focusedIndex ?? hoveredIndex;
   const [scaleMode, setScaleMode] = useState<ScaleMode>(() => {
@@ -180,20 +189,27 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const pendingIndexRef = useRef<number | null>(null);
+
   const handleRowMouseEnter = (index: number) => {
     clearHoverTimeout();
+    pendingIndexRef.current = index;
     if (tooltipDelay <= 0) {
       setHoveredIndex(index);
       return;
     }
     hoverTimeoutRef.current = window.setTimeout(() => {
-      setHoveredIndex(index);
+      // Only show if this is still the latest hovered row
+      if (pendingIndexRef.current === index) {
+        setHoveredIndex(index);
+      }
       hoverTimeoutRef.current = null;
     }, tooltipDelay);
   };
 
   const handleRowMouseLeave = () => {
     clearHoverTimeout();
+    pendingIndexRef.current = null;
     setHoveredIndex(null);
   };
 
@@ -245,16 +261,17 @@ const ExoplanetOrbitalChart = () => {
     if (event.key === "Escape") {
       event.preventDefault();
       clearHoverTimeout();
+      // Dismiss the tooltip but keep focus on the current row
       setFocusedIndex(null);
       setHoveredIndex(null);
-      event.currentTarget.blur();
     }
   };
 
-  const exportChartAsPng = (filename: string) => {
+  const exportChartAsPng = (filename: string, baseWidth: number = 1200) => {
     const canvas = document.createElement("canvas");
-    const width = 1200;
-    const height = 860;
+    const s = baseWidth / 1200;
+    const width = baseWidth;
+    const height = Math.round(860 * s);
     const scale = window.devicePixelRatio || 1;
     canvas.width = width * scale;
     canvas.height = height * scale;
@@ -274,33 +291,33 @@ const ExoplanetOrbitalChart = () => {
     context.fillRect(0, 0, width, height);
 
     context.fillStyle = "rgba(250, 204, 21, 0.08)";
-    for (let i = 0; i < 80; i += 1) {
+    const starCount = Math.round(80 * s);
+    for (let i = 0; i < starCount; i += 1) {
       const x = (i * 137) % width;
       const y = (i * 89) % height;
       context.beginPath();
-      context.arc(x, y, i % 3 === 0 ? 1.6 : 0.9, 0, Math.PI * 2);
+      context.arc(x, y, (i % 3 === 0 ? 1.6 : 0.9) * s, 0, Math.PI * 2);
       context.fill();
     }
 
     context.textAlign = "center";
     context.fillStyle = "#facc15";
-    context.font = "700 18px Inter, sans-serif";
-    context.fillText("ORBITAL DYNAMICS", width / 2, 76);
+    context.font = `700 ${18 * s}px Inter, sans-serif`;
+    context.fillText("ORBITAL DYNAMICS", width / 2, 76 * s);
 
     context.fillStyle = "#f8fafc";
-    context.font = "800 44px Inter, sans-serif";
-    context.fillText("Exoplanet Years vs Earth", width / 2, 132);
+    context.font = `800 ${44 * s}px Inter, sans-serif`;
+    context.fillText("Exoplanet Years vs Earth", width / 2, 132 * s);
 
     context.fillStyle = "#94a3b8";
-    context.font = "500 18px Inter, sans-serif";
-    context.fillText(`Orbital periods compared on a ${scaleMode === "logarithmic" ? "logarithmic" : "linear"} scale`, width / 2, 170);
+    context.font = `500 ${18 * s}px Inter, sans-serif`;
+    context.fillText(`Orbital periods compared on a ${scaleMode === "logarithmic" ? "logarithmic" : "linear"} scale`, width / 2, 170 * s);
 
-    const chartX = 150;
-    const chartY = 230;
-    const chartWidth = 860;
-    const rowHeight = 62;
-    const barX = 330;
-    const barWidth = 620;
+    const chartX = 150 * s;
+    const chartY = 230 * s;
+    const rowHeight = 62 * s;
+    const barX = 330 * s;
+    const barWidth = 620 * s;
 
     allData.forEach((planet, index) => {
       const ratio = planet.periodDays / earthPeriod;
@@ -314,29 +331,29 @@ const ExoplanetOrbitalChart = () => {
 
       context.textAlign = "right";
       context.fillStyle = isEarth ? "#60a5fa" : "#cbd5e1";
-      context.font = "700 18px Inter, sans-serif";
-      context.fillText(planet.name, chartX + 150, y + 28);
+      context.font = `700 ${18 * s}px Inter, sans-serif`;
+      context.fillText(planet.name, chartX + 150 * s, y + 28 * s);
 
       context.fillStyle = "rgba(148, 163, 184, 0.16)";
-      drawRoundedRect(context, barX, y + 5, barWidth, 32, 16);
+      drawRoundedRect(context, barX, y + 5 * s, barWidth, 32 * s, 16 * s);
 
       context.fillStyle = isEarth ? "#3b82f6" : planet.color;
-      drawRoundedRect(context, barX, y + 5, (barWidth * barPercent) / 100, 32, 16);
+      drawRoundedRect(context, barX, y + 5 * s, (barWidth * barPercent) / 100, 32 * s, 16 * s);
 
       context.textAlign = "left";
       context.fillStyle = "#f8fafc";
-      context.font = "700 16px Inter, sans-serif";
-      context.fillText(`${ratioLabel}×`, Math.min(barX + (barWidth * barPercent) / 100 + 12, barX + barWidth - 120), y + 27);
+      context.font = `700 ${16 * s}px Inter, sans-serif`;
+      context.fillText(`${ratioLabel}×`, Math.min(barX + (barWidth * barPercent) / 100 + 12 * s, barX + barWidth - 120 * s), y + 27 * s);
 
       context.fillStyle = "#94a3b8";
-      context.font = "500 14px Inter, sans-serif";
-      context.fillText(planet.periodLabel, barX + barWidth + 20, y + 27);
+      context.font = `500 ${14 * s}px Inter, sans-serif`;
+      context.fillText(planet.periodLabel, barX + barWidth + 20 * s, y + 27 * s);
     });
 
     context.textAlign = "center";
     context.fillStyle = "#94a3b8";
-    context.font = "500 15px Inter, sans-serif";
-    context.fillText("1× = Earth's orbital period (365.25 days) · Earth shown as reference", width / 2, height - 64);
+    context.font = `500 ${15 * s}px Inter, sans-serif`;
+    context.fillText("1× = Earth's orbital period (365.25 days) · Earth shown as reference", width / 2, height - 64 * s);
 
     const safeName = filename.trim().replace(/\.png$/i, "") || "exoplanet-years-vs-earth";
     const link = document.createElement("a");
@@ -351,13 +368,21 @@ const ExoplanetOrbitalChart = () => {
   };
 
   const openExportDialog = () => {
-    setExportFilename(buildDefaultExportFilename());
+    const saved = window.localStorage.getItem("exoplanet-orbital-chart-export-filename");
+    setExportFilename(saved || buildDefaultExportFilename());
     setExportDialogOpen(true);
   };
 
   const confirmExport = () => {
-    exportChartAsPng(exportFilename);
+    const finalName = exportFilename.trim() || "exoplanet-chart";
+    const fullFilename = finalName.endsWith(".png") ? finalName : `${finalName}.png`;
+    window.localStorage.setItem("exoplanet-orbital-chart-export-filename", finalName);
+    window.localStorage.setItem("exoplanet-orbital-chart-export-resolution", String(exportResolution));
+    exportChartAsPng(exportFilename, exportResolution);
     setExportDialogOpen(false);
+    toast.success(`PNG saved: ${fullFilename}`, {
+      description: `${exportResolution}px · Scale: ${scaleMode} · Tooltips: ${tooltipsEnabled ? "on" : "off"} (${tooltipUnit})`,
+    });
   };
 
   useEffect(() => {
@@ -393,30 +418,110 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const confirmReset = () => {
+    const prev = { scale: scaleMode, tooltips: tooltipsEnabled, tooltipUnit, tooltipDelay };
+    resetChartSettings();
+    setResetDialogOpen(false);
+    requestAnimationFrame(() => resetTriggerRef.current?.focus());
+    toast("Settings reset to defaults", {
+      action: {
+        label: "Undo",
+        onClick: () => {
+          if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
+          setTooltipsEnabled(prev.tooltips);
+          if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
+          setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
+          toast.success("Settings restored");
+        },
+      },
+    });
+  };
+
+  const cancelReset = () => {
+    setResetDialogOpen(false);
+    requestAnimationFrame(() => resetTriggerRef.current?.focus());
+  };
+
+  const exportSettings = () => {
+    const settings = {
+      version: 1,
+      scale: scaleMode,
+      tooltips: tooltipsEnabled,
+      tooltipUnit,
+      tooltipDelay,
+    };
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "exoplanet-chart-settings.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importFileRef = useRef<HTMLInputElement>(null);
+
+  const importSettings = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
+        if (data.version !== 1) throw new Error("Unknown settings version");
+        if (isScaleMode(data.scale)) setScaleMode(data.scale);
+        if (typeof data.tooltips === "boolean") setTooltipsEnabled(data.tooltips);
+        if (isTooltipUnit(data.tooltipUnit)) setTooltipUnit(data.tooltipUnit);
+        if (typeof data.tooltipDelay === "number") setTooltipDelay(clampTooltipDelay(data.tooltipDelay));
+        setSettingsAnnouncement("Chart settings imported successfully.");
+      } catch {
+        setSettingsAnnouncement("Failed to import settings. Invalid file format.");
+      }
+    };
+    reader.readAsText(file);
+    // Reset so the same file can be re-imported
+    event.target.value = "";
+  };
+
+  useEffect(() => {
+    if (!resetDialogOpen) return;
+    requestAnimationFrame(() => resetCancelRef.current?.focus());
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        cancelReset();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [resetDialogOpen]);
+
   const exportChartAsCsv = () => {
     const escapeCsv = (value: string): string => {
       if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
       return value;
     };
 
+    const unitLabel = tooltipUnit === "days" ? "Earth days" : "Earth years";
     const headers = [
       "Planet",
-      "Orbital period (Earth days)",
-      "Orbital period (Earth years)",
+      `Orbital Period (${unitLabel})`,
       "Ratio vs Earth",
-      "Percent difference vs Earth",
+      "Percent Difference vs Earth",
+      `Scale Mode`,
     ];
 
     const rows = allData.map((planet) => {
       const earthYears = planet.periodDays / earthPeriod;
+      const periodValue = tooltipUnit === "days" ? planet.periodDays : earthYears;
       const ratio = earthYears;
       const percentDifference = (ratio - 1) * 100;
       return [
         planet.name,
-        planet.periodDays.toFixed(4),
-        earthYears.toFixed(6),
+        tooltipUnit === "days" ? periodValue.toFixed(4) : periodValue.toFixed(6),
         ratio.toFixed(6),
         percentDifference.toFixed(2),
+        scaleMode,
       ].map(escapeCsv).join(",");
     });
 
@@ -425,7 +530,7 @@ const ExoplanetOrbitalChart = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "exoplanet-years-vs-earth.csv";
+    link.download = `exoplanet-orbital-periods-${tooltipUnit}-${scaleMode}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -478,14 +583,41 @@ const ExoplanetOrbitalChart = () => {
                 Export CSV
               </button>
               <button
+                ref={resetTriggerRef}
                 type="button"
-                onClick={resetChartSettings}
+                onClick={() => setResetDialogOpen(true)}
                 aria-label="Reset chart settings to defaults and close any open tooltip"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                 Reset
               </button>
+              <button
+                type="button"
+                onClick={exportSettings}
+                aria-label="Export chart settings as a JSON file"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Settings2 className="h-3.5 w-3.5" aria-hidden="true" />
+                Export Settings
+              </button>
+              <button
+                type="button"
+                onClick={() => importFileRef.current?.click()}
+                aria-label="Import chart settings from a JSON file"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background/40 px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+                Import Settings
+              </button>
+              <input
+                ref={importFileRef}
+                type="file"
+                accept=".json"
+                onChange={importSettings}
+                className="hidden"
+                aria-hidden="true"
+              />
             </div>
           </header>
 
@@ -786,6 +918,27 @@ const ExoplanetOrbitalChart = () => {
               <span className="pr-3 text-xs text-muted-foreground">.png</span>
             </div>
 
+            <label className="mt-4 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Resolution
+            </label>
+            <div className="mt-1 inline-flex rounded-full border border-border bg-background/40 p-1" role="group" aria-label="Choose PNG export resolution">
+              {([1200, 1800, 2400] as const).map((res) => (
+                <button
+                  key={res}
+                  type="button"
+                  onClick={() => setExportResolution(res)}
+                  aria-pressed={exportResolution === res}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                    exportResolution === res
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {res}px
+                </button>
+              ))}
+            </div>
+
             <div className="mt-5 flex justify-end gap-2">
               <button
                 type="button"
@@ -804,6 +957,54 @@ const ExoplanetOrbitalChart = () => {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {resetDialogOpen && (
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="exoplanet-reset-dialog-title"
+          aria-describedby="exoplanet-reset-dialog-desc"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/70 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) cancelReset();
+          }}
+        >
+          <div className="w-full max-w-sm rounded-2xl border border-border bg-popover p-5 shadow-2xl">
+            <h4
+              id="exoplanet-reset-dialog-title"
+              className="font-display text-base font-semibold text-foreground"
+            >
+              Reset chart settings?
+            </h4>
+            <p
+              id="exoplanet-reset-dialog-desc"
+              className="mt-2 text-xs text-muted-foreground leading-relaxed"
+            >
+              This will restore scale to <span className="text-foreground font-medium">logarithmic</span>,
+              tooltips to <span className="text-foreground font-medium">on (Earth years)</span>,
+              and hover delay to <span className="text-foreground font-medium">{DEFAULT_TOOLTIP_DELAY}ms</span>.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                ref={resetCancelRef}
+                type="button"
+                onClick={cancelReset}
+                className="rounded-full border border-border bg-background/40 px-4 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmReset}
+                className="inline-flex items-center gap-2 rounded-full bg-destructive px-4 py-1.5 text-xs font-semibold text-destructive-foreground hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                Reset
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

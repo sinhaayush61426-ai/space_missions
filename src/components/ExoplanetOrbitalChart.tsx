@@ -106,6 +106,11 @@ const ExoplanetOrbitalChart = () => {
   const [settingsAnnouncement, setSettingsAnnouncement] = useState("");
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [exportFilename, setExportFilename] = useState("");
+  const [exportResolution, setExportResolution] = useState<number>(() => {
+    const saved = window.localStorage.getItem("exoplanet-orbital-chart-export-resolution");
+    const parsed = saved ? Number(saved) : NaN;
+    return [1200, 1800, 2400].includes(parsed) ? parsed : 1200;
+  });
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const resetCancelRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);
@@ -262,10 +267,11 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
-  const exportChartAsPng = (filename: string) => {
+  const exportChartAsPng = (filename: string, baseWidth: number = 1200) => {
     const canvas = document.createElement("canvas");
-    const width = 1200;
-    const height = 860;
+    const s = baseWidth / 1200;
+    const width = baseWidth;
+    const height = Math.round(860 * s);
     const scale = window.devicePixelRatio || 1;
     canvas.width = width * scale;
     canvas.height = height * scale;
@@ -285,33 +291,33 @@ const ExoplanetOrbitalChart = () => {
     context.fillRect(0, 0, width, height);
 
     context.fillStyle = "rgba(250, 204, 21, 0.08)";
-    for (let i = 0; i < 80; i += 1) {
+    const starCount = Math.round(80 * s);
+    for (let i = 0; i < starCount; i += 1) {
       const x = (i * 137) % width;
       const y = (i * 89) % height;
       context.beginPath();
-      context.arc(x, y, i % 3 === 0 ? 1.6 : 0.9, 0, Math.PI * 2);
+      context.arc(x, y, (i % 3 === 0 ? 1.6 : 0.9) * s, 0, Math.PI * 2);
       context.fill();
     }
 
     context.textAlign = "center";
     context.fillStyle = "#facc15";
-    context.font = "700 18px Inter, sans-serif";
-    context.fillText("ORBITAL DYNAMICS", width / 2, 76);
+    context.font = `700 ${18 * s}px Inter, sans-serif`;
+    context.fillText("ORBITAL DYNAMICS", width / 2, 76 * s);
 
     context.fillStyle = "#f8fafc";
-    context.font = "800 44px Inter, sans-serif";
-    context.fillText("Exoplanet Years vs Earth", width / 2, 132);
+    context.font = `800 ${44 * s}px Inter, sans-serif`;
+    context.fillText("Exoplanet Years vs Earth", width / 2, 132 * s);
 
     context.fillStyle = "#94a3b8";
-    context.font = "500 18px Inter, sans-serif";
-    context.fillText(`Orbital periods compared on a ${scaleMode === "logarithmic" ? "logarithmic" : "linear"} scale`, width / 2, 170);
+    context.font = `500 ${18 * s}px Inter, sans-serif`;
+    context.fillText(`Orbital periods compared on a ${scaleMode === "logarithmic" ? "logarithmic" : "linear"} scale`, width / 2, 170 * s);
 
-    const chartX = 150;
-    const chartY = 230;
-    const chartWidth = 860;
-    const rowHeight = 62;
-    const barX = 330;
-    const barWidth = 620;
+    const chartX = 150 * s;
+    const chartY = 230 * s;
+    const rowHeight = 62 * s;
+    const barX = 330 * s;
+    const barWidth = 620 * s;
 
     allData.forEach((planet, index) => {
       const ratio = planet.periodDays / earthPeriod;
@@ -325,29 +331,29 @@ const ExoplanetOrbitalChart = () => {
 
       context.textAlign = "right";
       context.fillStyle = isEarth ? "#60a5fa" : "#cbd5e1";
-      context.font = "700 18px Inter, sans-serif";
-      context.fillText(planet.name, chartX + 150, y + 28);
+      context.font = `700 ${18 * s}px Inter, sans-serif`;
+      context.fillText(planet.name, chartX + 150 * s, y + 28 * s);
 
       context.fillStyle = "rgba(148, 163, 184, 0.16)";
-      drawRoundedRect(context, barX, y + 5, barWidth, 32, 16);
+      drawRoundedRect(context, barX, y + 5 * s, barWidth, 32 * s, 16 * s);
 
       context.fillStyle = isEarth ? "#3b82f6" : planet.color;
-      drawRoundedRect(context, barX, y + 5, (barWidth * barPercent) / 100, 32, 16);
+      drawRoundedRect(context, barX, y + 5 * s, (barWidth * barPercent) / 100, 32 * s, 16 * s);
 
       context.textAlign = "left";
       context.fillStyle = "#f8fafc";
-      context.font = "700 16px Inter, sans-serif";
-      context.fillText(`${ratioLabel}×`, Math.min(barX + (barWidth * barPercent) / 100 + 12, barX + barWidth - 120), y + 27);
+      context.font = `700 ${16 * s}px Inter, sans-serif`;
+      context.fillText(`${ratioLabel}×`, Math.min(barX + (barWidth * barPercent) / 100 + 12 * s, barX + barWidth - 120 * s), y + 27 * s);
 
       context.fillStyle = "#94a3b8";
-      context.font = "500 14px Inter, sans-serif";
-      context.fillText(planet.periodLabel, barX + barWidth + 20, y + 27);
+      context.font = `500 ${14 * s}px Inter, sans-serif`;
+      context.fillText(planet.periodLabel, barX + barWidth + 20 * s, y + 27 * s);
     });
 
     context.textAlign = "center";
     context.fillStyle = "#94a3b8";
-    context.font = "500 15px Inter, sans-serif";
-    context.fillText("1× = Earth's orbital period (365.25 days) · Earth shown as reference", width / 2, height - 64);
+    context.font = `500 ${15 * s}px Inter, sans-serif`;
+    context.fillText("1× = Earth's orbital period (365.25 days) · Earth shown as reference", width / 2, height - 64 * s);
 
     const safeName = filename.trim().replace(/\.png$/i, "") || "exoplanet-years-vs-earth";
     const link = document.createElement("a");
@@ -371,10 +377,11 @@ const ExoplanetOrbitalChart = () => {
     const finalName = exportFilename.trim() || "exoplanet-chart";
     const fullFilename = finalName.endsWith(".png") ? finalName : `${finalName}.png`;
     window.localStorage.setItem("exoplanet-orbital-chart-export-filename", finalName);
-    exportChartAsPng(exportFilename);
+    window.localStorage.setItem("exoplanet-orbital-chart-export-resolution", String(exportResolution));
+    exportChartAsPng(exportFilename, exportResolution);
     setExportDialogOpen(false);
     toast.success(`PNG saved: ${fullFilename}`, {
-      description: `Scale: ${scaleMode} · Tooltips: ${tooltipsEnabled ? "on" : "off"} (${tooltipUnit})`,
+      description: `${exportResolution}px · Scale: ${scaleMode} · Tooltips: ${tooltipsEnabled ? "on" : "off"} (${tooltipUnit})`,
     });
   };
 
@@ -896,6 +903,27 @@ const ExoplanetOrbitalChart = () => {
                 aria-label="Exported PNG filename, without extension"
               />
               <span className="pr-3 text-xs text-muted-foreground">.png</span>
+            </div>
+
+            <label className="mt-4 block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Resolution
+            </label>
+            <div className="mt-1 inline-flex rounded-full border border-border bg-background/40 p-1" role="group" aria-label="Choose PNG export resolution">
+              {([1200, 1800, 2400] as const).map((res) => (
+                <button
+                  key={res}
+                  type="button"
+                  onClick={() => setExportResolution(res)}
+                  aria-pressed={exportResolution === res}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                    exportResolution === res
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {res}px
+                </button>
+              ))}
             </div>
 
             <div className="mt-5 flex justify-end gap-2">

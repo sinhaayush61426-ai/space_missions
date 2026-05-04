@@ -421,8 +421,18 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const undoReset = (prev: typeof lastResetSnapshot) => {
+    if (!prev) return;
+    if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
+    setTooltipsEnabled(prev.tooltips);
+    if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
+    setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
+    setLastResetSnapshot(null);
+  };
+
   const confirmReset = () => {
     const prev = { scale: scaleMode, tooltips: tooltipsEnabled, tooltipUnit, tooltipDelay };
+    setLastResetSnapshot(prev);
     resetChartSettings();
     setResetDialogOpen(false);
     requestAnimationFrame(() => resetTriggerRef.current?.focus());
@@ -431,16 +441,14 @@ const ExoplanetOrbitalChart = () => {
        action: {
          label: "Undo",
          onClick: () => {
-           if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
-           setTooltipsEnabled(prev.tooltips);
-           if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
-           setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
+           undoReset(prev);
            toast("Settings restored", {
              duration: 5000,
              action: {
                label: "Redo",
                onClick: () => {
                  resetChartSettings();
+                 setLastResetSnapshot(prev);
                  toast.success("Settings reset again");
                },
              },

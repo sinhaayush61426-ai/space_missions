@@ -112,6 +112,9 @@ const ExoplanetOrbitalChart = () => {
     return [1200, 1800, 2400].includes(parsed) ? parsed : 1200;
   });
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [lastResetSnapshot, setLastResetSnapshot] = useState<{
+    scale: string; tooltips: boolean; tooltipUnit: string; tooltipDelay: number;
+  } | null>(null);
   const resetCancelRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const exportFilenameInputRef = useRef<HTMLInputElement>(null);
@@ -418,8 +421,18 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const undoReset = (prev: typeof lastResetSnapshot) => {
+    if (!prev) return;
+    if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
+    setTooltipsEnabled(prev.tooltips);
+    if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
+    setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
+    setLastResetSnapshot(null);
+  };
+
   const confirmReset = () => {
     const prev = { scale: scaleMode, tooltips: tooltipsEnabled, tooltipUnit, tooltipDelay };
+    setLastResetSnapshot(prev);
     resetChartSettings();
     setResetDialogOpen(false);
     requestAnimationFrame(() => resetTriggerRef.current?.focus());
@@ -428,16 +441,14 @@ const ExoplanetOrbitalChart = () => {
        action: {
          label: "Undo",
          onClick: () => {
-           if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
-           setTooltipsEnabled(prev.tooltips);
-           if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
-           setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
+           undoReset(prev);
            toast("Settings restored", {
              duration: 5000,
              action: {
                label: "Redo",
                onClick: () => {
                  resetChartSettings();
+                 setLastResetSnapshot(prev);
                  toast.success("Settings reset again");
                },
              },
@@ -601,7 +612,19 @@ const ExoplanetOrbitalChart = () => {
               >
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                 Reset
-              </button>
+               </button>
+               {lastResetSnapshot && (
+                 <button
+                   type="button"
+                   onClick={() => {
+                     undoReset(lastResetSnapshot);
+                     toast.success("Settings restored");
+                   }}
+                   className="text-[10px] text-primary underline underline-offset-2 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                 >
+                   Undo last reset
+                 </button>
+               )}
               <button
                 type="button"
                 onClick={exportSettings}

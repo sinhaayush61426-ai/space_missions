@@ -612,7 +612,19 @@ const ExoplanetOrbitalChart = () => {
               >
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                 Reset
-              </button>
+               </button>
+               {lastResetSnapshot && (
+                 <button
+                   type="button"
+                   onClick={() => {
+                     undoReset(lastResetSnapshot);
+                     toast.success("Settings restored");
+                   }}
+                   className="text-[10px] text-primary underline underline-offset-2 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                 >
+                   Undo last reset
+                 </button>
+               )}
               <button
                 type="button"
                 onClick={exportSettings}

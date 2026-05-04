@@ -978,14 +978,23 @@ const ExoplanetOrbitalChart = () => {
             >
               Reset chart settings?
             </h4>
-            <p
-              id="exoplanet-reset-dialog-desc"
-              className="mt-2 text-xs text-muted-foreground leading-relaxed"
-            >
-              This will restore scale to <span className="text-foreground font-medium">logarithmic</span>,
-              tooltips to <span className="text-foreground font-medium">on (Earth years)</span>,
-              and hover delay to <span className="text-foreground font-medium">{DEFAULT_TOOLTIP_DELAY}ms</span>.
-            </p>
+             <div
+               id="exoplanet-reset-dialog-desc"
+               className="mt-3 text-xs text-muted-foreground leading-relaxed space-y-2"
+             >
+               <p>Your current settings:</p>
+               <ul className="space-y-1 pl-3">
+                 <li>Scale: <span className="text-foreground font-medium capitalize">{scaleMode}</span></li>
+                 <li>Tooltips: <span className="text-foreground font-medium">{tooltipsEnabled ? "On" : "Off"}</span></li>
+                 <li>Units: <span className="text-foreground font-medium capitalize">{tooltipUnit.replace("-", " ")}</span></li>
+                 <li>Hover delay: <span className="text-foreground font-medium">{tooltipDelay}ms</span></li>
+               </ul>
+               <p className="pt-1">
+                 This will restore scale to <span className="text-foreground font-medium">logarithmic</span>,
+                 tooltips to <span className="text-foreground font-medium">on (Earth years)</span>,
+                 and hover delay to <span className="text-foreground font-medium">{DEFAULT_TOOLTIP_DELAY}ms</span>.
+               </p>
+             </div>
             <div className="mt-5 flex justify-end gap-2">
               <button
                 ref={resetCancelRef}

@@ -423,18 +423,26 @@ const ExoplanetOrbitalChart = () => {
     resetChartSettings();
     setResetDialogOpen(false);
     requestAnimationFrame(() => resetTriggerRef.current?.focus());
-    toast("Settings reset to defaults", {
-      action: {
-        label: "Undo",
-        onClick: () => {
-          if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
-          setTooltipsEnabled(prev.tooltips);
-          if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
-          setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
-          toast.success("Settings restored");
-        },
-      },
-    });
+     toast("Settings reset to defaults", {
+       action: {
+         label: "Undo",
+         onClick: () => {
+           if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
+           setTooltipsEnabled(prev.tooltips);
+           if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
+           setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
+           toast("Settings restored", {
+             action: {
+               label: "Redo",
+               onClick: () => {
+                 resetChartSettings();
+                 toast.success("Settings reset again");
+               },
+             },
+           });
+         },
+       },
+     });
   };
 
   const cancelReset = () => {

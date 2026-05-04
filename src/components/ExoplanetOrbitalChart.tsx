@@ -112,6 +112,9 @@ const ExoplanetOrbitalChart = () => {
     return [1200, 1800, 2400].includes(parsed) ? parsed : 1200;
   });
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [lastResetSnapshot, setLastResetSnapshot] = useState<{
+    scale: string; tooltips: boolean; tooltipUnit: string; tooltipDelay: number;
+  } | null>(null);
   const resetCancelRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const exportFilenameInputRef = useRef<HTMLInputElement>(null);

@@ -424,6 +424,7 @@ const ExoplanetOrbitalChart = () => {
     setResetDialogOpen(false);
     requestAnimationFrame(() => resetTriggerRef.current?.focus());
      toast("Settings reset to defaults", {
+       duration: 5000,
        action: {
          label: "Undo",
          onClick: () => {
@@ -432,6 +433,7 @@ const ExoplanetOrbitalChart = () => {
            if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
            setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
            toast("Settings restored", {
+             duration: 5000,
              action: {
                label: "Redo",
                onClick: () => {

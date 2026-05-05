@@ -1,7 +1,27 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { Rocket, ArrowRight, Thermometer, Scale, Wind } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
+import mercuryImage from "@/assets/mercury.png";
+import venusImage from "@/assets/venus.png";
+import earthImage from "@/assets/earth.png";
+import marsImage from "@/assets/mars.png";
+import jupiterImage from "@/assets/jupiter.png";
+import saturnImage from "@/assets/saturn.png";
+import uranusImage from "@/assets/uranus.png";
+import neptuneImage from "@/assets/neptune.png";
+
+const planetImages: Record<string, string> = {
+  mercury: mercuryImage,
+  venus: venusImage,
+  earth: earthImage,
+  mars: marsImage,
+  jupiter: jupiterImage,
+  saturn: saturnImage,
+  uranus: uranusImage,
+  neptune: neptuneImage,
+};
 
 interface Mission {
   name: string;

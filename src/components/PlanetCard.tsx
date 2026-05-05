@@ -101,7 +101,7 @@ const PlanetCard = ({
         </span>
       )}
       
-      {/* Planet image */}
+      {/* Planet image with gradient fallback */}
       {planetImages[id] ? (
         <img
           src={planetImages[id]}
@@ -111,17 +111,23 @@ const PlanetCard = ({
             boxShadow: `0 0 30px ${gradient.shadow}40`,
             animationDelay: `${delay * 0.5}s`,
           }}
-        />
-      ) : (
-        <div
-          className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
-          style={{
-            background: gradientStyle,
-            boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
-            animationDelay: `${delay * 0.5}s`,
+          onError={(e) => {
+            const target = e.currentTarget;
+            target.style.display = "none";
+            const fallback = target.nextElementSibling as HTMLElement | null;
+            if (fallback) fallback.style.display = "block";
           }}
         />
-      )}
+      ) : null}
+      <div
+        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
+        style={{
+          background: gradientStyle,
+          boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
+          animationDelay: `${delay * 0.5}s`,
+          display: planetImages[id] ? "none" : "block",
+        }}
+      />
 
       <h3 className="font-display text-2xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
         {name}

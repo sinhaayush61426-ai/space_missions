@@ -1,7 +1,27 @@
 import { Link } from "react-router-dom";
+
 import { Rocket, ArrowRight, Thermometer, Scale, Wind } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
 import CompareButton from "@/components/CompareButton";
+import mercuryImage from "@/assets/mercury.png";
+import venusImage from "@/assets/venus.png";
+import earthImage from "@/assets/earth.png";
+import marsImage from "@/assets/mars.png";
+import jupiterImage from "@/assets/jupiter.png";
+import saturnImage from "@/assets/saturn.png";
+import uranusImage from "@/assets/uranus.png";
+import neptuneImage from "@/assets/neptune.png";
+
+const planetImages: Record<string, string> = {
+  mercury: mercuryImage,
+  venus: venusImage,
+  earth: earthImage,
+  mars: marsImage,
+  jupiter: jupiterImage,
+  saturn: saturnImage,
+  uranus: uranusImage,
+  neptune: neptuneImage,
+};
 
 interface Mission {
   name: string;
@@ -81,25 +101,27 @@ const PlanetCard = ({
         </span>
       )}
       
-      {/* Realistic planet sphere */}
-      <div 
-        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
-        style={{ 
-          background: gradientStyle,
-          boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
-          animationDelay: `${delay * 0.5}s`
-        }}
-      >
-        {(id === 'saturn' || id === 'uranus') && (
-          <div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-3 rounded-full border-2 opacity-60"
-            style={{ 
-              borderColor: id === 'saturn' ? '#c9a86c' : '#7de3f4',
-              transform: 'translate(-50%, -50%) rotateX(70deg)',
-            }}
-          />
-        )}
-      </div>
+      {/* Planet image */}
+      {planetImages[id] ? (
+        <img
+          src={planetImages[id]}
+          alt={name}
+          className="w-16 h-16 rounded-full mb-4 object-cover animate-float mt-2"
+          style={{
+            boxShadow: `0 0 30px ${gradient.shadow}40`,
+            animationDelay: `${delay * 0.5}s`,
+          }}
+        />
+      ) : (
+        <div
+          className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
+          style={{
+            background: gradientStyle,
+            boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
+            animationDelay: `${delay * 0.5}s`,
+          }}
+        />
+      )}
 
       <h3 className="font-display text-2xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
         {name}

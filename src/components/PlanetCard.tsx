@@ -86,6 +86,11 @@ const PlanetCard = ({
 
   const gradient = planetGradients[id] || { colors: [color, color], shadow: color };
   const gradientStyle = `radial-gradient(circle at 30% 30%, ${gradient.colors.join(", ")})`;
+  const hasPlanetImage = Boolean(planetImages[id]);
+
+  if (!hasPlanetImage) {
+    reportMissingPlanetImage(id, name, "no-asset");
+  }
 
   return (
     <Link 

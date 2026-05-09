@@ -15,25 +15,6 @@ import FavoriteButton from "@/components/FavoriteButton";
 import PlanetDetailSkeleton from "@/components/PlanetDetailSkeleton";
 import { usePlanetSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useKeyboardNavigation } from "@/hooks/useKeyboardNavigation";
-import mercuryImage from "@/assets/mercury.png";
-import venusImage from "@/assets/venus.png";
-import earthImage from "@/assets/earth.png";
-import marsImage from "@/assets/mars.png";
-import jupiterImage from "@/assets/jupiter.png";
-import saturnImage from "@/assets/saturn.png";
-import uranusImage from "@/assets/uranus.png";
-import neptuneImage from "@/assets/neptune.png";
-
-const planetImages: Record<string, string> = {
-  mercury: mercuryImage,
-  venus: venusImage,
-  earth: earthImage,
-  mars: marsImage,
-  jupiter: jupiterImage,
-  saturn: saturnImage,
-  uranus: uranusImage,
-  neptune: neptuneImage,
-};
 
 const planetIds = planetsData.map((p) => p.id);
 
@@ -253,24 +234,7 @@ const PlanetDetail = () => {
           planetName={planet.name} 
         />
 
-        {/* Planet Image (if available) */}
-        {planetImages[planet.id] && (
-          <section className="py-12 px-6">
-            <div className="container mx-auto">
-              <div className="relative max-w-2xl mx-auto">
-                <div 
-                  className="absolute inset-0 blur-3xl opacity-20"
-                  style={{ backgroundColor: planet.color }}
-                />
-                <img 
-                  src={planetImages[planet.id]} 
-                  alt={planet.name}
-                  className="relative w-full rounded-2xl border border-border/50"
-                />
-              </div>
-            </div>
-          </section>
-        )}
+        {/* Planet Image section removed - Planet3D component above provides procedural rendering */}
 
         {/* Mission Timeline */}
         <section className="py-12 px-6">

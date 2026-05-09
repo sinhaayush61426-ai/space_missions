@@ -5,27 +5,12 @@ import { motion } from "framer-motion";
 import { getExoplanetById, exoplanetsData } from "@/data/exoplanetsData";
 import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
+import CartoonPlanet from "@/components/CartoonPlanet";
 import PlanetInternalStructure from "@/components/PlanetInternalStructure";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import FavoriteButton from "@/components/FavoriteButton";
 import ExoplanetDetailSkeleton from "@/components/ExoplanetDetailSkeleton";
 import { useExoplanetSwipeNavigation, useExoplanetKeyboardNavigation } from "@/hooks/useExoplanetNavigation";
-
-import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
-import trappist1eImage from "@/assets/trappist-1e.png";
-import trappist1fImage from "@/assets/trappist-1f.png";
-import trappist1gImage from "@/assets/trappist-1g.png";
-import kepler452bImage from "@/assets/kepler-452b.png";
-import toi700dImage from "@/assets/toi-700d.png";
-
-const exoplanetImages: Record<string, string> = {
-  "proxima-centauri-b": proximaCentauriBImage,
-  "trappist-1e": trappist1eImage,
-  "trappist-1f": trappist1fImage,
-  "trappist-1g": trappist1gImage,
-  "kepler-452b": kepler452bImage,
-  "toi-700d": toi700dImage,
-};
 
 const exoplanetIds = exoplanetsData.map((p) => p.id);
 
@@ -196,16 +181,14 @@ const ExoplanetDetail = () => {
 
               {/* Planet Image */}
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-                <div className="relative">
+                <div className="relative flex justify-center">
                   <div
-                    className="absolute inset-0 blur-3xl opacity-30"
+                    className="absolute inset-0 blur-3xl opacity-20 w-64 h-64 mx-auto"
                     style={{ backgroundColor: exoplanet.color }}
                   />
-                  <img
-                    src={exoplanetImages[exoplanet.id]}
-                    alt={exoplanet.name}
-                    className="relative w-full max-w-lg mx-auto rounded-2xl border border-border/50"
-                  />
+                  <div className="relative p-8">
+                    <CartoonPlanet id={exoplanet.id} name={exoplanet.name} size={200} shadow={exoplanet.color} />
+                  </div>
                 </div>
               </div>
             </div>

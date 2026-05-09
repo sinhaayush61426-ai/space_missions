@@ -1,8 +1,10 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Star, Telescope, MapPin } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { exoplanetsData, type ExoplanetData } from "@/data/exoplanetsData";
 import FavoriteButton from "@/components/FavoriteButton";
+import CartoonPlanet from "@/components/CartoonPlanet";
 import HabitabilityChart from "@/components/HabitabilityChart";
 import ExoplanetOrbitalChart from "@/components/ExoplanetOrbitalChart";
 import ExoplanetFilters from "@/components/ExoplanetFilters";
@@ -13,22 +15,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-
-import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
-import trappist1eImage from "@/assets/trappist-1e.png";
-import trappist1fImage from "@/assets/trappist-1f.png";
-import trappist1gImage from "@/assets/trappist-1g.png";
-import kepler452bImage from "@/assets/kepler-452b.png";
-import toi700dImage from "@/assets/toi-700d.png";
-
-const exoplanetImages: Record<string, string> = {
-  "proxima-centauri-b": proximaCentauriBImage,
-  "trappist-1e": trappist1eImage,
-  "trappist-1f": trappist1fImage,
-  "trappist-1g": trappist1gImage,
-  "kepler-452b": kepler452bImage,
-  "toi-700d": toi700dImage,
-};
 
 const earthOrbitalPeriodDays = 365.25;
 
@@ -77,6 +63,12 @@ const ExoplanetsSection = () => {
     setDistanceRange([0, 2000]);
   };
 
+  const parseDistance = (distance: string): number => {
+    const numValue = parseFloat(distance.replace(/,/g, ""));
+    if (distance.toLowerCase().includes("light-year")) return numValue * 63241;
+    return numValue;
+  };
+
   const filteredExoplanets = useMemo(() => {
     return exoplanetsData.filter((exo) => {
       // Search
@@ -102,9 +94,15 @@ const ExoplanetsSection = () => {
         if (!selectedHabitability.includes(habLevel)) return false;
       }
 
+      // Distance range filter
+      const exoDistance = parseDistance(exo.distance);
+      if (exoDistance < distanceRange[0] || exoDistance > distanceRange[1]) {
+        return false;
+      }
+
       return true;
     });
-  }, [searchQuery, selectedTypes, selectedHabitability]);
+  }, [searchQuery, selectedTypes, selectedHabitability, distanceRange]);
 
   return (
     <section id="exoplanets" className="py-20 px-6">
@@ -139,92 +137,97 @@ const ExoplanetsSection = () => {
         />
 
         {/* Exoplanet Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredExoplanets.map((exo, index) => (
-            <article
-              key={exo.id}
-              role="button"
-              tabIndex={0}
-              onClick={() => setSelectedExoplanet(exo)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  setSelectedExoplanet(exo);
-                }
-              }}
-              className="group relative bg-card border border-border/50 rounded-2xl overflow-hidden hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all duration-300 opacity-0 animate-fade-in block cursor-pointer"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
+        <AnimatePresence mode="popLayout">
+          <motion.div 
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {filteredExoplanets.map((exo, index) => (
+              <motion.article
+                key={exo.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelectedExoplanet(exo)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setSelectedExoplanet(exo);
+                  }
+                }}
+                className="group relative bg-card border border-border/50 rounded-2xl overflow-hidden hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-all duration-300 block cursor-pointer"
+              >
               {/* Image */}
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/20 to-transparent flex items-center justify-center">
                 <div 
-                  className="absolute inset-0 opacity-20"
+                  className="absolute inset-0 opacity-10"
                   style={{ backgroundColor: exo.color }}
                 />
-                <img
-                  src={exoplanetImages[exo.id]}
-                  alt={exo.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <CartoonPlanet id={exo.id} name={exo.name} size={120} shadow={exo.color} />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
                 
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex gap-2">
-                  <span className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 backdrop-blur-sm">
+                  <span className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-secondary/80 text-muted-foreground border border-border/50">
                     {exo.type}
                   </span>
                 </div>
-                <div className="absolute top-3 right-3 flex items-center gap-2">
-                  <span className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 backdrop-blur-sm">
-                    {exo.habitabilityIndex.split(" — ")[0]}
-                  </span>
-                  <div onClick={(event) => event.stopPropagation()}>
-                    <FavoriteButton planetId={`exo:${exo.id}`} size="sm" />
-                  </div>
+                <div className="absolute top-3 right-3">
+                  <FavoriteButton planetId={`exo:${exo.id}`} size="sm" />
                 </div>
               </div>
 
               {/* Content */}
               <div className="p-5">
-                <h3 className="font-display text-xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+                <h3 className="font-display text-2xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
                   {exo.name}
                 </h3>
 
-                <div className="flex items-center gap-4 mb-3 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    {exo.distance}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Star className="w-3 h-3" />
-                    {exo.hostStar.type.split(" ")[0]}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Telescope className="w-3 h-3" />
-                    {exo.discoveredYear}
-                  </span>
-                </div>
+                <p className="text-muted-foreground text-xs mb-3">
+                  {exo.distance} from {exo.hostStar?.name || "Unknown"}
+                </p>
 
                 {/* Quick Stats */}
-                <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="grid grid-cols-2 gap-2 mb-4">
                   <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30">
                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Diameter</p>
-                    <p className="text-xs font-semibold text-foreground">{exo.diameter.split("(")[0].trim()}</p>
+                    <p className="text-xs font-semibold text-foreground">{exo.diameter?.split("(")[0].trim() || "Unknown"}</p>
                   </div>
                   <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Year</p>
-                    <p className="text-xs font-semibold text-foreground">{exo.yearLength}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Orbit</p>
+                    <p className="text-xs font-semibold text-foreground">{exo.yearLength || "Unknown"}</p>
+                  </div>
+                  <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Star Type</p>
+                    <p className="text-xs font-semibold text-foreground">{exo.hostStar?.type?.split(" ")[0] || "Unknown"}</p>
+                  </div>
+                  <div className="bg-secondary/40 rounded-lg px-2.5 py-1.5 border border-border/30">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Discovered</p>
+                    <p className="text-xs font-semibold text-foreground">{exo.discoveredYear || "Unknown"}</p>
                   </div>
                 </div>
 
-                <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2 mb-4">
+                <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-2">
                   {exo.description}
                 </p>
 
+                {/* Habitability Badge */}
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                    Habitability: {exo.habitabilityIndex?.split(" — ")[0] || "Unknown"}
+                  </span>
+                </div>
+
                 {/* View More */}
-                <div className="flex items-center justify-between pt-3 border-t border-border/50">
-                  <span className="text-xs text-muted-foreground">
-                    {exo.missions.length} observation missions
+                <div className="pt-3 border-t border-border/50 flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {exo.missions.length} missions
                   </span>
                   <Link
                     to={`/exoplanet/${exo.id}`}
@@ -235,9 +238,10 @@ const ExoplanetsSection = () => {
                   </Link>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
+            </motion.article>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         {filteredExoplanets.length === 0 && (
           <div className="text-center py-12">
@@ -258,7 +262,14 @@ const ExoplanetsSection = () => {
       <Drawer open={Boolean(selectedExoplanet)} onOpenChange={(open) => !open && setSelectedExoplanet(null)}>
         <DrawerContent className="border-border/70 bg-card/95 backdrop-blur-xl">
           {selectedExoplanet && (
-            <div className="mx-auto w-full max-w-xl px-6 pb-8">
+            <div className="mx-auto w-full max-w-xl px-6 pb-8 relative">
+              <button
+                onClick={() => setSelectedExoplanet(null)}
+                className="absolute top-4 right-4 p-2 hover:bg-secondary/50 rounded-lg transition-colors"
+                aria-label="Close drawer"
+              >
+                <X className="w-4 h-4" />
+              </button>
               <DrawerHeader className="px-0 text-left">
                 <DrawerDescription className="font-display text-xs uppercase tracking-[0.3em] text-primary">
                   Exoplanet Snapshot

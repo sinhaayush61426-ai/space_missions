@@ -120,27 +120,14 @@ const PlanetCard = ({
         </span>
       )}
       
-      {/* Planet image with gradient fallback */}
+      {/* Planet image with shimmer placeholder + gradient fallback */}
       {planetImages[id] ? (
-        <img
+        <PlanetImage
+          id={id}
+          name={name}
           src={planetImages[id]}
-          alt={name}
-          loading="lazy"
-          decoding="async"
-          width={64}
-          height={64}
-          className="w-16 h-16 rounded-full mb-4 object-cover animate-float mt-2"
-          style={{
-            boxShadow: `0 0 30px ${gradient.shadow}40`,
-            animationDelay: `${delay * 0.5}s`,
-          }}
-          onError={(e) => {
-            reportMissingPlanetImage(id, name, "load-error");
-            const target = e.currentTarget;
-            target.style.display = "none";
-            const fallback = target.nextElementSibling as HTMLElement | null;
-            if (fallback) fallback.style.display = "block";
-          }}
+          shadow={gradient.shadow}
+          delay={delay}
         />
       ) : null}
       <div

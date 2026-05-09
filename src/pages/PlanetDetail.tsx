@@ -50,6 +50,15 @@ const PlanetDetail = () => {
     return () => clearTimeout(timer);
   }, [planetId]);
 
+  // Set page title based on planet data
+  useEffect(() => {
+    if (planet) {
+      document.title = `Planet - ${planet.name}`;
+    } else {
+      document.title = "Planet Not Found";
+    }
+  }, [planet]);
+
   // Get navigation direction from location state
   const direction = (location.state as { direction?: "left" | "right" })?.direction || "none";
 

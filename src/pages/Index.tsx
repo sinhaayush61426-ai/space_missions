@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Starfield from "@/components/Starfield";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -8,6 +9,9 @@ import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
 
 const Index = () => {
+  useEffect(() => {
+    document.title = "Explore";
+  }, []);
   return (
     <div className="relative min-h-screen bg-background overflow-x-hidden">
       <Starfield />

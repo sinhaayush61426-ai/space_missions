@@ -38,6 +38,15 @@ const ExoplanetDetail = () => {
     return () => clearTimeout(timer);
   }, [exoplanetId]);
 
+  // Set page title based on exoplanet data
+  useEffect(() => {
+    if (exoplanet) {
+      document.title = `Exoplanet - ${exoplanet.name}`;
+    } else {
+      document.title = "Exoplanet Not Found";
+    }
+  }, [exoplanet]);
+
   if (!exoplanet) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">

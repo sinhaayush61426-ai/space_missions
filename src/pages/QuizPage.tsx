@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft, RotateCcw, Trophy, Star, CheckCircle, XCircle, Sparkles } from "lucide-react";
@@ -120,6 +120,11 @@ const QuizPage = () => {
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(false);
   const [finished, setFinished] = useState(false);
+
+  // Set page title
+  useEffect(() => {
+    document.title = "Quiz";
+  }, []);
 
   const current = questions[currentIndex];
 

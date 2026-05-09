@@ -112,6 +112,9 @@ const ExoplanetOrbitalChart = () => {
     return [1200, 1800, 2400].includes(parsed) ? parsed : 1200;
   });
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [lastResetSnapshot, setLastResetSnapshot] = useState<{
+    scale: string; tooltips: boolean; tooltipUnit: string; tooltipDelay: number;
+  } | null>(null);
   const resetCancelRef = useRef<HTMLButtonElement>(null);
   const resetTriggerRef = useRef<HTMLButtonElement>(null);
   const exportFilenameInputRef = useRef<HTMLInputElement>(null);
@@ -418,23 +421,41 @@ const ExoplanetOrbitalChart = () => {
     }
   };
 
+  const undoReset = (prev: typeof lastResetSnapshot) => {
+    if (!prev) return;
+    if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
+    setTooltipsEnabled(prev.tooltips);
+    if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
+    setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
+    setLastResetSnapshot(null);
+  };
+
   const confirmReset = () => {
     const prev = { scale: scaleMode, tooltips: tooltipsEnabled, tooltipUnit, tooltipDelay };
+    setLastResetSnapshot(prev);
     resetChartSettings();
     setResetDialogOpen(false);
     requestAnimationFrame(() => resetTriggerRef.current?.focus());
-    toast("Settings reset to defaults", {
-      action: {
-        label: "Undo",
-        onClick: () => {
-          if (isScaleMode(prev.scale)) setScaleMode(prev.scale);
-          setTooltipsEnabled(prev.tooltips);
-          if (isTooltipUnit(prev.tooltipUnit)) setTooltipUnit(prev.tooltipUnit);
-          setTooltipDelay(clampTooltipDelay(prev.tooltipDelay));
-          toast.success("Settings restored");
-        },
-      },
-    });
+     toast("Settings reset to defaults", {
+       duration: 5000,
+       action: {
+         label: "Undo",
+         onClick: () => {
+           undoReset(prev);
+           toast("Settings restored", {
+             duration: 5000,
+             action: {
+               label: "Redo",
+               onClick: () => {
+                 resetChartSettings();
+                 setLastResetSnapshot(prev);
+                 toast.success("Settings reset again");
+               },
+             },
+           });
+         },
+       },
+     });
   };
 
   const cancelReset = () => {
@@ -591,7 +612,19 @@ const ExoplanetOrbitalChart = () => {
               >
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
                 Reset
-              </button>
+               </button>
+               {lastResetSnapshot && (
+                 <button
+                   type="button"
+                   onClick={() => {
+                     undoReset(lastResetSnapshot);
+                     toast.success("Settings restored");
+                   }}
+                   className="text-[10px] text-primary underline underline-offset-2 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+                 >
+                   Undo last reset
+                 </button>
+               )}
               <button
                 type="button"
                 onClick={exportSettings}
@@ -978,14 +1011,23 @@ const ExoplanetOrbitalChart = () => {
             >
               Reset chart settings?
             </h4>
-            <p
-              id="exoplanet-reset-dialog-desc"
-              className="mt-2 text-xs text-muted-foreground leading-relaxed"
-            >
-              This will restore scale to <span className="text-foreground font-medium">logarithmic</span>,
-              tooltips to <span className="text-foreground font-medium">on (Earth years)</span>,
-              and hover delay to <span className="text-foreground font-medium">{DEFAULT_TOOLTIP_DELAY}ms</span>.
-            </p>
+             <div
+               id="exoplanet-reset-dialog-desc"
+               className="mt-3 text-xs text-muted-foreground leading-relaxed space-y-2"
+             >
+               <p>Your current settings:</p>
+               <ul className="space-y-1 pl-3">
+                 <li>Scale: <span className="text-foreground font-medium capitalize">{scaleMode}</span></li>
+                 <li>Tooltips: <span className="text-foreground font-medium">{tooltipsEnabled ? "On" : "Off"}</span></li>
+                 <li>Units: <span className="text-foreground font-medium capitalize">{tooltipUnit.replace("-", " ")}</span></li>
+                 <li>Hover delay: <span className="text-foreground font-medium">{tooltipDelay}ms</span></li>
+               </ul>
+               <p className="pt-1">
+                 This will restore scale to <span className="text-foreground font-medium">logarithmic</span>,
+                 tooltips to <span className="text-foreground font-medium">on (Earth years)</span>,
+                 and hover delay to <span className="text-foreground font-medium">{DEFAULT_TOOLTIP_DELAY}ms</span>.
+               </p>
+             </div>
             <div className="mt-5 flex justify-end gap-2">
               <button
                 ref={resetCancelRef}

@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ArrowLeft, Globe, Clock, Calendar, Thermometer, Scale, Wind, Star, Telescope, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
@@ -8,6 +8,8 @@ import Navbar from "@/components/Navbar";
 import PlanetInternalStructure from "@/components/PlanetInternalStructure";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import FavoriteButton from "@/components/FavoriteButton";
+import ExoplanetDetailSkeleton from "@/components/ExoplanetDetailSkeleton";
+import { useExoplanetSwipeNavigation, useExoplanetKeyboardNavigation } from "@/hooks/useExoplanetNavigation";
 
 import proximaCentauriBImage from "@/assets/proxima-centauri-b.png";
 import trappist1eImage from "@/assets/trappist-1e.png";
@@ -29,6 +31,7 @@ const exoplanetIds = exoplanetsData.map((p) => p.id);
 
 const ExoplanetDetail = () => {
   const { exoplanetId } = useParams<{ exoplanetId: string }>();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const exoplanet = getExoplanetById(exoplanetId || "");
 
@@ -37,15 +40,6 @@ const ExoplanetDetail = () => {
     const timer = setTimeout(() => setIsLoading(false), 400);
     return () => clearTimeout(timer);
   }, [exoplanetId]);
-
-  // Set page title based on exoplanet data
-  useEffect(() => {
-    if (exoplanet) {
-      document.title = `Exoplanet - ${exoplanet.name}`;
-    } else {
-      document.title = "Exoplanet Not Found";
-    }
-  }, [exoplanet]);
 
   if (!exoplanet) {
     return (
@@ -58,9 +52,8 @@ const ExoplanetDetail = () => {
     );
   }
 
-  const currentIndex = exoplanetIds.indexOf(exoplanet.id);
-  const prevExo = currentIndex > 0 ? exoplanetsData[currentIndex - 1] : null;
-  const nextExo = currentIndex < exoplanetIds.length - 1 ? exoplanetsData[currentIndex + 1] : null;
+  const prevExo = prevId ? exoplanetsData.find(e => e.id === prevId) : null;
+  const nextExo = nextId ? exoplanetsData.find(e => e.id === nextId) : null;
 
   const stats = [
     { icon: Globe, label: "Diameter", value: exoplanet.diameter },
@@ -72,23 +65,42 @@ const ExoplanetDetail = () => {
   ];
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Starfield />
-        <Navbar />
-        <div className="flex items-center justify-center h-[80vh]">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-      </div>
-    );
+    return <ExoplanetDetailSkeleton />;
   }
+
+  // Animation variants (same as PlanetDetail)
+  const pageVariants = {
+    initial: (dir: string) => ({
+      x: dir === "none" ? 0 : dir === "left" ? "100%" : "-100%",
+      opacity: dir === "none" ? 1 : 0,
+    }),
+    animate: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        x: { type: "spring" as const, stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 },
+      },
+    },
+    exit: (dir: string) => ({
+      x: dir === "none" ? 0 : dir === "left" ? "-100%" : "100%",
+      opacity: dir === "none" ? 1 : 0,
+      transition: {
+        x: { type: "spring" as const, stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 },
+      },
+    }),
+  };
 
   return (
     <motion.div
       className="relative min-h-screen bg-background overflow-x-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      custom={direction}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageVariants}
+      {...handlers}
     >
       <Starfield />
       <Navbar />
@@ -313,6 +325,7 @@ const ExoplanetDetail = () => {
                 <Link
                   key={id}
                   to={`/exoplanet/${id}`}
+                  state={{ direction: index < currentIndex ? "right" : "left" }}
                   className={`w-2 h-2 rounded-full transition-all ${
                     index === currentIndex
                       ? "bg-primary scale-125"
@@ -327,6 +340,7 @@ const ExoplanetDetail = () => {
               {prevExo ? (
                 <Link
                   to={`/exoplanet/${prevExo.id}`}
+                  state={{ direction: "right" }}
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
                 >
                   <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -339,6 +353,7 @@ const ExoplanetDetail = () => {
               {nextExo ? (
                 <Link
                   to={`/exoplanet/${nextExo.id}`}
+                  state={{ direction: "left" }}
                   className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
                 >
                   <div className="text-right">
@@ -349,6 +364,11 @@ const ExoplanetDetail = () => {
                 </Link>
               ) : <div />}
             </div>
+
+            {/* Swipe hint for mobile */}
+            <p className="text-xs text-muted-foreground text-center md:hidden mb-4">
+              Swipe left or right to navigate exoplanets
+            </p>
 
             <div className="text-center">
               <Link

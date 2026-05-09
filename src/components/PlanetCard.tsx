@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { Globe2 } from "lucide-react";
 
 import { Rocket, ArrowRight, Thermometer, Scale, Wind } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -56,6 +57,13 @@ interface PlanetCardProps {
   temperature?: string;
   moons?: number;
   type?: string;
+  /**
+   * What to render when the planet image is missing or fails to load.
+   * - "gradient": realistic radial-gradient sphere (default, matches design system)
+   * - "placeholder": neutral muted circle with subtle shimmer
+   * - "icon": colored globe icon on a tinted background
+   */
+  fallbackVariant?: "gradient" | "placeholder" | "icon";
 }
 
 // Realistic planet gradient configurations
@@ -89,14 +97,15 @@ interface PlanetImageProps {
   src: string;
   shadow: string;
   delay: number;
+  fallback: ReactNode;
 }
 
-const PlanetImage = ({ id, name, src, shadow, delay }: PlanetImageProps) => {
+const PlanetImage = ({ id, name, src, shadow, delay, fallback }: PlanetImageProps) => {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
 
   if (errored) {
-    return null;
+    return <>{fallback}</>;
   }
 
   return (
@@ -122,11 +131,9 @@ const PlanetImage = ({ id, name, src, shadow, delay }: PlanetImageProps) => {
           animationDelay: `${delay * 0.5}s`,
         }}
         onLoad={() => setLoaded(true)}
-        onError={(e) => {
+        onError={() => {
           reportMissingPlanetImage(id, name, "load-error");
           setErrored(true);
-          const fallback = e.currentTarget.parentElement?.nextElementSibling as HTMLElement | null;
-          if (fallback) fallback.style.display = "block";
         }}
       />
     </div>
@@ -137,6 +144,7 @@ const PlanetCard = ({
   id, name, description, color, missions, distance, delay,
   isInCompare = false, onToggleCompare,
   diameter, gravity, temperature, moons, type,
+  fallbackVariant = "gradient",
 }: PlanetCardProps) => {
   const statusColors = {
     completed: "bg-planet-earth",
@@ -152,6 +160,43 @@ const PlanetCard = ({
   if (!hasPlanetImage) {
     reportMissingPlanetImage(id, name, "no-asset");
   }
+
+  const fallbackNode: ReactNode = (() => {
+    if (fallbackVariant === "placeholder") {
+      return (
+        <div
+          className="w-16 h-16 rounded-full mb-4 mt-2 bg-muted/40 border border-border/40 animate-pulse"
+          style={{ animationDelay: `${delay * 0.5}s` }}
+          aria-hidden="true"
+        />
+      );
+    }
+    if (fallbackVariant === "icon") {
+      return (
+        <div
+          className="w-16 h-16 rounded-full mb-4 mt-2 flex items-center justify-center animate-float"
+          style={{
+            backgroundColor: `${gradient.shadow}25`,
+            boxShadow: `0 0 24px ${gradient.shadow}30`,
+            animationDelay: `${delay * 0.5}s`,
+          }}
+          aria-hidden="true"
+        >
+          <Globe2 className="w-7 h-7" style={{ color: gradient.shadow }} />
+        </div>
+      );
+    }
+    return (
+      <div
+        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
+        style={{
+          background: gradientStyle,
+          boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
+          animationDelay: `${delay * 0.5}s`,
+        }}
+      />
+    );
+  })();
 
   return (
     <Link 
@@ -180,26 +225,19 @@ const PlanetCard = ({
         </span>
       )}
       
-      {/* Planet image with shimmer placeholder + gradient fallback */}
-      {planetImages[id] ? (
+      {/* Planet image with shimmer + configurable fallback */}
+      {hasPlanetImage ? (
         <PlanetImage
           id={id}
           name={name}
           src={planetImages[id]}
           shadow={gradient.shadow}
           delay={delay}
+          fallback={fallbackNode}
         />
-      ) : null}
-      <div
-        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
-        style={{
-          background: gradientStyle,
-          boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
-          animationDelay: `${delay * 0.5}s`,
-          display: planetImages[id] ? "none" : "block",
-        }}
-      />
-
+      ) : (
+        fallbackNode
+      )}
       <h3 className="font-display text-2xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
         {name}
       </h3>

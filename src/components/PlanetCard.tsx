@@ -57,6 +57,13 @@ interface PlanetCardProps {
   temperature?: string;
   moons?: number;
   type?: string;
+  /**
+   * What to render when the planet image is missing or fails to load.
+   * - "gradient": realistic radial-gradient sphere (default, matches design system)
+   * - "placeholder": neutral muted circle with subtle shimmer
+   * - "icon": colored globe icon on a tinted background
+   */
+  fallbackVariant?: "gradient" | "placeholder" | "icon";
 }
 
 // Realistic planet gradient configurations

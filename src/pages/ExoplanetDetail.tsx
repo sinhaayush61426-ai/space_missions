@@ -35,6 +35,18 @@ const ExoplanetDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const exoplanet = getExoplanetById(exoplanetId || "");
 
+  // Get navigation direction from location state
+  const direction = (location.state as { direction?: "left" | "right" })?.direction || "none";
+
+  // Swipe navigation for mobile
+  const { prevId, nextId, currentIndex, ...handlers } = useExoplanetSwipeNavigation(
+    exoplanetId || "",
+    exoplanetIds
+  );
+
+  // Keyboard navigation
+  useExoplanetKeyboardNavigation(prevId, nextId);
+
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 400);

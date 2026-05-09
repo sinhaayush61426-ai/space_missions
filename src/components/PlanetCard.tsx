@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState, type ReactNode } from "react";
-import { Globe2 } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Globe2, RefreshCw } from "lucide-react";
 
 import { Rocket, ArrowRight, Thermometer, Scale, Wind } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -100,12 +100,46 @@ interface PlanetImageProps {
   fallback: ReactNode;
 }
 
+const MAX_AUTO_RETRIES = 2;
+const RETRY_BACKOFF_MS = [600, 1500];
+
 const PlanetImage = ({ id, name, src, shadow, delay, fallback }: PlanetImageProps) => {
   const [loaded, setLoaded] = useState(false);
-  const [errored, setErrored] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [exhausted, setExhausted] = useState(false);
+  const timerRef = useRef<number | null>(null);
 
-  if (errored) {
-    return <>{fallback}</>;
+  useEffect(() => {
+    return () => {
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  // Cache-bust on retries so the browser actually re-requests the asset
+  const imgSrc = attempt === 0 ? src : `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
+
+  const handleManualRetry = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExhausted(false);
+    setLoaded(false);
+    setAttempt((a) => a + 1);
+  };
+
+  if (exhausted) {
+    return (
+      <div className="relative w-16 h-16 mb-4 mt-2 group/retry">
+        {fallback}
+        <button
+          type="button"
+          onClick={handleManualRetry}
+          aria-label={`Retry loading ${name} image`}
+          className="absolute inset-0 rounded-full flex items-center justify-center bg-background/70 backdrop-blur-sm opacity-0 group-hover/retry:opacity-100 focus:opacity-100 transition-opacity"
+        >
+          <RefreshCw className="w-5 h-5 text-primary" />
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -117,7 +151,8 @@ const PlanetImage = ({ id, name, src, shadow, delay, fallback }: PlanetImageProp
         />
       )}
       <img
-        src={src}
+        key={attempt}
+        src={imgSrc}
         alt={name}
         loading="lazy"
         decoding="async"
@@ -132,8 +167,15 @@ const PlanetImage = ({ id, name, src, shadow, delay, fallback }: PlanetImageProp
         }}
         onLoad={() => setLoaded(true)}
         onError={() => {
-          reportMissingPlanetImage(id, name, "load-error");
-          setErrored(true);
+          if (attempt < MAX_AUTO_RETRIES) {
+            const wait = RETRY_BACKOFF_MS[attempt] ?? 1500;
+            timerRef.current = window.setTimeout(() => {
+              setAttempt((a) => a + 1);
+            }, wait);
+          } else {
+            reportMissingPlanetImage(id, name, "load-error");
+            setExhausted(true);
+          }
         }}
       />
     </div>

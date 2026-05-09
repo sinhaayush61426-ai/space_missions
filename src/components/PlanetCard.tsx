@@ -144,6 +144,7 @@ const PlanetCard = ({
   id, name, description, color, missions, distance, delay,
   isInCompare = false, onToggleCompare,
   diameter, gravity, temperature, moons, type,
+  fallbackVariant = "gradient",
 }: PlanetCardProps) => {
   const statusColors = {
     completed: "bg-planet-earth",

@@ -59,6 +59,19 @@ const planetGradients: Record<string, { colors: string[]; shadow: string }> = {
   neptune: { colors: ["#6b8cce", "#3d5fc4", "#1a3a8a"], shadow: "#3d5fc4" },
 };
 
+// Track missing/broken planet image assets so we only warn once per id
+const missingPlanetImages = new Set<string>();
+const reportMissingPlanetImage = (id: string, name: string, reason: "no-asset" | "load-error") => {
+  if (missingPlanetImages.has(id)) return;
+  missingPlanetImages.add(id);
+  const message =
+    reason === "no-asset"
+      ? `[PlanetCard] Missing planet image asset for "${id}" (${name}). Add src/assets/${id}.png and map it in planetImages.`
+      : `[PlanetCard] Failed to load planet image for "${id}" (${name}). Check that src/assets/${id}.png exists and is valid.`;
+  // eslint-disable-next-line no-console
+  console.warn(message);
+};
+
 const PlanetCard = ({ 
   id, name, description, color, missions, distance, delay,
   isInCompare = false, onToggleCompare,

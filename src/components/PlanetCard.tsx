@@ -24,6 +24,16 @@ const planetImages: Record<string, string> = {
   neptune: neptuneImage,
 };
 
+// Preload all planet image assets once on module load so cards render
+// without flicker or layout shifts when they mount.
+if (typeof window !== "undefined") {
+  Object.values(planetImages).forEach((src) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = src;
+  });
+}
+
 interface Mission {
   name: string;
   year: string;

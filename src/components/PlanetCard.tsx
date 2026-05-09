@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState, type ReactNode } from "react";
-import { Globe2 } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Globe2, RefreshCw } from "lucide-react";
 
 import { Rocket, ArrowRight, Thermometer, Scale, Wind } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";

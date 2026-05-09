@@ -106,6 +106,10 @@ const PlanetCard = ({
         <img
           src={planetImages[id]}
           alt={name}
+          loading="lazy"
+          decoding="async"
+          width={64}
+          height={64}
           className="w-16 h-16 rounded-full mb-4 object-cover animate-float mt-2"
           style={{
             boxShadow: `0 0 30px ${gradient.shadow}40`,

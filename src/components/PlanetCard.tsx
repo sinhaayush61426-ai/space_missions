@@ -97,14 +97,15 @@ interface PlanetImageProps {
   src: string;
   shadow: string;
   delay: number;
+  fallback: ReactNode;
 }
 
-const PlanetImage = ({ id, name, src, shadow, delay }: PlanetImageProps) => {
+const PlanetImage = ({ id, name, src, shadow, delay, fallback }: PlanetImageProps) => {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
 
   if (errored) {
-    return null;
+    return <>{fallback}</>;
   }
 
   return (
@@ -130,11 +131,9 @@ const PlanetImage = ({ id, name, src, shadow, delay }: PlanetImageProps) => {
           animationDelay: `${delay * 0.5}s`,
         }}
         onLoad={() => setLoaded(true)}
-        onError={(e) => {
+        onError={() => {
           reportMissingPlanetImage(id, name, "load-error");
           setErrored(true);
-          const fallback = e.currentTarget.parentElement?.nextElementSibling as HTMLElement | null;
-          if (fallback) fallback.style.display = "block";
         }}
       />
     </div>

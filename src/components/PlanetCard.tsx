@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 import { Rocket, ArrowRight, Thermometer, Scale, Wind } from "lucide-react";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -72,6 +73,56 @@ const reportMissingPlanetImage = (id: string, name: string, reason: "no-asset" |
   console.warn(message);
 };
 
+interface PlanetImageProps {
+  id: string;
+  name: string;
+  src: string;
+  shadow: string;
+  delay: number;
+}
+
+const PlanetImage = ({ id, name, src, shadow, delay }: PlanetImageProps) => {
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+
+  if (errored) {
+    return null;
+  }
+
+  return (
+    <div className="relative w-16 h-16 mb-4 mt-2">
+      {!loaded && (
+        <div
+          className="absolute inset-0 rounded-full bg-gradient-to-br from-secondary/60 via-muted/40 to-secondary/60 animate-pulse"
+          aria-hidden="true"
+        />
+      )}
+      <img
+        src={src}
+        alt={name}
+        loading="lazy"
+        decoding="async"
+        width={64}
+        height={64}
+        className={`w-16 h-16 rounded-full object-cover animate-float transition-opacity duration-500 ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
+        style={{
+          boxShadow: `0 0 30px ${shadow}40`,
+          animationDelay: `${delay * 0.5}s`,
+        }}
+        onLoad={() => setLoaded(true)}
+        onError={(e) => {
+          reportMissingPlanetImage(id, name, "load-error");
+          setErrored(true);
+          const fallback = e.currentTarget.parentElement?.nextElementSibling as HTMLElement | null;
+          if (fallback) fallback.style.display = "block";
+        }}
+      />
+    </div>
+  );
+};
+
 const PlanetCard = ({ 
   id, name, description, color, missions, distance, delay,
   isInCompare = false, onToggleCompare,
@@ -119,27 +170,14 @@ const PlanetCard = ({
         </span>
       )}
       
-      {/* Planet image with gradient fallback */}
+      {/* Planet image with shimmer placeholder + gradient fallback */}
       {planetImages[id] ? (
-        <img
+        <PlanetImage
+          id={id}
+          name={name}
           src={planetImages[id]}
-          alt={name}
-          loading="lazy"
-          decoding="async"
-          width={64}
-          height={64}
-          className="w-16 h-16 rounded-full mb-4 object-cover animate-float mt-2"
-          style={{
-            boxShadow: `0 0 30px ${gradient.shadow}40`,
-            animationDelay: `${delay * 0.5}s`,
-          }}
-          onError={(e) => {
-            reportMissingPlanetImage(id, name, "load-error");
-            const target = e.currentTarget;
-            target.style.display = "none";
-            const fallback = target.nextElementSibling as HTMLElement | null;
-            if (fallback) fallback.style.display = "block";
-          }}
+          shadow={gradient.shadow}
+          delay={delay}
         />
       ) : null}
       <div

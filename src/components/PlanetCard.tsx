@@ -134,6 +134,7 @@ const PlanetCard = ({
             animationDelay: `${delay * 0.5}s`,
           }}
           onError={(e) => {
+            reportMissingPlanetImage(id, name, "load-error");
             const target = e.currentTarget;
             target.style.display = "none";
             const fallback = target.nextElementSibling as HTMLElement | null;

@@ -225,26 +225,19 @@ const PlanetCard = ({
         </span>
       )}
       
-      {/* Planet image with shimmer placeholder + gradient fallback */}
-      {planetImages[id] ? (
+      {/* Planet image with shimmer + configurable fallback */}
+      {hasPlanetImage ? (
         <PlanetImage
           id={id}
           name={name}
           src={planetImages[id]}
           shadow={gradient.shadow}
           delay={delay}
+          fallback={fallbackNode}
         />
-      ) : null}
-      <div
-        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
-        style={{
-          background: gradientStyle,
-          boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
-          animationDelay: `${delay * 0.5}s`,
-          display: planetImages[id] ? "none" : "block",
-        }}
-      />
-
+      ) : (
+        fallbackNode
+      )}
       <h3 className="font-display text-2xl font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
         {name}
       </h3>

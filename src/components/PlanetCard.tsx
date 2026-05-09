@@ -161,6 +161,43 @@ const PlanetCard = ({
     reportMissingPlanetImage(id, name, "no-asset");
   }
 
+  const fallbackNode: ReactNode = (() => {
+    if (fallbackVariant === "placeholder") {
+      return (
+        <div
+          className="w-16 h-16 rounded-full mb-4 mt-2 bg-muted/40 border border-border/40 animate-pulse"
+          style={{ animationDelay: `${delay * 0.5}s` }}
+          aria-hidden="true"
+        />
+      );
+    }
+    if (fallbackVariant === "icon") {
+      return (
+        <div
+          className="w-16 h-16 rounded-full mb-4 mt-2 flex items-center justify-center animate-float"
+          style={{
+            backgroundColor: `${gradient.shadow}25`,
+            boxShadow: `0 0 24px ${gradient.shadow}30`,
+            animationDelay: `${delay * 0.5}s`,
+          }}
+          aria-hidden="true"
+        >
+          <Globe2 className="w-7 h-7" style={{ color: gradient.shadow }} />
+        </div>
+      );
+    }
+    return (
+      <div
+        className="w-14 h-14 rounded-full mb-4 shadow-lg animate-float relative mt-2"
+        style={{
+          background: gradientStyle,
+          boxShadow: `0 0 30px ${gradient.shadow}40, inset -4px -4px 8px rgba(0,0,0,0.4), inset 2px 2px 6px rgba(255,255,255,0.2)`,
+          animationDelay: `${delay * 0.5}s`,
+        }}
+      />
+    );
+  })();
+
   return (
     <Link 
       to={`/planet/${id}`}

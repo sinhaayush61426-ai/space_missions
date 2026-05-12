@@ -47,6 +47,7 @@ export interface PlanetData {
   type: "terrestrial" | "gas giant" | "ice giant";
   structure: StructureLayer[];
   majorMoons: MajorMoon[];
+  imageUrl?: string;
 }
 
 export const planetsData: PlanetData[] = [
@@ -109,7 +110,8 @@ export const planetsData: PlanetData[] = [
         description: "Joint European-Japanese mission with two orbiters to study Mercury's magnetosphere, surface, and interior. Orbital insertion revised to late 2026 after 6th flyby in January 2025.",
         achievements: ["Most comprehensive Mercury mission ever", "Two orbiters for simultaneous observations", "Completed 6th Mercury flyby in Jan 2025", "Expected orbital insertion late 2026"]
       }
-    ]
+    ],
+    imageUrl: "/mercury.png"
   },
   {
     id: "venus",
@@ -177,7 +179,8 @@ export const planetsData: PlanetData[] = [
         description: "Deep Atmosphere Venus Investigation of Noble gases, Chemistry, and Imaging mission. Launch timeline shifted to early 2030s.",
         achievements: ["First US Venus atmospheric probe since 1978", "Will descend through Venus atmosphere", "High-resolution surface imaging", "Launch expected early 2030s"]
       }
-    ]
+    ],
+    imageUrl: "/venus.png"
   },
   {
     id: "earth",
@@ -244,7 +247,8 @@ export const planetsData: PlanetData[] = [
         description: "Most powerful space telescope ever built, observing in infrared wavelengths.",
         achievements: ["Deepest infrared images ever taken", "Direct imaging of exoplanets", "Early universe observations", "Atmospheric analysis of exoplanets"]
       }
-    ]
+    ],
+    imageUrl: "/earth.png"
   },
   {
     id: "mars",
@@ -347,7 +351,8 @@ export const planetsData: PlanetData[] = [
         description: "Mission to retrieve Perseverance samples was canceled by U.S. Congress in January 2026 due to budget constraints. Alternative sample return concepts are under study.",
         achievements: ["Program canceled January 2026", "Budget estimated at $11B+", "Alternative architectures under review", "Perseverance samples remain cached on Mars"]
       }
-    ]
+    ],
+    imageUrl: "/mars.png"
   },
   {
     id: "jupiter",
@@ -562,7 +567,8 @@ export const planetsData: PlanetData[] = [
         description: "Rotorcraft lander to explore Titan's surface, hopping between locations. Launch confirmed for 2028, arrival at Titan expected 2034.",
         achievements: ["First multi-rotor vehicle on another world", "Launch 2028, arrival Titan 2034", "Search for prebiotic chemistry", "Study Titan's habitability"]
       }
-    ]
+    ],
+    imageUrl: "/saturn.png"
   },
   {
     id: "uranus",
@@ -644,7 +650,8 @@ export const planetsData: PlanetData[] = [
         description: "Proposed flagship mission to orbit Uranus and deploy atmospheric probe.",
         achievements: ["First Uranus orbiter", "Atmospheric composition study", "Ring and moon exploration", "Interior structure investigation"]
       }
-    ]
+    ],
+    imageUrl: "/uranus.png"
   },
   {
     id: "neptune",

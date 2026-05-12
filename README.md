@@ -28,6 +28,7 @@ bun run dev
 ### 🌍 Solar System Explorer
 - Browse all 8 planets with scientifically accurate data (2025/2026 agency figures)
 - Interactive **3D planet models** with procedural textures, day/night cycles, and rotation
+- **Professionally styled cartoony planet graphics** — all planets and exoplanets are rendered with a custom procedural canvas-based component (no static PNGs)
 - **Internal structure** SVG half-cutaway diagrams with scroll animations and click-to-expand layers
 - **Major moons** section with diameter, orbit, discovery info, and notable characteristics
 - **Mission timelines** for each planet — past, active, and upcoming missions
@@ -35,7 +36,8 @@ bun run dev
 ### 🌌 Exoplanet Discovery
 - Catalog of notable exoplanets: TRAPPIST-1 system, Proxima Centauri b, Kepler-452b, TOI-700d
 - Host star data (spectral type, temperature, luminosity, habitable zone)
-- **Multi-criteria filtering** — search by name, type, habitability index, and distance
+- **Multi-criteria filtering** — search by name, type, habitability index, and distance (distance filter now fully functional)
+- **Unified card layout and data presentation** — exoplanet cards now match planet cards in structure, stats, and animation
 - **Habitability comparison chart** with scoring visualizations
 - **Orbital period chart** — exoplanet years vs Earth with:
   - Linear / logarithmic scale toggle
@@ -64,12 +66,14 @@ bun run dev
 - Outer solar system mission highlights
 - Image lightbox gallery
 
-### 📱 Mobile-First UX
+### 📱 Mobile-First UX & Accessibility
 - 6-tab fixed bottom navigation
 - Swipe gestures between planet pages
 - Haptic feedback on supported devices
 - Smooth scroll with offsets for fixed navbars
 - Animated page transitions via Framer Motion
+- All detail drawers (modals) have a visible close button for accessibility
+- Null safety and fallback values for all displayed data
 
 ### ♿ Accessibility
 - Keyboard navigation (arrow keys, Enter, Escape) throughout
@@ -105,7 +109,7 @@ bun run dev
 
 ```
 src/
-├── assets/              # Planet & exoplanet images
+├── assets/              # (No longer used for planet/exoplanet images)
 ├── components/
 │   ├── ui/              # shadcn/ui base components
 │   ├── Hero.tsx          # Landing hero section
@@ -161,12 +165,13 @@ All scientific data lives in `src/data/*.ts` as typed TypeScript constants — t
 
 ---
 
-## 🎨 Design System
+## 🎨 Design System & Visuals
 
 - **Theme**: Dark cosmic aesthetic with starfield background and golden accents
 - **Colors**: HSL-based semantic tokens defined in `index.css` (`--primary`, `--background`, `--foreground`, etc.)
 - **Typography**: Display font for headings, system/Inter for body
 - **Components**: shadcn/ui with Radix primitives, customized via Tailwind
+- **Planets & Exoplanets**: All planet/exoplanet visuals are rendered with a procedural canvas-based component (`CartoonPlanet.tsx`) for a consistent, professional, and cartoony look
 
 ---
 

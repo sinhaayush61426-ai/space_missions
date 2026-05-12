@@ -46,6 +46,7 @@ export interface ExoplanetData {
   discoveredYear: string;
   discoveryMethod: string;
   habitabilityIndex: string;
+  imageUrl?: string;
 }
 
 export const exoplanetsData: ExoplanetData[] = [
@@ -114,7 +115,8 @@ export const exoplanetsData: ExoplanetData[] = [
         description: "JWST has attempted thermal emission observations to characterize Proxima b's atmosphere.",
         achievements: ["Attempted atmosphere characterization", "Infrared observations of the system", "Constraining atmospheric models", "Ongoing observation campaigns"]
       }
-    ]
+    ],
+    imageUrl: "/proxima-centauri-b.png"
   },
   {
     id: "trappist-1e",
@@ -180,7 +182,8 @@ export const exoplanetsData: ExoplanetData[] = [
         description: "JWST is conducting the most detailed atmospheric characterization of TRAPPIST-1 planets, with TRAPPIST-1 e as a priority target.",
         achievements: ["Found TRAPPIST-1 b likely has no thick atmosphere", "Ongoing observations of TRAPPIST-1 e atmosphere", "Most detailed exoplanet atmospheric survey", "Testing habitability models"]
       }
-    ]
+    ],
+    imageUrl: "/trappist-1e.png"
   },
   {
     id: "trappist-1f",
@@ -237,7 +240,8 @@ export const exoplanetsData: ExoplanetData[] = [
         description: "JWST is observing TRAPPIST-1 f for atmospheric signatures and surface conditions.",
         achievements: ["Scheduled for atmospheric observations", "Constraining surface conditions", "Testing water-world hypothesis", "Multi-epoch transit observations"]
       }
-    ]
+    ],
+    imageUrl: "/trappist-1f.png"
   },
   {
     id: "trappist-1g",
@@ -294,7 +298,8 @@ export const exoplanetsData: ExoplanetData[] = [
         description: "JWST observations planned to assess whether TRAPPIST-1 g retains any atmosphere.",
         achievements: ["Queued for atmospheric characterization", "Will test greenhouse warming models", "Tidal heating investigation", "Comparative study with inner planets"]
       }
-    ]
+    ],
+    imageUrl: "/trappist-1g.png"
   },
   {
     id: "kepler-452b",
@@ -361,7 +366,8 @@ export const exoplanetsData: ExoplanetData[] = [
         description: "ESA's PLAnetary Transits and Oscillations of stars mission will characterize planets in habitable zones of Sun-like stars.",
         achievements: ["Will improve mass measurements", "Stellar seismology of host star", "Better habitability assessment", "Next-gen transit photometry"]
       }
-    ]
+    ],
+    imageUrl: "/kepler-452b.png"
   },
   {
     id: "toi-700d",
@@ -427,7 +433,8 @@ export const exoplanetsData: ExoplanetData[] = [
         description: "JWST is targeting TOI-700 d for atmospheric characterization using transmission spectroscopy during transits.",
         achievements: ["Priority target for atmosphere detection", "Transmission spectroscopy observations", "Searching for water vapor signatures", "Testing habitability models"]
       }
-    ]
+    ],
+    imageUrl: "/toi-700d.png"
   }
 ];
 

@@ -111,7 +111,7 @@ export const planetsData: PlanetData[] = [
         achievements: ["Most comprehensive Mercury mission ever", "Two orbiters for simultaneous observations", "Completed 6th Mercury flyby in Jan 2025", "Expected orbital insertion late 2026"]
       }
     ],
-    imageUrl: "/mercury.png"
+    imageUrl: "/assets/mercury.png"
   },
   {
     id: "venus",
@@ -180,7 +180,7 @@ export const planetsData: PlanetData[] = [
         achievements: ["First US Venus atmospheric probe since 1978", "Will descend through Venus atmosphere", "High-resolution surface imaging", "Launch expected early 2030s"]
       }
     ],
-    imageUrl: "/venus.png"
+    imageUrl: "/assets/venus.png"
   },
   {
     id: "earth",
@@ -248,7 +248,7 @@ export const planetsData: PlanetData[] = [
         achievements: ["Deepest infrared images ever taken", "Direct imaging of exoplanets", "Early universe observations", "Atmospheric analysis of exoplanets"]
       }
     ],
-    imageUrl: "/earth.png"
+    imageUrl: "/assets/earth.png"
   },
   {
     id: "mars",
@@ -352,7 +352,7 @@ export const planetsData: PlanetData[] = [
         achievements: ["Program canceled January 2026", "Budget estimated at $11B+", "Alternative architectures under review", "Perseverance samples remain cached on Mars"]
       }
     ],
-    imageUrl: "/mars.png"
+    imageUrl: "/assets/mars.png"
   },
   {
     id: "jupiter",
@@ -464,7 +464,8 @@ export const planetsData: PlanetData[] = [
         description: "Dedicated mission to study Europa's ice shell and subsurface ocean. Completed Mars gravity assist in March 2025, arrival at Jupiter expected April 2030.",
         achievements: ["Mars gravity assist completed March 2025", "Will search for conditions for life", "49 planned Europa flybys", "Arrival at Jupiter April 2030"]
       }
-    ]
+    ],
+    imageUrl: "/assets/jupiter.png"
   },
   {
     id: "saturn",
@@ -568,7 +569,7 @@ export const planetsData: PlanetData[] = [
         achievements: ["First multi-rotor vehicle on another world", "Launch 2028, arrival Titan 2034", "Search for prebiotic chemistry", "Study Titan's habitability"]
       }
     ],
-    imageUrl: "/saturn.png"
+    imageUrl: "/assets/saturn.png"
   },
   {
     id: "uranus",
@@ -651,7 +652,7 @@ export const planetsData: PlanetData[] = [
         achievements: ["First Uranus orbiter", "Atmospheric composition study", "Ring and moon exploration", "Interior structure investigation"]
       }
     ],
-    imageUrl: "/uranus.png"
+    imageUrl: "/assets/uranus.png"
   },
   {
     id: "neptune",
@@ -725,7 +726,8 @@ export const planetsData: PlanetData[] = [
         description: "Proposed mission to orbit Neptune and study Triton as a potential ocean world.",
         achievements: ["First Neptune orbiter", "Triton ocean investigation", "Atmospheric dynamics study", "Ring system exploration"]
       }
-    ]
+    ],
+    imageUrl: "/assets/neptune.png"
   }
 ];
 

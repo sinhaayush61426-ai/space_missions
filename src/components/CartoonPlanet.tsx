@@ -449,66 +449,56 @@ const drawCartoonPlanet = (
 
   ctx.restore();
 
-  // SATURN'S RINGS
+  // SATURN'S RINGS — slow tilt animation
   if (planetId === 'saturn') {
-    // Main ring bands
+    const ringTilt = Math.PI * 0.1 + Math.sin(time * 0.3) * 0.04;
     for (let ringLayer = 0; ringLayer < 3; ringLayer++) {
       ctx.strokeStyle = `rgba(${200 - ringLayer * 20}, ${180 - ringLayer * 20}, ${120 - ringLayer * 20}, ${0.7 - ringLayer * 0.2})`;
       ctx.lineWidth = radius * (0.25 - ringLayer * 0.08);
       ctx.beginPath();
-      ctx.ellipse(centerX, centerY, radius * (1.4 - ringLayer * 0.15), radius * (0.5 - ringLayer * 0.05), Math.PI * 0.1, 0, Math.PI * 2);
+      ctx.ellipse(centerX, centerY, radius * (1.4 - ringLayer * 0.15), radius * (0.5 - ringLayer * 0.05), ringTilt, 0, Math.PI * 2);
       ctx.stroke();
     }
-    
-    // Ring gaps (Cassini division)
+
     ctx.strokeStyle = 'rgba(50, 40, 30, 0.5)';
     ctx.lineWidth = radius * 0.1;
     ctx.beginPath();
-    ctx.ellipse(centerX, centerY, radius * 1.2, radius * 0.4, Math.PI * 0.1, 0, Math.PI * 2);
+    ctx.ellipse(centerX, centerY, radius * 1.2, radius * 0.4, ringTilt, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Ring shadows
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
     ctx.lineWidth = radius * 0.12;
     ctx.beginPath();
-    ctx.ellipse(centerX, centerY, radius * 1.35, radius * 0.45, Math.PI * 0.1, 0, Math.PI * 2);
+    ctx.ellipse(centerX, centerY, radius * 1.35, radius * 0.45, ringTilt, 0, Math.PI * 2);
     ctx.stroke();
   }
 
-  // ADVANCED HIGHLIGHTING
+  // ADVANCED HIGHLIGHTING — drifts subtly
   if (style.hasHighlight) {
-    // Primary specular highlight
-    const highlightGradient = ctx.createRadialGradient(
-      centerX - radius * 0.35,
-      centerY - radius * 0.35,
-      0,
-      centerX,
-      centerY,
-      radius * 0.8
-    );
+    const hx = centerX - radius * 0.35 + Math.cos(highlightAngle) * radius * 0.06;
+    const hy = centerY - radius * 0.35 + Math.sin(highlightAngle) * radius * 0.06;
+    const highlightGradient = ctx.createRadialGradient(hx, hy, 0, centerX, centerY, radius * 0.8);
     highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
     highlightGradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.5)');
     highlightGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.2)');
     highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    
+
     ctx.fillStyle = highlightGradient;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
     ctx.fill();
-    
-    // Secondary rim light
-    ctx.globalAlpha = 0.25;
+
+    ctx.globalAlpha = 0.2 + pulse * 0.15;
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
     ctx.lineWidth = radius * 0.08;
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius * 0.95, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Tertiary subtle highlight
     ctx.globalAlpha = 0.2;
     ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
     ctx.beginPath();
-    ctx.arc(centerX - radius * 0.25, centerY - radius * 0.4, radius * 0.2, 0, Math.PI * 2);
+    ctx.arc(hx, hy, radius * 0.2, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalAlpha = 1;
   }

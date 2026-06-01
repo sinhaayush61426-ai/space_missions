@@ -532,10 +532,21 @@ const CartoonPlanet = ({ id, name, size = 64, shadow, delay = 0 }: CartoonPlanet
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (canvasRef.current) {
-      drawCartoonPlanet(canvasRef.current, id, size);
-    }
-  }, [id, size]);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    let rafId = 0;
+    const start = performance.now() / 1000 - (delay || 0);
+    const prefersReduced = typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    const render = (now: number) => {
+      const t = prefersReduced ? 0 : (now / 1000) - start;
+      drawCartoonPlanet(canvas, id, size, t);
+      if (!prefersReduced) rafId = requestAnimationFrame(render);
+    };
+    rafId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(rafId);
+  }, [id, size, delay]);
 
   const style = exoplanetStyles[id] || planetStyles[id];
   const shadowColor = shadow || (style?.baseColor || '#888');
@@ -545,7 +556,8 @@ const CartoonPlanet = ({ id, name, size = 64, shadow, delay = 0 }: CartoonPlanet
       ref={canvasRef}
       width={size}
       height={size}
-      alt={name}
+      aria-label={name}
+      role="img"
       className="rounded-full object-cover animate-float"
       style={{
         boxShadow: `0 0 30px ${shadowColor}40`,

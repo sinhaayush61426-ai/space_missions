@@ -284,13 +284,13 @@ const drawCartoonPlanet = (
   const radius = size / 2 - 2;
   const seed = planetId.charCodeAt(0) + planetId.charCodeAt(1);
 
-  // Draw outer atmosphere glow
+  // Draw outer atmosphere glow (pulses)
   if (style.hasAtmosphere) {
     for (let i = 3; i > 0; i--) {
       ctx.fillStyle = style.atmosphereColor;
-      ctx.globalAlpha = 0.15 / i;
+      ctx.globalAlpha = (0.15 / i) * (0.7 + pulse * 0.6);
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius + i * 2, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, radius + i * 2 + pulse * 1.5, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = 1;

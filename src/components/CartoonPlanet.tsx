@@ -256,9 +256,15 @@ const drawIceCap = (
 const drawCartoonPlanet = (
   canvas: HTMLCanvasElement,
   planetId: string,
-  size: number = 64
+  size: number = 64,
+  time: number = 0
 ) => {
   const ctx = canvas.getContext('2d')!;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Animation phases
+  const rot = time * 0.4; // overall rotation phase (radians-ish)
+  const pulse = 0.5 + 0.5 * Math.sin(time * 1.2); // 0..1
+  const highlightAngle = time * 0.3;
   
   // Get planet style
   const style = exoplanetStyles[planetId] || planetStyles[planetId];

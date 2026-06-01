@@ -314,85 +314,85 @@ const drawCartoonPlanet = (
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
   ctx.fill();
 
+  // Clip subsequent surface patterns to the sphere so animated offsets don't leak out
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.clip();
+
   // DETAILED PATTERN RENDERING
   if (style.pattern === 'stripes') {
-    // Jupiter/Saturn band patterns
+    // Jupiter/Saturn band patterns — scroll horizontally
+    const stripeOffset = ((rot * radius * 0.6) % (radius * 2));
     ctx.globalAlpha = 0.5;
     for (let i = 0; i < style.accentColors.length; i++) {
       const startY = centerY - radius + (i * radius * 0.66);
-      
+
       ctx.fillStyle = style.accentColors[i];
-      ctx.beginPath();
-      ctx.moveTo(centerX - radius, startY);
-      ctx.lineTo(centerX + radius, startY);
-      ctx.lineTo(centerX + radius, startY + radius * 0.25);
-      ctx.lineTo(centerX - radius, startY + radius * 0.25);
-      ctx.fill();
-      
-      // Add turbulence in bands
+      ctx.fillRect(centerX - radius, startY, radius * 2, radius * 0.25);
+
+      // Turbulence chunks drift across the band
       ctx.globalAlpha = 0.25;
-      for (let j = 0; j < 4; j++) {
+      for (let j = -1; j < 5; j++) {
         const randomOffset = seededRandom(seed + i, j) * radius * 0.1;
-        const waveX = centerX - radius + (j * radius * 0.5);
+        let waveX = centerX - radius + (j * radius * 0.5) + stripeOffset * (i % 2 === 0 ? 1 : -1);
+        // wrap
+        waveX = centerX - radius + (((waveX - (centerX - radius)) % (radius * 2)) + radius * 2) % (radius * 2);
         const waveY = startY + radius * 0.125 + randomOffset;
         ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
         ctx.fillRect(waveX, waveY, radius * 0.3, radius * 0.05);
       }
+      ctx.globalAlpha = 0.5;
     }
     ctx.globalAlpha = 1;
   } else if (style.pattern === 'spots') {
-    // Cratered surface (Mercury, Mars)
+    // Cratered surface (Mercury, Mars) — rotate around center
     ctx.globalAlpha = 0.6;
-    
-    // Large impact basins
+    const spinSlow = rot * 0.5;
+
     for (let i = 0; i < 5; i++) {
-      const angle = seededRandom(seed, i * 100) * Math.PI * 2;
+      const angle = seededRandom(seed, i * 100) * Math.PI * 2 + spinSlow;
       const distance = radius * (0.4 + seededRandom(seed + 50, i) * 0.4);
       const craterX = centerX + Math.cos(angle) * distance;
-      const craterY = centerY + Math.sin(angle) * distance;
+      const craterY = centerY + Math.sin(angle) * distance * 0.85;
       const craterSize = radius * (0.08 + seededRandom(seed + 100, i) * 0.1);
-      
       drawCrater(ctx, craterX, craterY, craterSize, 0.6, style.baseColor);
     }
 
-    // Medium and small craters for detail
     for (let i = 0; i < 15; i++) {
-      const angle = seededRandom(seed + 200, i) * Math.PI * 2;
+      const angle = seededRandom(seed + 200, i) * Math.PI * 2 + spinSlow;
       const distance = radius * (0.2 + seededRandom(seed + 250, i) * 0.7);
       const craterX = centerX + Math.cos(angle) * distance;
-      const craterY = centerY + Math.sin(angle) * distance;
+      const craterY = centerY + Math.sin(angle) * distance * 0.85;
       const craterSize = radius * (0.02 + seededRandom(seed + 300, i) * 0.05);
-      
       drawCrater(ctx, craterX, craterY, craterSize, 0.4, style.baseColor);
     }
     ctx.globalAlpha = 1;
   } else if (style.pattern === 'waves') {
-    // Ocean/atmospheric patterns (Earth, Venus, Neptune)
+    // Ocean/atmospheric patterns — animated swirl
     ctx.globalAlpha = 0.5;
-    
-    // Add storm systems
+
     if (['neptune', 'earth', 'venus', 'toi-700d'].includes(planetId)) {
       for (let i = 0; i < 2; i++) {
-        const angle = seededRandom(seed, i) * Math.PI * 2;
+        const baseAngle = seededRandom(seed, i) * Math.PI * 2;
+        const angle = baseAngle + rot * 0.4;
         const distance = radius * (0.3 + seededRandom(seed + 50, i) * 0.4);
         const stormX = centerX + Math.cos(angle) * distance;
-        const stormY = centerY + Math.sin(angle) * distance;
+        const stormY = centerY + Math.sin(angle) * distance * 0.85;
         const stormSize = radius * 0.15;
-        const stormRotation = seededRandom(seed + 100, i) * Math.PI * 2;
-        
+        const stormRotation = seededRandom(seed + 100, i) * Math.PI * 2 + rot * 1.2;
         drawStorm(ctx, stormX, stormY, stormSize, style.accentColors[i % style.accentColors.length], stormRotation);
       }
     }
 
-    // Ocean wave patterns
     for (let wave = 0; wave < 4; wave++) {
       ctx.strokeStyle = style.accentColors[wave % style.accentColors.length];
       ctx.lineWidth = radius * 0.04;
       ctx.globalAlpha = 0.4 - wave * 0.08;
-      
+
       ctx.beginPath();
       for (let angle = 0; angle < Math.PI * 2; angle += 0.15) {
-        const waveOffset = Math.sin(angle * 3 + wave * 0.8) * radius * 0.18;
+        const waveOffset = Math.sin(angle * 3 + wave * 0.8 + rot * 1.5) * radius * 0.18;
         const noise = seededRandom(seed + wave, Math.floor(angle * 10)) * radius * 0.05;
         const distance = radius * 0.4 + waveOffset + noise;
         const x = centerX + Math.cos(angle) * distance;
@@ -405,13 +405,12 @@ const drawCartoonPlanet = (
     }
     ctx.globalAlpha = 1;
 
-    // Add ice caps for compatible planets
     if (['earth', 'toi-700d'].includes(planetId)) {
       drawIceCap(ctx, centerX, centerY, radius, radius * 0.18, 'rgba(220, 240, 255, 0.8)');
       drawIceCap(ctx, centerX, centerY + radius * 2 - 2, radius, radius * 0.18, 'rgba(220, 240, 255, 0.8)');
     }
   } else if (style.pattern === 'gradient') {
-    // Ice giants (Uranus, ice giants)
+    // Ice giants — bands drift sideways
     ctx.globalAlpha = 0.5;
     for (let layer = 1; layer > 0; layer -= 0.2) {
       const layerGradient = ctx.createRadialGradient(
@@ -425,26 +424,30 @@ const drawCartoonPlanet = (
       layerGradient.addColorStop(0, style.accentColors[0] || style.baseColor);
       layerGradient.addColorStop(0.5, style.baseColor);
       layerGradient.addColorStop(1, style.accentColors[Math.floor((1 - layer) * 3) % style.accentColors.length] || style.baseColor);
-      
+
       ctx.fillStyle = layerGradient;
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius * layer, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Add cloud bands for ice giants
+    const bandOffset = (rot * radius * 0.4) % (radius * 2);
     for (let band = 0; band < 3; band++) {
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
       ctx.lineWidth = radius * 0.08;
       ctx.globalAlpha = 0.3;
       const bandY = centerY - radius + (band * radius * 0.5);
+      const dir = band % 2 === 0 ? 1 : -1;
+      const x0 = centerX - radius - radius + ((bandOffset * dir) % (radius * 2));
       ctx.beginPath();
-      ctx.moveTo(centerX - radius, bandY);
-      ctx.lineTo(centerX + radius, bandY);
+      ctx.moveTo(x0, bandY);
+      ctx.lineTo(x0 + radius * 4, bandY);
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
   }
+
+  ctx.restore();
 
   // SATURN'S RINGS
   if (planetId === 'saturn') {
